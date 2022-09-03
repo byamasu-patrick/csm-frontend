@@ -57,7 +57,7 @@ const ShopLayout: NextPageWithLayout<ShopProps> = ({children}: ShopProps) => {
     return (
         <>
         {
-          true ? (<div className="min-h-full bg-slate-100 " style={{ height: '100vh' }} >
+          true ? (<div className="min-h-full bg-slate-100 " style={{ height: 'auto' }} >
           {/* When the mobile menu is open, add `overflow-hidden` to the `body` element to prevent double scrollbars */}
           <Popover
             as="header"           

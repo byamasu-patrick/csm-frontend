@@ -36,7 +36,8 @@ export const optionsMUITable : MUIDataTableOptions = {
       filename: "catalog.csv",
     },
     onRowClick: (rowData: string[], rowMeta) => {
-        console.log("Clicked row: ", data[rowMeta.dataIndex].name)
+        console.log("Clicked row: ", data[rowMeta.dataIndex].name);
+        
     } 
 };
 

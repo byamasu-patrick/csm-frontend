@@ -7,9 +7,11 @@ import MUIDataTable, { MUIDataTableOptions } from "mui-datatables";
 import { catalogColumns, optionsMUITable, data  } from "../../../libs/models/shops/catalogs/CatalogModels";
 import { createTheme, Theme, ThemeProvider } from '@mui/material/styles';
 import { Fade } from '@mui/material';
+import CreateProduct from '../../../components/pages/shop/catalog/CreateProduct';
 
 
 const Catalog: NextPageWithLayout = () => {
+    const [isCreate, setIsCreate] = useState<boolean>(false);
 
     const title: string = "Catalog List of Products";
 
@@ -21,9 +23,19 @@ const Catalog: NextPageWithLayout = () => {
                 <h1 className="text-3xl font-extrabold text-gray-900">Products</h1>
               </div>             
             </div>
+            <div className=" py-2 items-end">
+                <button
+                  type="button"
+                  onClick={() => setIsCreate(!isCreate)}
+                  className="float-right inline-block px-6 py-2.5 bg-orange-600 text-white font-medium text-xs leading-tight rounded shadow-md hover:bg-orange-700 hover:shadow-lg focus:bg-orange-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-orange-800 active:shadow-lg transition duration-100 ease-in-out capitalize"
+                >
+                    New Product
+                </button>
+            </div>
+            
             <div className="align-middle inline-block min-w-full  mt-5">
-                {/* <ThemeProvider theme={getMuiTheme()}> */}
-                    <MUIDataTable
+                {
+                  !isCreate ? <MUIDataTable
                         title={ title }
                         data={ data }
                         columns={ catalogColumns }
@@ -33,10 +45,16 @@ const Catalog: NextPageWithLayout = () => {
                         //         console.log(catalogColumns[rowMeta.dataIndex])
                         //     }
                         // }
-                    />
-                {/* </ThemeProvider> */}
+                    /> : <></>
+                }
             </div>
           </div>
+          
+          <div className="mt-4 flex-shrink-0 flex md:mt-0 md:ml-4">
+            {
+              isCreate ? <CreateProduct isCreate={isCreate} setIsCreate={setIsCreate}/> : (<></>)
+            }      
+            </div>  
         </>
       );
 }
