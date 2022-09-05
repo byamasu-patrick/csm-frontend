@@ -19,6 +19,7 @@ import { useAppDispatch, useAppSelector } from "../../libs/store";
 import { Logout } from "@mui/icons-material";
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
+import Footer from "../widgets/footer";
 
 interface ShopProps {
     children?: React.ReactNode;
@@ -29,16 +30,11 @@ const ShopLayout: NextPageWithLayout<ShopProps> = ({children}: ShopProps) => {
     const pathname =  router.pathname;
     const { user } = useAppSelector(AuthSelector);
   
-    // const { } = useAppSelector(AuthSelector);
-    // let user: (User & TokenModel) | null = null;
     const dispatch = useAppDispatch();
 
-   useEffect(() => {
-    // const getUser = async () => {
-    //   user = await initialLoadUser();
-    // };
-    // getUser().catch(console.error);
-   }, []);
+    useEffect(() => {
+      
+    }, []);
     
     const navigation = () => {
         for (let nav of navList)
@@ -68,17 +64,17 @@ const ShopLayout: NextPageWithLayout<ShopProps> = ({children}: ShopProps) => {
                   <div className="relative flex justify-between xl:grid xl:grid-cols-12 lg:gap-8">
                     <div className="flex md:absolute md:left-0 md:inset-y-0 lg:static xl:col-span-2">
                       <div className="flex-shrink-0 flex items-center">
-                        {/* <Link href="/">
+                        <Link href="/">
                           <a>
-                            <Image
+                            <img
                               className="block "
-                              src="/u_src_logo.png"
-                              width={40}
-                              height={40}
+                              src="../../cloud-stores.png"
+                              width={60}
+                              height={60}
                               alt="Umozi Source"
                             />
                           </a>
-                        </Link> */}
+                        </Link>
                       </div>
                     </div>
                     <div className="min-w-0 flex-1 md:px-8 lg:px-0 xl:col-span-3">
@@ -244,7 +240,7 @@ const ShopLayout: NextPageWithLayout<ShopProps> = ({children}: ShopProps) => {
 
           <div className="py-10">
             <div className="max-w-3xl w-10/12 mx-auto sm:px-6 lg:max-w-7xl lg:px-8 lg:grid lg:grid-cols-12 lg:gap-8">
-              <div className="w-auto py-4 px-6 hidden lg:block lg:col-span-3 xl:col-span-3 bg-gray-50 rounded-lg">
+              <div className="w-auto py-4 px-6 hidden lg:block lg:col-span-3 xl:col-span-3 bg-gray-50 rounded-lg shadow">
                 <nav
                   aria-label="Sidebar"
                   className="sticky top-4 divide-y divide-gray-300"
@@ -255,7 +251,7 @@ const ShopLayout: NextPageWithLayout<ShopProps> = ({children}: ShopProps) => {
                         <a
                           className= { item.current
                             ? "bg-gray-200 text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md"
-                            : "text-gray-600 hover:bg-gray-50 group flex items-center px-3 py-2 text-sm font-medium rounded-md"
+                            : "text-gray-600 hover:text-gray-600 hover:bg-gray-200 group flex items-center px-3 py-2 text-sm font-medium rounded-md"
                           }
                           aria-current={item.current ? "page" : undefined}
                         >
@@ -293,15 +289,19 @@ const ShopLayout: NextPageWithLayout<ShopProps> = ({children}: ShopProps) => {
               <main className="lg:col-span-9 sm:col-span-10 "> 
                   <ShopBreadcrumb />
                   {children}
-              </main>
+              </main>              
+            </div>
+            
+            <div className="">                
+             <Footer />
             </div>
           </div>
-        </div>) : (<>
-         <div className="grid place-items-center h-screen">
-         <Box sx={{ display: 'flex' }} className="">
-            <CircularProgress />
-          </Box>
-         </div>
+          </div>) : (<>
+          <div className="grid place-items-center h-screen">
+          <Box sx={{ display: 'flex' }} className="">
+              <CircularProgress />
+            </Box>
+          </div>
         </>)
         }
         

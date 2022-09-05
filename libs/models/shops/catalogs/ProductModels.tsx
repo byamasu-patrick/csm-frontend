@@ -8,7 +8,7 @@ export interface ProductModel {
     imageFile: string;
     price: number;
     itemsInStock: number;
-    userId: number;
+    userId: string;
 };
 
 export interface AddProductModel {
@@ -19,7 +19,7 @@ export interface AddProductModel {
     imageFile: string;
     price: number;
     itemsInStock: number;
-    userId: number;
+    userId: string;
 };
 
 export interface ProductSearchModel {

@@ -1,6 +1,6 @@
 import axios from "axios"
 import { AddProductModel, ProductModel } from "../../models/shops/catalogs/ProductModels";
-const clientUrl = 'http://localhost:5000/api/v1';
+const clientUrl = 'http://localhost:8000';
 export const getProducts = async () =>{
     var result  = await axios.get(`${clientUrl}/Catalog`);
     return result.data;

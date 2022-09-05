@@ -1,5 +1,5 @@
 import { Dialog, Transition } from '@headlessui/react';
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../../libs/store';
 import { AuthSelector } from '../../../../libs/store/Auth';
 import { AddProductToDB, ProductSelector } from '../../../../libs/store/Catalog';
@@ -23,6 +23,7 @@ const CreateProduct: React.FC<CreateProps>  = (props) => {
     const dispatch = useAppDispatch();
     const { product } = useAppSelector(ProductSelector);
     const { user } = useAppSelector(AuthSelector);
+
         
 
     const addNewProduct = () => {
@@ -35,7 +36,7 @@ const CreateProduct: React.FC<CreateProps>  = (props) => {
                 "description": description,
                 "price": price,
                 "itemsInStock": itemsInStock,
-                "userId": user != null ? user?.id : 0
+                "userId": user?.email
             }));
             props.setIsCreate(!props.isCreate);
     };

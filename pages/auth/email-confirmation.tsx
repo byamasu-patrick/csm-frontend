@@ -90,63 +90,54 @@ const PasswordConfirmation: React.FC = () => {
               </p>
             </div>
             <div className="mt-12">
-                <Formik
-                    initialValues={{
-                        verificationCode: "987-791-775"
-                    }}
-                    onSubmit={(data, { resetForm }) => {
-                        setToken(data.verificationCode);
-                        submitForm();
-                        resetForm({
-                          values: {
-                            verificationCode: ""
-                          }
-                        });
-                    }}
-                    >
-                    {({ touched, errors, isSubmitting, values }) => (
-                    <div className="">
-                      <Form className="grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-8">
-                        <div className="sm:col-span-2">
-                          <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                            Verification Code
-                          </label>
-                          <div className="mt-1">
-                            <Field
-                              id="verificationCode"
-                              name="verificationCode"
-                              type="text"
-                              className={`appearance-none block w-full px-3 py-3 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none  sm:text-sm
-                               ${touched.verificationCode &&
-                                   errors.verificationCode
-                                   ? "is-invalid  focus:ring-red-500 focus:border-red-500 "
-                                   : "focus:ring-orange-500 focus:border-orange-500"
-                                 }`}
-                            />
-                          </div>
-                          <div className="ml-3 mt-6">
-                              <p className="text-base text-gray-500">
-                                Have not received an code yet?{' '} 
-                                <a href="#" className="font-medium text-gray-700 underline">
-                                  Click here
-                                </a>{' '}
-                                to get a new verification token. {' '}
-                              </p>
-                            </div>
-                        </div>
-                        
-                        <div className="sm:col-span-2">
-                          <button
-                            type="submit"
-                            className="w-full inline-flex items-center justify-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
-                          >
-                            Verify
-                          </button>
-                        </div>
-                      </Form>
+              <div className="">
+                <form
+                  className="grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-8"
+                  onSubmit={(event: React.FormEventHandler<HTMLFormElement>) => {
+                    event.preventDefault();
+                    submitForm();                        
+                  }}
+                  >
+                  <div className="sm:col-span-2">
+                    <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                      Verification Code
+                    </label>
+                    <div className="mt-1">
+                      <input
+                        id="verificationCode"
+                        name="verificationCode"
+                        type="text"
+                        className={`appearance-none block w-full px-3 py-3 border border-gray-300 rounded-md shadow-sm
+                         placeholder-gray-400 focus:outline-none  
+                         sm:text-sm focus:ring-orange-500 focus:border-orange-500`
+                        }                        
+                        onChange={(event: React.FormEvent<HTMLInputElement>) => {
+                          setToken(event?.currentTarget?.value);                            
+                        }}
+                        placeholder="6ae195ac-d3d0-46ee-87d1-90f536c8fdfe"
+                      />
                     </div>
-                  )}
-                </Formik>    
+                    <div className="ml-3 mt-6">
+                        <p className="text-base text-gray-500">
+                          Have not received an code yet?{' '} 
+                          <a href={`http://localhost:3000/auth/emailnotconfirmed?email=${email}`} className="font-medium text-gray-700 underline">
+                            Click here
+                          </a>{' '}
+                          to get a new verification token.
+                        </p>
+                      </div>
+                  </div>
+                  
+                  <div className="sm:col-span-2">
+                    <button
+                      type="submit"
+                      className="w-full inline-flex items-center justify-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
+                    >
+                      Verify
+                    </button>
+                  </div>
+                </form>
+              </div> 
             </div>
             <div className="flex items-center mt-5">
                 <Link href="/signin" >

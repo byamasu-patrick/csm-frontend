@@ -4,12 +4,13 @@ import ShopLayout from '../../../components/layouts/shop-layout';
 import type { NextPageWithLayout } from '../../_app';
 import React, { Component, useEffect, useState } from "react";
 import MUIDataTable, { MUIDataTableOptions } from "mui-datatables";
-import { catalogColumns, optionsMUITable, data  } from "../../../libs/models/shops/catalogs/CatalogModels";
+import { catalogColumns, optionsMUITable  } from "../../../libs/models/shops/catalogs/CatalogModels";
 import { createTheme, Theme, ThemeProvider } from '@mui/material/styles';
 import { Fade } from '@mui/material';
 import CreateProduct from '../../../components/pages/shop/catalog/CreateProduct';
 import { useAppDispatch, useAppSelector } from '../../../libs/store';
 import { GetAllProducts, gettingAllProducts, ProductSelector } from '../../../libs/store/Catalog';
+import { AuthSelector } from '../../../libs/store/Auth';
 
 
 const Catalog: NextPageWithLayout = () => {
@@ -18,12 +19,23 @@ const Catalog: NextPageWithLayout = () => {
     const title: string = "Catalog List of Products";
     const dispatch = useAppDispatch();
     const { products } = useAppSelector(ProductSelector);
+    const { user } = useAppSelector(AuthSelector);
 
     useEffect(() => {
       dispatch(GetAllProducts(''));
-
-      console.log(products)
+      console.log(products);
+      console.log(user);
     }, []);
+
+    // id: string;
+    // name: string;
+    // category: string;
+    // summary: string;
+    // description: string
+    // imageFile: string;
+    // price: number;
+    // itemsInStock: number;
+    // userId: number;
 
     return (
         <>
@@ -47,14 +59,9 @@ const Catalog: NextPageWithLayout = () => {
                 {
                   !isCreate ? <MUIDataTable
                         title={ title }
-                        data={ data }
+                        data={ products }
                         columns={ catalogColumns }
-                        options={ optionsMUITable }        
-                        // onRowClicked={
-                        //     (rowData: string[], rowMeta: { dataIndex: number, rowIndex: number }) => {
-                        //         console.log(catalogColumns[rowMeta.dataIndex])
-                        //     }
-                        // }
+                        options={ optionsMUITable }     
                     /> : <></>
                 }
             </div>

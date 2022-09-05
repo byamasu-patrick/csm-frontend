@@ -4,6 +4,7 @@ import ShopLayout from '../../../components/layouts/shop-layout';
 import type { NextPageWithLayout } from '../../_app';
 import React, { Component, useEffect, useState } from "react";
 import MUIDataTable, { MUIDataTableOptions } from "mui-datatables";
+import OrderDetails from '../../../components/pages/shop/Shippment/OrderDetails';
 
 const Orders: NextPageWithLayout = () => {
     const columns = ["Name", "Company", "City", "State"];
@@ -31,12 +32,7 @@ const Orders: NextPageWithLayout = () => {
               </div>             
             </div>
             <div className="align-middle inline-block min-w-full  mt-5">
-                <MUIDataTable
-                    title={ title }
-                    data={ data }
-                    columns={ columns }
-                    options={ options }
-                />
+               <OrderDetails />
             </div>
           </div>
         </>

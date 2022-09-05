@@ -7,13 +7,16 @@ import { useAppDispatch, useAppSelector } from "../libs/store";
 import { AuthSelector } from "../libs/store/Auth/selectors";
 import { ErrorEnum } from "../libs/models/error-enums";
 import { clearAuthError, signInWithEmailAndPassword } from "../libs/store/Auth/actions";
+import Loader from "../components/widgets/loader";
 
 const Signin: React.FC = () => {
    const [password, setPassword] = useState<string>('');
    const [email, setEmail] = useState<string>('');
-   const router = useRouter();
+   const [isLogingIn, setIsLogingIn] = useState<boolean>(false);
+   const router = useRouter();   
+   const [activeStatus, setActiveStatus] = useState(1);
 
-   const { isAuthenticated, error, isLoading } = useAppSelector(AuthSelector);
+   const { isAuthenticated, error, isLoading, user } = useAppSelector(AuthSelector);
    const dispatch: any = useAppDispatch();
 
    useEffect(() => {
@@ -37,24 +40,34 @@ const Signin: React.FC = () => {
         dispatch(clearAuthError());
     }, []);
 
+    useEffect(() => {
+      if(user !== null){
+        setIsLogingIn(!isLogingIn);
+      }
+    }, [user]);
+
     const submitForm = async (email: string, password: string) => {
+      setIsLogingIn(!isLogingIn);
       dispatch(signInWithEmailAndPassword({ email, password }));
+
     };
 
 
     return (
         <>        
         <div className="h-full min-h-full flex">
-          <div className="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
+          <div className="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24">               
+
             <div className="mx-auto w-full max-w-sm lg:w-96">
-              <div>
-                {/* <Image
-                    className=""
-                    src="/u_src_logo.png"
-                    width={80}
-                    height={80}
-                    alt="Umozi Source Logo"
-                    /> */}
+              <div className="hover:cursor-pointer">
+                <Link href="/">
+                  <img
+                      src="cloud-stores.png"
+                      width={70}
+                      height={70}
+                      alt="Cloud Stores Malawi Logo"
+                      />
+                </Link>
                 <h2 className="mt-6 text-3xl font-extrabold text-gray-900">Sign in to your account</h2>
                 <p className="mt-2 text-sm text-gray-600">
                   Or{' '}
@@ -225,6 +238,9 @@ const Signin: React.FC = () => {
               layout='fill'
               alt="Cloud Store Malawi"
             />
+            {
+              isLogingIn ? <Loader /> : (<></>)
+            }
           </div>
         </div>
         </>
