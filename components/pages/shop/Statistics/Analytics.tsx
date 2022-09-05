@@ -1,7 +1,10 @@
 import React, { useEffect } from "react";
-import Head from "next/head";
+import { useAppSelector } from "../../../../libs/store";
+import { AuthSelector } from "../../../../libs/store/Auth";
 
 const Analytics = () => {
+    let { user } = useAppSelector(AuthSelector);
+
     useEffect(() => {
         let yLabels = {
             0: "$0",
@@ -12,7 +15,7 @@ const Analytics = () => {
             40: "$40K",
         };
 
-        let line_chart = new Chart(document.getElementById("line_chart"), {
+        let line_chart = new Chart(document.getElementById("line_chart_"), {
             type: "line",
             data: {
                 labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Nov", "Dec"],
@@ -51,7 +54,8 @@ const Analytics = () => {
                 },
             },
         });
-    });
+        
+    }, []);
     return (
         <>
             <p className="py-4">Sale and Revenue Statistics based on months: </p>
@@ -93,7 +97,7 @@ const Analytics = () => {
                         <div className="chartjs-size-monitor-shrink">
                         </div>
                     </div>
-                    <canvas id="line_chart" height={528} width={1760} className="w-full" style={{ display: "block", height: 364, width: 980 }} className="chartjs-render-monitor" />
+                    <canvas id="line_chart_" height={528} width={1760} className="w-full" style={{ display: "block", height: 364, width: 980 }} className="chartjs-render-monitor" />
                 </div>
             </div>
         </>

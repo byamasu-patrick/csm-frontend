@@ -10,7 +10,7 @@ import { AuthSelector } from "../../libs/store/Auth/selectors";
 
 const EmailNotConfirmed = () => {
     const [isMailSent, setIsMailSent] = useState<boolean>(false);
-   const router = useRouter();   
+   const router = useRouter();
    const resendEmail = async () => {
       const email = router.query['email'];
       // console.log(router.query);

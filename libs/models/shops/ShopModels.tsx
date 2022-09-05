@@ -103,8 +103,8 @@ export const breadcrumbPages: Array<UserNavigation> = [
   ];
 
 export const userNavigation: Array<UserNavigation> = [
-    { name: "Your Profile", href: "#" },
-    { name: "Settings", href: "#" },
+    { name: "Your Profile", href: "/shop/settings/edit" },
+    { name: "Settings", href: "/shop/settings" },
 ];
   
   
