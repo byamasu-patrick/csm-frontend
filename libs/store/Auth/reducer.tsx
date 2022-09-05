@@ -20,7 +20,7 @@ const initialState: AuthState = {
 
 export const AuthReducer = createReducer(initialState, (builder) => {
    builder.addCase(authSuccess, (state, { payload }) => {
-      return { ...state, error: null, isAuthenticated: true, isLoading: false, tokenModel: { accessToken: payload!.accessToken, refreshToken: payload!.refreshToken, validTo: payload!.validTo }, user: { email: payload!.email, emailConfirmed: payload!.emailConfirmed, profile: payload!.profile, userType: payload!.userType } }
+      return { ...state, error: null, isAuthenticated: true, isLoading: false, tokenModel: { accessToken: payload!.accessToken, refreshToken: payload!.refreshToken, validTo: payload!.validTo }, user: { email: payload!.email, emailConfirmed: payload!.emailConfirmed, profile: payload!.profile, userType: payload!.userType, id: payload!.id } }
    })
 
    builder.addCase(authError, (state, { payload }) => {

@@ -8,12 +8,22 @@ import { catalogColumns, optionsMUITable, data  } from "../../../libs/models/sho
 import { createTheme, Theme, ThemeProvider } from '@mui/material/styles';
 import { Fade } from '@mui/material';
 import CreateProduct from '../../../components/pages/shop/catalog/CreateProduct';
+import { useAppDispatch, useAppSelector } from '../../../libs/store';
+import { GetAllProducts, gettingAllProducts, ProductSelector } from '../../../libs/store/Catalog';
 
 
 const Catalog: NextPageWithLayout = () => {
     const [isCreate, setIsCreate] = useState<boolean>(false);
 
     const title: string = "Catalog List of Products";
+    const dispatch = useAppDispatch();
+    const { products } = useAppSelector(ProductSelector);
+
+    useEffect(() => {
+      dispatch(GetAllProducts(''));
+
+      console.log(products)
+    }, []);
 
     return (
         <>

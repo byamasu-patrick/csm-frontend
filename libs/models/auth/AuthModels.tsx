@@ -21,6 +21,7 @@ export enum AuthProviderEnum {
  
  export interface User {
     // tokenModel: TokenModel;
+    id: number;
     email: string;
     emailConfirmed: boolean;
     userType: UserType;

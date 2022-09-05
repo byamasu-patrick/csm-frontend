@@ -3,8 +3,6 @@ import { MUIDataTableOptions } from "mui-datatables";
 import Link from "next/link";
 import { ReactElement } from "react";
 
-
-
 export interface CatalogColumn {
     name: string;
     label: string;
@@ -24,6 +22,7 @@ export interface CatalogData {
     summary: string;
     imageFile: string;
     price: number;
+    itemsInStock: number;
 };
 
 export const optionsMUITable : MUIDataTableOptions = {
@@ -49,7 +48,8 @@ export const data: Array<CatalogData> = [
           "category": "Smart Phone",
           "summary": "This phone is the company's.",
           "imageFile": "https://kwingy.com/wp-content/uploads/2022/06/apple-iphone-x-new-1-1.jpg",
-          "price": 950
+          "price": 950,
+          "itemsInStock": 98
         },
         {
           "id": "2",
@@ -57,7 +57,8 @@ export const data: Array<CatalogData> = [
           "category": "Smart Phone",
           "summary": "This phone is the company's.",
           "imageFile": "https://www.samsung.com/global/galaxy/galaxy-z-flip4/images/galaxy-z-flip4_highlights_kv.jpg",
-          "price": 840
+          "price": 840,
+          "itemsInStock": 78
         },
         {
           "id": "3",
@@ -65,7 +66,8 @@ export const data: Array<CatalogData> = [
           "category": "White Appliances",
           "summary": "This phone is the company's.",
           "imageFile": "https://www.gizmochina.com/wp-content/uploads/2017/01/Huawei-nova-plus.jpg",
-          "price": 650
+          "price": 650,
+          "itemsInStock": 200
         },
         {
           "id": "4",
@@ -73,7 +75,8 @@ export const data: Array<CatalogData> = [
           "category": "White Appliances",
           "summary": "This phone is the company's.",
           "imageFile": "https://media.router-switch.com/media/catalog/product/cache/b90fceee6a5fa7acd36a04c7b968181c/x/i/xiaomi-mi-11-5g_3.jpg",
-          "price": 470
+          "price": 470,
+          "itemsInStock": 62
         },
         {
           "id": "5",
@@ -81,7 +84,8 @@ export const data: Array<CatalogData> = [
           "category": "Smart Phone",
           "summary": "This phone is the company's.",
           "imageFile": "https://www.zdnet.com/a/img/resize/681faf2113dca46191de9cee5dc3d35b40bb8ada/2018/01/16/b14982a8-eea3-4614-ae5f-c77cc6e36ea8/htc-u11-plus-header.jpg?auto=webp&width=768",
-          "price": 380
+          "price": 380,
+          "itemsInStock": 62
         },
         {
           "id": "6",
@@ -89,7 +93,8 @@ export const data: Array<CatalogData> = [
           "category": "Home Kitchen",
           "summary": "This phone is the company's.",
           "imageFile": "https://fdn2.gsmarena.com/vv/pics/lg/lg-g7-thinq-00.jpg",
-          "price": 240
+          "price": 240,
+          "itemsInStock": 168
         }        
 ];
 

@@ -43,16 +43,17 @@ const registerWithEmailAndPassword = async (
     const decodedToken = decodeJwtToken(content.data?.accessToken!);
  
     const result: User & TokenModel = {
-       email: decodedToken.email,
-       profile: {
-          firstName: decodedToken.name,
-          lastName: decodedToken.family_name,
-       },
-       userType: decodedToken.role,
-       emailConfirmed: decodedToken.email_confirmed == "true",
-       accessToken: content.data?.accessToken!,
-       refreshToken: content.data?.refreshToken!,
-       validTo: content.data?.validTo!
+      id: Number(decodedToken.sub),
+      email: decodedToken.email,
+      profile: {
+         firstName: decodedToken.name,
+         lastName: decodedToken.family_name,
+      },
+      userType: decodedToken.role,
+      emailConfirmed: decodedToken.email_confirmed == "true",
+      accessToken: content.data?.accessToken!,
+      refreshToken: content.data?.refreshToken!,
+      validTo: content.data?.validTo!
     };
     return result;
  };
@@ -78,6 +79,7 @@ const activateUser = async (token: string, email: string): Promise<{ userTokenMo
        const decodedToken = decodeJwtToken(content.data?.accessToken!);
        console.log(decodedToken);
        const user: User & TokenModel = {
+         id: Number(decodedToken.sub),
           email: decodedToken.email,
           profile: {
              firstName: decodedToken.name,
@@ -128,6 +130,7 @@ const activateUser = async (token: string, email: string): Promise<{ userTokenMo
        }
  
        const user: User & TokenModel = {
+         id: Number(decodedToken.sub),
           email: decodedToken.email,
           profile: {
              firstName: decodedToken.name,
