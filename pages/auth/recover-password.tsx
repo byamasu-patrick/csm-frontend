@@ -30,7 +30,7 @@ const RecoverPassword: React.FC = () => {
           title: 'Oops...',
           text: errors,
           confirmButtonText: 'OK',
-          confirmButtonColor: '#8CD4F5',
+           confirmButtonColor: 'rgb(249 115 22)',
         });
       }
       else{

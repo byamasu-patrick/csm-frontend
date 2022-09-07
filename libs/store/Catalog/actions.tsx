@@ -86,10 +86,10 @@ export const GetAllProducts = createAsyncThunk(ProductActionType.GET_ALL_PRODUCT
    async(id: string, thunkAPI) =>{
        try{
 
-           thunkAPI.dispatch(gettingAllProducts(true));
-           let result = await getProducts();
-           thunkAPI.dispatch(getAllProductsSuccess(result));
-        console.log(result);
+            thunkAPI.dispatch(gettingAllProducts(true));
+            let result = await getProducts();
+            thunkAPI.dispatch(getAllProductsSuccess(result));
+            console.log(result);
 
        }catch(error){
             var errorMessage = (error as string);
@@ -98,11 +98,11 @@ export const GetAllProducts = createAsyncThunk(ProductActionType.GET_ALL_PRODUCT
 });
 
 export const GetAllProductsByOwner = createAsyncThunk(ProductActionType.GET_ALL_PRODUCTS_BY_OWNER, 
-   async(id: number, thunkAPI) =>{
+   async(ownerId: string, thunkAPI) =>{
        try{
 
            thunkAPI.dispatch(gettingAllProductsByShopOwner(true));
-           let result = await getProductsByShopOwner(id);
+           let result = await getProductsByShopOwner(ownerId);           
            thunkAPI.dispatch(getAllProductsByShopOwnerSuccess(result));
 
        }catch(error){

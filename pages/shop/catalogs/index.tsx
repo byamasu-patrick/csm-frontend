@@ -9,7 +9,7 @@ import { createTheme, Theme, ThemeProvider } from '@mui/material/styles';
 import { Fade } from '@mui/material';
 import CreateProduct from '../../../components/pages/shop/catalog/CreateProduct';
 import { useAppDispatch, useAppSelector } from '../../../libs/store';
-import { GetAllProducts, gettingAllProducts, ProductSelector } from '../../../libs/store/Catalog';
+import { GetAllProducts, GetAllProductsByOwner, gettingAllProducts, ProductSelector } from '../../../libs/store/Catalog';
 import { AuthSelector } from '../../../libs/store/Auth';
 
 
@@ -18,24 +18,19 @@ const Catalog: NextPageWithLayout = () => {
 
     const title: string = "Catalog List of Products";
     const dispatch = useAppDispatch();
-    const { products } = useAppSelector(ProductSelector);
+    const { productsOwner } = useAppSelector(ProductSelector);
     const { user } = useAppSelector(AuthSelector);
 
     useEffect(() => {
-      dispatch(GetAllProducts(''));
-      console.log(products);
-      console.log(user);
+      if(user !== null){
+        const getProducts = async () => {          
+          await dispatch(GetAllProductsByOwner(user?.email));
+        }
+        getProducts().catch((error) => console.log(error));
+      }
+      
     }, []);
-
-    // id: string;
-    // name: string;
-    // category: string;
-    // summary: string;
-    // description: string
-    // imageFile: string;
-    // price: number;
-    // itemsInStock: number;
-    // userId: number;
+    
 
     return (
         <>
@@ -59,7 +54,7 @@ const Catalog: NextPageWithLayout = () => {
                 {
                   !isCreate ? <MUIDataTable
                         title={ title }
-                        data={ products }
+                        data={ productsOwner }
                         columns={ catalogColumns }
                         options={ optionsMUITable }     
                     /> : <></>

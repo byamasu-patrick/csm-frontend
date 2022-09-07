@@ -1,11 +1,29 @@
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import { useRouter } from "next/router";
+import { Fragment } from "react";
+import { useAppDispatch, useAppSelector } from "../../libs/store";
+import { AuthSelector, logOut } from "../../libs/store/Auth";
+import { Menu, Popover, Transition } from "@headlessui/react";
+import { clientNavigation } from "../../libs/models/shops/ShopModels";
+import { BasketSelector, searchBasketsData } from "../../libs/store/Basket";
 
 const Navigation = () => {
     const [searchInput, setSearchInput] = useState(true);
     const [mdOptionsToggle, setMdOptionsToggle] = useState(true);
     const [showMenu, setShowMenu] = useState(false);
+
+    
+    const { isAuthenticated, error, isLoading, tokenModel, user } = useAppSelector(AuthSelector);
+    const { cart, basketSearch } = useAppSelector(BasketSelector);
+    const dispatch: any = useAppDispatch();
+    const router = useRouter();
+
+    const logout = () => {
+        dispatch(logOut());
+        router.push('/signin');
+    }
 
     return (
         <div className="dark:bg-gray-900 bg-gray-50">
@@ -52,17 +70,17 @@ const Navigation = () => {
                                     </Link>
                                 </li>
                                 <li>
-                                    <a href="javascript:void(0)" className="dark:text-white text-base text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800 hover:underline">
+                                    <a href="#" className="dark:text-white text-base text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800 hover:underline">
                                         Shops
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="javascript:void(0)" className="dark:text-white text-base text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800 hover:underline">
+                                    <a href="#" className="dark:text-white text-base text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800 hover:underline">
                                         New Products
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="javascript:void(0)" className="dark:text-white text-base text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800 hover:underline">
+                                    <a href="#" className="dark:text-white text-base text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800 hover:underline">
                                         Support
                                     </a>
                                 </li>
@@ -73,42 +91,170 @@ const Navigation = () => {
                                     <Link href="/user/carts">
                                         <a aria-label="go to cart" className="text-gray-800 hover:cursor-pointer dark:hover:text-gray-300 hover:text-gray-900 dark:text-white">
                                             <AddShoppingCartIcon  sx={{ fontSize: 28 }}/>
-                                            <div className="inline-flex relative -top-4 right-2 justify-center items-center w-6 h-6 text-sm font-bold text-white bg-[rgb(11,115,164)] rounded-full border-2 border-white dark:border-gray-900">20</div>
+                                            {
+                                                (cart?.items.length !== 0) && (cart !== null) || (basketSearch.searchResult?.items.length !== 0) && (cart !== null)  ?
+                                                (
+                                                    <div className="inline-flex relative -top-4 right-2 justify-center items-center w-6 h-6 text-sm font-bold text-white bg-[rgb(11,115,164)] rounded-full border-2 border-white dark:border-gray-900">
+                                                        { cart?.items.length || basketSearch.searchResult?.items.length }
+                                                    </div>
+                                                ) : (<></>)
+                                            }
                                         </a>
                                     </Link>
-                                    <Link href="/signup">
-                                    <a 
-                                        type="button" 
-                                        className="
-                                            text-white bg-orange-500
-                                            focus:ring-offset-2 
-                                            rounded-sm
-                                            hover:bg-orange-600 focus:outline-none 
-                                            focus:ring-2 focus:ring-orange-500 
-                                            font-medium text-sm px-5 
-                                            py-2.5 mr-2 mb-2 dark:bg-orange-600 
-                                            dark:hover:bg-orange-700 
-                                            dark:focus:ring-orange-700 
-                                            dark:border-orange-700">Sign Up</a>
-                                    </Link>
-                                    <Link href="/signin">
-                                    <a 
-                                        type="button" 
-                                        className="
-                                            text-gray-900 
-                                            bg-white border 
-                                            rounded-sm
-                                            hover:text-white
-                                            border-gray-300 focus:outline-none 
-                                            hover:bg-[#0b73a4] focus:ringf-4 
-                                            focus:ring-gray-200 font-medium 
-                                            text-sm px-5 py-2.5 
-                                            mr-2 mb-2 dark:bg-gray-800 
-                                            dark:text-white dark:border-gray-600 
-                                            dark:hover:bg-gray-700 
-                                            dark:hover:border-gray-600 
-                                            dark:focus:ring-gray-700">Sign In</a>
-                                    </Link>
+                                    {
+                                        isAuthenticated ? ( 
+                                            <Popover
+                                                as="header"           
+                                                >                                      
+                                                <Popover.Panel as="nav" className="lg:hidden" aria-label="Global">
+                                                    <div className="border-t border-gray-200 pt-4">
+                                                        <div className="max-w-3xl mx-auto px-4 flex items-center sm:px-6">
+                                                            <div className="flex-shrink-0">
+                                                            <span
+                                                                className="
+                                                                    inline-flex
+                                                                    items-center
+                                                                    px-3
+                                                                    p-2
+                                                                    rounded-full
+                                                                    text-sm
+                                                                    font-medium
+                                                                    bg-orange-600
+                                                                    text-white
+                                                                    uppercase
+                                                                    "
+                                                            >
+                                                                {user?.profile?.firstName +" "+ user?.profile?.lastName}
+                                                            </span>
+                                                            </div>
+                                                            <div className="ml-3">
+                                                            <div className="text-base font-medium text-gray-800">
+                                                            {user?.profile?.firstName +" "+ user?.profile?.lastName}
+                                                            </div>
+                                                            <div className="text-sm font-medium text-gray-500">
+                                                                {user?.email}
+                                                            </div>
+                                                            </div>
+                                                        </div>
+                                                        <div className="mt-3 max-w-3xl mx-auto px-2 space-y-1 sm:px-4">
+                                                            {clientNavigation.map((item: any) => (
+                                                            <Link key={item.name} href={item.href}>
+                                                                <a className="block rounded-md py-2 px-3 text-base font-medium text-gray-500 hover:bg-gray-50 hover:text-gray-900">
+                                                                    {item.name}
+                                                                </a>
+                                                            </Link>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="mt-6 max-w-3xl mx-auto px-4 sm:px-6"></div>
+                                                </Popover.Panel>
+                                                
+                                                <Menu as="div" className="flex-shrink-0 relative ml-5">
+                                                    <div>
+                                                    <Menu.Button
+                                                        className="
+                                                            rounded-full
+                                                            flex
+                                                            focus:outline-none
+                                                            focus:ring-2
+                                                            focus:ring-offset-2
+                                                            focus:ring-orange-500
+                                                        "
+                                                    >
+                                                        <span className="sr-only">Open user menu</span>
+                                                        <span className="lowercase m-2"> {user?.email} </span>
+                                                        <span
+                                                        className="
+                                                                inline-flex
+                                                                items-center
+                                                                px-3
+                                                                rounded-full
+                                                                text-sm
+                                                                font-medium
+                                                                bg-orange-600
+                                                                text-white
+                                                                uppercase
+                                                            "
+                                                        >
+                                                        {user?.profile?.firstName +" "+ user?.profile?.lastName}
+                                                        </span>
+                                                    </Menu.Button>
+                                                    </div>
+                                                    <Transition
+                                                    as={Fragment}
+                                                    enter="transition ease-out duration-100"
+                                                    enterFrom="transform opacity-0 scale-95"
+                                                    enterTo="transform opacity-100 scale-100"
+                                                    leave="transition ease-in duration-75"
+                                                    leaveFrom="transform opacity-100 scale-100"
+                                                    leaveTo="transform opacity-0 scale-95"
+                                                    >
+                                                    <Menu.Items className="origin-top-right absolute z-10 right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 py-1 focus:outline-none">
+                                                        {clientNavigation.map((item: any) => (
+                                                        <Menu.Item key={item.name}>
+                                                            {({ active }) => (
+                                                            <Link href={item.href}>
+                                                                <a
+                                                                className = "block py-2 px-4 text-sm text-gray-700"
+                                                                
+                                                                >
+                                                                {item.name}
+                                                                </a>
+                                                            </Link>
+                                                            )}
+                                                        </Menu.Item>
+                                                        ))}
+                                                        <Menu.Item key="signout">
+                                                            <a
+                                                            className="bg-gray-100 block py-2 px-4 text-sm text-gray-700"
+                                                            onClick={() => logout()}
+                                                            >
+                                                            Sign out
+                                                            </a>
+                                                        </Menu.Item>
+                                                    </Menu.Items>
+                                                    </Transition>
+                                                </Menu>
+                                            </Popover>     
+                                        ) : (
+                                            <>                                                            
+                                                <Link href="/signup">
+                                                <a 
+                                                    type="button" 
+                                                    className="
+                                                        text-white bg-orange-500
+                                                        focus:ring-offset-2 
+                                                        rounded-sm
+                                                        hover:bg-orange-600 focus:outline-none 
+                                                        focus:ring-2 focus:ring-orange-500 
+                                                        font-medium text-sm px-5 
+                                                        py-2.5 mr-2 mb-2 dark:bg-orange-600 
+                                                        dark:hover:bg-orange-700 
+                                                        dark:focus:ring-orange-700 
+                                                        dark:border-orange-700">Sign Up</a>
+                                                </Link>
+                                                <Link href="/signin">
+                                                <a 
+                                                    type="button" 
+                                                    className="
+                                                        text-gray-900 
+                                                        bg-white border 
+                                                        rounded-sm
+                                                        hover:text-white
+                                                        border-gray-300 focus:outline-none 
+                                                        hover:bg-[#0b73a4] focus:ringf-4 
+                                                        focus:ring-gray-200 font-medium 
+                                                        text-sm px-5 py-2.5 
+                                                        mr-2 mb-2 dark:bg-gray-800 
+                                                        dark:text-white dark:border-gray-600 
+                                                        dark:hover:bg-gray-700 
+                                                        dark:hover:border-gray-600 
+                                                        dark:focus:ring-gray-700">Sign In</a>
+                                                </Link>
+                                            </>
+                                        )
+                                    }
                                 </div>
                                 <div className="flex lg:hidden">
                                     <button aria-label="show options" onClick={() => setMdOptionsToggle(!mdOptionsToggle)} className="text-black dark:text-white dark:hover:text-gray-300 hidden md:flex focus:outline-none focus:ring-2 rounded focus:ring-gray-600">
@@ -152,7 +298,7 @@ const Navigation = () => {
                         <div className="mt-6 p-4">
                             <ul className="flex flex-col space-y-6">
                                 <li>
-                                    <a href="javascript:void(0)" className="dark:text-white flex items-center justify-between hover:underline text-base text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800">
+                                    <a href="#" className="dark:text-white flex items-center justify-between hover:underline text-base text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800">
                                         Home
                                         <div>
                                             <svg className="fill-stroke text-black dark:text-white" width={12} height={12} viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -162,7 +308,7 @@ const Navigation = () => {
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="javascript:void(0)" className="dark:text-white flex items-center justify-between hover:underline text-base text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800">
+                                    <a href="#" className="dark:text-white flex items-center justify-between hover:underline text-base text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800">
                                         Furniture
                                         <div>
                                             <svg className="fill-stroke text-black dark:text-white" width={12} height={12} viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -172,7 +318,7 @@ const Navigation = () => {
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="javascript:void(0)" className="dark:text-white flex items-center justify-between hover:underline text-base text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800">
+                                    <a href="#" className="dark:text-white flex items-center justify-between hover:underline text-base text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800">
                                         Lookbook
                                         <div>
                                             <svg className="fill-stroke text-black dark:text-white" width={12} height={12} viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -182,7 +328,7 @@ const Navigation = () => {
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="javascript:void(0)" className="dark:text-white flex items-center justify-between hover:underline text-base text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800">
+                                    <a href="#" className="dark:text-white flex items-center justify-between hover:underline text-base text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800">
                                         Support
                                         <div>
                                             <svg className="fill-stroke text-black dark:text-white" width={12} height={12} viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -196,7 +342,7 @@ const Navigation = () => {
                         <div className="h-full flex items-end">
                             <ul className="flex flex-col space-y-8 bg-gray-50 w-full py-10 p-4 dark:bg-gray-800">
                                 <li>
-                                    <a href="javascript:void(0)" className="dark:text-white text-gray-800 flex items-center space-x-2 focus:outline-none focus:ring-2 focus:ring-gray-800 hover:underline">
+                                    <a href="#" className="dark:text-white text-gray-800 flex items-center space-x-2 focus:outline-none focus:ring-2 focus:ring-gray-800 hover:underline">
                                         <div>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" className="bi bi-cart" viewBox="0 0 22 22"> 
                                             <path 
@@ -208,7 +354,7 @@ const Navigation = () => {
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="javascript:void(0)" className="dark:text-white text-gray-800 flex items-center space-x-2 focus:outline-none focus:ring-2 focus:ring-gray-800 hover:underline">
+                                    <a href="#" className="dark:text-white text-gray-800 flex items-center space-x-2 focus:outline-none focus:ring-2 focus:ring-gray-800 hover:underline">
                                         <div>
                                             <svg className="fill-stroke" width={20} height={20} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path

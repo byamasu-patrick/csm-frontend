@@ -1,13 +1,13 @@
 import axios from "axios"
 import { AddProductModel, ProductModel } from "../../models/shops/catalogs/ProductModels";
-const clientUrl = 'http://localhost:8000';
+const clientUrl = 'http://localhost:5000/api/v1';
 export const getProducts = async () =>{
     var result  = await axios.get(`${clientUrl}/Catalog`);
     return result.data;
 }
 
-export const getProductsByShopOwner = async (ownerId: number) =>{
-    var result  = await axios.get(`${clientUrl}/Catalog/GetProductsByShopOwner/${ownerId}`);
+export const getProductsByShopOwner = async (ownerId: string) =>{
+    var result  = await axios.get(`${clientUrl}/Catalog/GetProductByOwner/${ownerId}`);
     return result.data;
 }
 

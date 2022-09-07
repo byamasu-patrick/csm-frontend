@@ -47,16 +47,17 @@ export const signInWithEmailAndPassword = createAsyncThunk<void, { email: string
           const decodedToken = decodeJwtToken(content.data?.accessToken!);
           
           const userModel: User & TokenModel = {
-             accessToken: content.data?.accessToken!,
-             refreshToken: content.data?.refreshToken!,
-             validTo: content.data?.validTo!,
-             email: decodedToken.email,
-             emailConfirmed: decodedToken.email_confirmed === "true",
-             userType: decodedToken.role,
-             profile: {
-                firstName: decodedToken.name,
-                lastName: decodedToken.family_name
-             }
+            id: Number(decodedToken.sub),
+            accessToken: content.data?.accessToken!,
+            refreshToken: content.data?.refreshToken!,
+            validTo: content.data?.validTo!,
+            email: decodedToken.email,
+            emailConfirmed: decodedToken.email_confirmed === "true",
+            userType: decodedToken.role,
+            profile: {
+               firstName: decodedToken.name,
+               lastName: decodedToken.family_name
+            }
           };
  
           setLocalTokenStorage(content.data!);
@@ -92,17 +93,18 @@ export const registerWithEmailAndPassword = createAsyncThunk<void, {
     email: string,
     password: string,
     firstName: string,
-    lastName: string
+    lastName: string,
+    accountType: string
  }>(
     ActionType.REGISTER_WITH_EMAIL_AND_PASSWORD,
     async (
        credentials,
        thunkApi,
     ) => {
-       const { email, firstName, lastName, password } = credentials;
+       const { email, firstName, lastName, password, accountType } = credentials;
        thunkApi.dispatch(authLoading(true));
-       const registerErrResult = await register(email, password, firstName, lastName);
-        console.log("Creating an account");
+       const registerErrResult = await register(email, password, firstName, lastName, accountType);
+        console.log(registerErrResult);
        if (registerErrResult) {
           thunkApi.dispatch(authError({
             code: 500, 
@@ -134,9 +136,7 @@ export const registerWithEmailAndPassword = createAsyncThunk<void, {
  );
  
  export const logOut = createAction(ActionType.LOGOUT, () => {
-    clearLocalTokenStorage();
-
-    
+    clearLocalTokenStorage();    
 
     return {
        payload: null

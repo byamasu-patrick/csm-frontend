@@ -106,6 +106,13 @@ export const userNavigation: Array<UserNavigation> = [
     { name: "Your Profile", href: "/shop/settings/edit" },
     { name: "Settings", href: "/shop/settings" },
 ];
+
+export const clientNavigation: Array<UserNavigation> = [
+    { name: "Your Profile", href: "/user/settings/edit" },
+    { name: "Ordered Products", href: "/user/order-summary" },
+    { name: "Settings", href: "/user/settings" },
+];
+  
   
   
 export const user:  User = {

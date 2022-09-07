@@ -1,11 +1,14 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
+import React, { ReactElement } from 'react';
 import Image from 'next/image';
+import ClientLayout from '../../components/layouts/clients-layout';
 import OrderDetails from '../../components/pages/user/ordering/OrderDetails';
+import { NextPageWithLayout } from '../_app';
 
-const Order: NextPage = () => {
+const Order: NextPageWithLayout = () => {
   return (   
-      <div className="bg-white py-16 px-4 overflow-hidden sm:px-6 lg:px-8 lg:py-24">
+      <div className="bg-white py-5 px-4 overflow-hidden sm:px-6 lg:px-8 lg:py-6">
         <div className="relative max-w-xl mx-auto">
           <svg
               className="absolute left-full transform translate-x-1/2"
@@ -55,6 +58,10 @@ const Order: NextPage = () => {
         <OrderDetails />  
       </div>
   )
+}
+
+Order.getLayout = function getLayout(page: ReactElement){
+  return <ClientLayout> { page } </ClientLayout>
 }
 
 export default Order;

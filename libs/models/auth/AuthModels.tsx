@@ -10,10 +10,11 @@ export enum AuthProviderEnum {
  export enum UserType {
     Anonymous = 'Anonymous',
     Admin = "Admin",
+    ShopOwner = "Shop-Owner",
     FreeUser = "Free-User",
     PremiumUser = "Premium-User",
  }
- 
+
  export interface AuthError {
     code: ErrorEnum,
     message: string
@@ -83,4 +84,5 @@ export enum AuthProviderEnum {
     password: string;
     firstName: string;
     lastName: string;
+    accountType: string;
  }

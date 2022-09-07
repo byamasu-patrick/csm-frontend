@@ -1,5 +1,5 @@
 // react
-import React, { ReactElement } from "react";
+import React, { ReactElement, useEffect } from "react";
 import { Fragment } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -15,10 +15,27 @@ import { NextComponentType } from "next";
 import ShopLayout from "../../components/layouts/shop-layout";
 import Analytics from "../../components/pages/shop/Statistics/Analytics";
 import Head from "next/head";
+import { useAppDispatch, useAppSelector } from "../../libs/store";
+import { GetAllProductsByOwner, ProductSelector } from "../../libs/store/Catalog";
+import { AuthSelector } from "../../libs/store/Auth";
 
 const Shop: NextPageWithLayout = () => {
     const router = useRouter();
     const pathname =  router.pathname;
+
+    const dispatch = useAppDispatch();
+    const { productsOwner } = useAppSelector(ProductSelector);
+    const { user } = useAppSelector(AuthSelector);
+
+    useEffect(() => {
+      if(user !== null){
+        const getProducts = async () => {          
+          await dispatch(GetAllProductsByOwner(user?.email));
+        }
+        getProducts().catch((error) => console.log(error));
+      }
+      
+    }, []);
    
     return (
       <>      

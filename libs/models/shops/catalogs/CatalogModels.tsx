@@ -40,74 +40,7 @@ export const optionsMUITable : MUIDataTableOptions = {
     } 
 };
 
-// export const data: Array<CatalogData> = [
-    
-//         {
-//           "id": "1",
-//           "name": "IPhone X",
-//           "category": "Smart Phone",
-//           "summary": "This phone is the company's.",
-//           "imageFile": "https://kwingy.com/wp-content/uploads/2022/06/apple-iphone-x-new-1-1.jpg",
-//           "price": 950,
-//           "itemsInStock": 98
-//         },
-//         {
-//           "id": "2",
-//           "name": "Samsung 10",
-//           "category": "Smart Phone",
-//           "summary": "This phone is the company's.",
-//           "imageFile": "https://www.samsung.com/global/galaxy/galaxy-z-flip4/images/galaxy-z-flip4_highlights_kv.jpg",
-//           "price": 840,
-//           "itemsInStock": 78
-//         },
-//         {
-//           "id": "3",
-//           "name": "Huawei Plus",
-//           "category": "White Appliances",
-//           "summary": "This phone is the company's.",
-//           "imageFile": "https://www.gizmochina.com/wp-content/uploads/2017/01/Huawei-nova-plus.jpg",
-//           "price": 650,
-//           "itemsInStock": 200
-//         },
-//         {
-//           "id": "4",
-//           "name": "Xiaomi Mi 9",
-//           "category": "White Appliances",
-//           "summary": "This phone is the company's.",
-//           "imageFile": "https://media.router-switch.com/media/catalog/product/cache/b90fceee6a5fa7acd36a04c7b968181c/x/i/xiaomi-mi-11-5g_3.jpg",
-//           "price": 470,
-//           "itemsInStock": 62
-//         },
-//         {
-//           "id": "5",
-//           "name": "HTC U11+ Plus",
-//           "category": "Smart Phone",
-//           "summary": "This phone is the company's.",
-//           "imageFile": "https://www.zdnet.com/a/img/resize/681faf2113dca46191de9cee5dc3d35b40bb8ada/2018/01/16/b14982a8-eea3-4614-ae5f-c77cc6e36ea8/htc-u11-plus-header.jpg?auto=webp&width=768",
-//           "price": 380,
-//           "itemsInStock": 62
-//         },
-//         {
-//           "id": "6",
-//           "name": "LG G7 ThinQ",
-//           "category": "Home Kitchen",
-//           "summary": "This phone is the company's.",
-//           "imageFile": "https://fdn2.gsmarena.com/vv/pics/lg/lg-g7-thinq-00.jpg",
-//           "price": 240,
-//           "itemsInStock": 168
-//         }        
-// ];
-
 export const catalogColumns: Array<CatalogColumn> = [
-    {
-        name: "id",
-        label: "Id",
-        options: {
-            filter: false,
-            sort: true,
-            customBodyRender: null
-        }
-    },
     {
         name: "imageFile",
         label: "Image",
@@ -116,7 +49,7 @@ export const catalogColumns: Array<CatalogColumn> = [
             sort: false,
             customBodyRender: (imageFile: string): ReactElement => {
                 return (
-                    <Avatar variant="rounded" src={`data:image/png;base64,${imageFile}`} />
+                    <img variant="rounded" width="60" height="60" src={`${imageFile}`} />
                 );
             }
         }
@@ -127,7 +60,9 @@ export const catalogColumns: Array<CatalogColumn> = [
         options: {
             filter: true,
             sort: false,
-            customBodyRender: null
+            customBodyRender: (name) => {
+                return name.substr(0, 15)
+            }
         }
     },
     {
@@ -145,7 +80,9 @@ export const catalogColumns: Array<CatalogColumn> = [
         options: {
             filter: true,
             sort: false,
-            customBodyRender: null
+            customBodyRender: (summaryData) => {
+                return summaryData.substr(0, 25)
+            }
         }
     },
     {

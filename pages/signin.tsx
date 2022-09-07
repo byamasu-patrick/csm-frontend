@@ -10,6 +10,7 @@ import { clearAuthError, signInWithEmailAndPassword } from "../libs/store/Auth/a
 import Loader from "../components/widgets/loader";
 import { FormatAlignCenterOutlined } from "@mui/icons-material";
 import Swal from "sweetalert2";
+import { UserType } from "../libs/models/auth/AuthModels";
 
 const Signin: React.FC = () => {
    const [password, setPassword] = useState<string>('');
@@ -25,7 +26,9 @@ const Signin: React.FC = () => {
    useEffect(() => {
       const returnUrl = router.query['returnUrl'];
       isAuthenticated && returnUrl && router.push(`${returnUrl}`);
-      isAuthenticated && !returnUrl && router.push('/shop');
+
+      isAuthenticated && !returnUrl && (user?.userType == UserType.ShopOwner) && router.push('/shop');
+      isAuthenticated && !returnUrl && (user?.userType == UserType.FreeUser) && router.push('/');
    }, [isAuthenticated]);
 
    useEffect(() => {
@@ -65,7 +68,7 @@ const Signin: React.FC = () => {
           title: 'Oops...',
           text: errors,
           confirmButtonText: 'OK',
-          confirmButtonColor: '#8CD4F5',
+           confirmButtonColor: 'rgb(249 115 22)',
         });
       }
       else{

@@ -5,17 +5,22 @@ import type { NextPageWithLayout } from '../../_app';
 import React, { Component, useEffect, useState } from "react";
 import MUIDataTable, { MUIDataTableOptions } from "mui-datatables";
 import OrderDetails from '../../../components/pages/shop/Shippment/OrderDetails';
+import { useAppDispatch, useAppSelector } from '../../../libs/store';
+import { AuthSelector } from '../../../libs/store/Auth';
+import { ProductSelector } from '../../../libs/store/Catalog';
+import { GetOrderedProducts } from '../../../libs/store/Basket';
 
 const Orders: NextPageWithLayout = () => {
-    const columns = ["Name", "Company", "City", "State"];
+    const dispatch = useAppDispatch();
+    const { user } = useAppSelector(AuthSelector);
+    const { productsOwner } = useAppSelector(ProductSelector);
 
-    const data = [
-        ["Joe James", "Test Corp", "Yonkers", "NY"],
-        ["John Walsh", "Test Corp", "Hartford", "CT"],
-        ["Bob Herm", "Test Corp", "Tampa", "FL"],
-        ["James Houston", "Test Corp", "Dallas", "TX"],
-        
-    ];
+    useEffect(() => {
+      const fetchOrders = async () => {
+        await dispatch(GetOrderedProducts(''));
+      };
+      fetchOrders().catch(error => console.log(error));
+    }, []);
 
     const options: MUIDataTableOptions = {
         filterType: 'checkbox',

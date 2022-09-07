@@ -7,13 +7,15 @@ const registerWithEmailAndPassword = async (
     email: string,
     password: string,
     firstName: string,
-    lastName: string
+    lastName: string,
+    accountType: string
  ): Promise<AuthError | void> => {
     var data: RegisterParamModel = {
        email,
        password,
        firstName,
        lastName,
+       accountType
     };
  
     try {

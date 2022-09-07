@@ -6,12 +6,16 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useAppDispatch, useAppSelector } from "../libs/store";
 import { AuthSelector } from "../libs/store/Auth/selectors";
 import { clearAuthError, registerWithEmailAndPassword } from "../libs/store/Auth/actions";
+import { UserType } from "../libs/models/auth/AuthModels";
+import Swal from "sweetalert2";
 
 const Signup: React.FC = () => {
   const [password, setPassword] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [firstName, setFirstName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
+  const [confirmPassword, setConfirmPassword] = useState<string>('');
+  const [accountType, setAccountType] = useState<string>('');
 
   const { isAuthenticated, error, isLoading } = useAppSelector(AuthSelector);
   const dispatch = useAppDispatch();
@@ -26,24 +30,37 @@ const Signup: React.FC = () => {
      dispatch(clearAuthError());
   }, []);
 
-  const submitForm = async (email:string , firstName: string, lastName: string, password: string) => {
+  const submitForm = async () => {
     //  event.preventDefault();
-     var result = await dispatch(
+    if(!email && !password && !firstName && !lastName && !accountType){
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: "Fill all the inputs please",
+        confirmButtonText: 'OK',
+         confirmButtonColor: 'rgb(249 115 22)',
+      });
+    }
+    else{
+      var result = await dispatch(
         registerWithEmailAndPassword({
            email,
            password,
            firstName,
            lastName,
+           accountType
         })
-     );
-     console.log(result);
-     if (result.meta.requestStatus !== 'rejected')
-        router.push({
-           pathname: '/auth/emailnotconfirmed',
-           query: {
-              email: email,
-           },
-        });
+      );
+      console.log(result);
+      if (result.meta.requestStatus !== 'rejected')
+          router.push({
+            pathname: '/auth/emailnotconfirmed',
+            query: {
+                email: email,
+            },
+          });
+    }
+    
   };
 
     return (
@@ -104,57 +121,32 @@ const Signup: React.FC = () => {
 
                 </p>
               </div>
-              <div className="mt-12">
-                <Formik
-                  initialValues={{
-                    firstName: "",
-                    lastName: "",
-                    email: "",
-                    password: "",
-                    confirmPassword: "",
-                    status: false,
-                  }}
-                  onSubmit={(data, { resetForm }) => {                    
-                    
-                    submitForm(data.email, data.firstName,
-                      data.lastName, data.password);
-                    resetForm({ values: {
-                      firstName: "",
-                      lastName: "",
-                      email: "",
-                      password: "",
-                      confirmPassword: "",
-                      status: false
-                    } });
-                  }}
-                >
-                  {({ touched, errors, isSubmitting, values }) => (
+              <div className="mt-12">              
                     <div className="">
-                      <Form className="grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-8" >
+                      <form 
+                        onSubmit={(event) => {
+                          event.preventDefault();
+                          submitForm();
+                        }}
+                        className="
+                          grid grid-cols-1 
+                          gap-y-6 
+                          sm:grid-cols-2 sm:gap-x-8" >
                         <div className="sm:col-span-2">
                           <label htmlFor="username" className="block text-sm font-medium text-gray-700">
                             First Name
                           </label>
                           <div className="mt-1">
-                            <Field
+                            <input
                               type="text"
                               name="firstName"
                               id="firstName"
                               autoComplete="firstName"
                                className={`appearance-none block w-full px-3 py-3 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none  sm:text-sm
-                                ${touched.firstName &&
-                                    errors.firstName
-                                    ? "is-invalid  focus:ring-red-500 focus:border-red-500 "
-                                    : "focus:ring-orange-500 focus:border-orange-500"
-                                  }`}
+                               focus:ring-orange-500 focus:border-orange-500`}
                               placeholder="Donald"
-                              // value={firstName}
-                              // onChange={(event: any) => setEmail(event.target.value)}
-                            />
-                            <ErrorMessage
-                              component="span"
-                              name="firstName"
-                              className="invalid-feedback"
+                              value={firstName}
+                              onChange={(event: any) => setFirstName(event.target.value)}
                             />
                           </div>
                         </div>
@@ -164,23 +156,16 @@ const Signup: React.FC = () => {
                           </label>
                           <div className="mt-1 relative rounded-md shadow-sm">
 
-                            <Field
+                            <input
                               id="lastName"
                               name="lastName"
                               type="text"
                               placeholder="Phiri"
                               autoComplete="lastName"                              
                               className={`appearance-none block w-full px-3 py-3 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none  sm:text-sm
-                              ${touched.lastName &&
-                                  errors.lastName
-                                  ? "is-invalid  focus:ring-red-500 focus:border-red-500 "
-                                  : "focus:ring-orange-500 focus:border-orange-500"
-                                }`}
-                            />
-                            <ErrorMessage
-                              component="span"
-                              name="lastName"
-                              className="invalid-feedback"
+                              focus:ring-orange-500 focus:border-orange-500"`}
+                              value={lastName}
+                              onChange={(event: any) => setLastName(event.target.value)}
                             />
                           </div>
                         </div>
@@ -190,18 +175,16 @@ const Signup: React.FC = () => {
                             Email
                           </label>
                           <div className="mt-1">
-                            <Field
+                            <input
                               id="email"
                               name="email"
                               type="email"
                               placeholder="donald.phiri@gmail.com"
                               autoComplete="email"
                               className={`appearance-none block w-full px-3 py-3 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none  sm:text-sm
-                               ${touched.email &&
-                                   errors.email
-                                   ? "is-invalid  focus:ring-red-500 focus:border-red-500 "
-                                   : "focus:ring-orange-500 focus:border-orange-500"
-                                 }`}
+                               focus:ring-orange-500 focus:border-orange-500`}
+                               value={email}
+                               onChange={(event: any) => setEmail(event.target.value)}
                             />
                           </div>
                         </div>
@@ -211,7 +194,7 @@ const Signup: React.FC = () => {
                             Password
                           </label>
                           <div className="mt-1">
-                            <Field
+                            <input
                               id="password"
                               name="password"
                               type="password"
@@ -219,19 +202,10 @@ const Signup: React.FC = () => {
                               placeholder="Donald@2022"
                               required                              
                               className={`appearance-none block w-full px-3 py-3 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none  sm:text-sm
-                              ${touched.password &&
-                                  errors.password
-                                  ? "is-invalid  focus:ring-red-500 focus:border-red-500 "
-                                  : "focus:ring-orange-500 focus:border-orange-500"
-                                }`}
+                               focus:ring-orange-500 focus:border-orange-500`}
+                               value={password}
+                               onChange={(event: any) => setPassword(event.target.value)}
                             />
-                            <ErrorMessage
-                              component="span"
-                              name="password"
-                              className="invalid-feedback"
-                            />
-
-
                           </div>
                           <div className="flex items-center mt-1">
                             <input
@@ -251,7 +225,7 @@ const Signup: React.FC = () => {
                           </label>
                           <div className="mt-1">
 
-                            <Field
+                            <input
                               id="confirmPassword"
                               name="confirmPassword"
                               type="password"
@@ -259,19 +233,32 @@ const Signup: React.FC = () => {
                               autoComplete="confirmPassword"
                               required                              
                               className={`appearance-none block w-full px-3 py-3 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none  sm:text-sm
-                              ${touched.confirmPassword &&
-                                  errors.confirmPassword
-                                  ? "is-invalid  focus:ring-red-500 focus:border-red-500 "
-                                  : "focus:ring-orange-500 focus:border-orange-500"
-                                }`}
-                            />
-                            <ErrorMessage
-                              component="span"
-                              name="confirmPassword"
-                              className="invalid-feedback"
+                              focus:ring-orange-500 focus:border-orange-500`}
+                              value={confirmPassword}
+                              onChange={(event: any) => setConfirmPassword(event.target.value)}
                             />
                           </div>
                         </div>
+                        <div className="sm:col-span-2">
+                          <label htmlFor="accountType" className="block text-sm font-medium text-gray-700">
+                            Choose the account type
+                          </label>
+                          <div className="mt-1">
+                            <select
+                              id="accountType"
+                              name="accountType"
+                              required                              
+                              className={`appearance-none block w-full px-3 py-3 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none  sm:text-sm
+                              focus:ring-orange-500 focus:border-orange-500`}
+                              value={accountType}
+                              onChange={(event: any) => setAccountType(event.target.value)}
+                            >
+                              <option className="py-4" value={UserType.FreeUser}>{UserType.FreeUser}</option>
+                              <option value={UserType.ShopOwner}>{UserType.ShopOwner}</option>
+                            </select>
+                          </div>
+                        </div>
+                        
                         <div className="sm:col-span-2">
                           <div className="flex items-start">
                             <div className="flex-shrink-0">
@@ -308,19 +295,8 @@ const Signup: React.FC = () => {
                             Sign up
                           </button>
                         </div>
-                      </Form>
+                      </form>
                     </div>
-                  )}
-                </Formik>
-                {/* <div className="mt-5">
-                  <Link href="/signin" >
-                    <a className="font-medium text-orange-600 hover:text-orange-500">
-                      <span className="absolute inset-0" aria-hidden="true" />
-                      Go back to sign in page
-                      <span aria-hidden="true"> &rarr;</span>
-                    </a>
-                  </Link>
-                </div> */}
               </div>
 
             </div>

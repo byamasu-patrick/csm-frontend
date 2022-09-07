@@ -12,6 +12,7 @@ export type ProductState = {
    successMessage : string,
    warningMessage : string,
    products : ProductModel[], 
+   productsOwner: ProductModel[],
    productSearch : ProductSearchModel
 };
 
@@ -25,6 +26,7 @@ const initialState: ProductState = {
    successMessage : "",
    warningMessage : "",
    products : [], 
+   productsOwner: [],
    productSearch : {
       isSearching: false,
       error: "",
@@ -115,7 +117,7 @@ export const ProductReducer = createReducer(initialState, (builder) => {
 
       return {
          ...state,  
-         isGetting: !state.isGetting,
+         isGetting: false,
          products: payload       
       }
    });
@@ -127,7 +129,7 @@ export const ProductReducer = createReducer(initialState, (builder) => {
 
       return {
          ...state, 
-         isGetting : !state.isGetting, 
+         isGetting : false, 
          error: payload
       }
    });    
@@ -139,13 +141,13 @@ export const ProductReducer = createReducer(initialState, (builder) => {
    builder.addCase(getAllProductsByShopOwnerSuccess , (state , {payload}) =>{
       return {
          ...state,  
-         isGettingByOwner: !state.isGettingByOwner,
-         products: state.products         
+         isGettingByOwner: false,
+         productsOwner: payload         
       }
    });
 
    builder.addCase(getAllProductsByShopOwnerFailed , (state , {payload}) =>{
-      return {...state, isGettingByOwner : !state.isGettingByOwner, error: payload}
+      return {...state, isGettingByOwner : false, error: payload}
    });
 
 });

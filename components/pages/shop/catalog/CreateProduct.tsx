@@ -1,5 +1,6 @@
 import { Dialog, Transition } from '@headlessui/react';
 import React, { Fragment, useEffect, useState } from 'react';
+import Swal from 'sweetalert2';
 import { useAppDispatch, useAppSelector } from '../../../../libs/store';
 import { AuthSelector } from '../../../../libs/store/Auth';
 import { AddProductToDB, ProductSelector } from '../../../../libs/store/Catalog';
@@ -12,22 +13,19 @@ interface CreateProps{
 
 const CreateProduct: React.FC<CreateProps>  = (props) => {
     const [name, setName] = useState<string>('');
-    const [category, setCategory] = useState<string>('');
+    const [category, setCategory] = useState<string>('Default');
     const [summary, setSummary] = useState<string>('');
     const [description, setDescrition] = useState<string>('');
     const [imageFile, setImageFile] = useState<string>('');
     const [price, setPrice] = useState<number>(0.0);
     const [itemsInStock, setItemsInStock] = useState<number>(0);
-    const [userId, setUserId] = useState<number>(0);
 
     const dispatch = useAppDispatch();
     const { product } = useAppSelector(ProductSelector);
-    const { user } = useAppSelector(AuthSelector);
-
-        
+    const { user } = useAppSelector(AuthSelector);        
 
     const addNewProduct = () => {
-       
+        if(category !== "Default"){
             dispatch(AddProductToDB({
                 "name": name,
                 "category": category,
@@ -36,9 +34,20 @@ const CreateProduct: React.FC<CreateProps>  = (props) => {
                 "description": description,
                 "price": price,
                 "itemsInStock": itemsInStock,
-                "userId": user?.email
+                "userId": user.email
             }));
             props.setIsCreate(!props.isCreate);
+        }
+        else{
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: "Please choose the category which the product belongs to",
+                confirmButtonText: 'OK',
+                 confirmButtonColor: 'rgb(249 115 22)',
+              });
+        }
+            
     };
 
     
@@ -139,12 +148,11 @@ const CreateProduct: React.FC<CreateProps>  = (props) => {
                                                                         required
                                                                         className={`appearance-none bg-white w-full block px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none  sm:text-sm focus:ring-orange-500 focus:border-orange-500
                                                                         `}
-                                                                        onChange={(event: React.FormEvent<HTMLInputElement>) => {
-                                                                            setCategory(event?.currentTarget?.value);
-                                                                            
+                                                                        onChange={(event: any) => {
+                                                                            setCategory(event.currentTarget.value);                                                                            
                                                                         }}
                                                                     >
-                                                                        
+                                                                        <option value={category} className='text-gray-900 py-4'>{category}</option>
                                                                         <option value="Smart Phone" className='text-gray-900 py-4'>Smart Phone</option>
                                                                         <option value="White Appliances" className='text-gray-900 py-4'>White Appliances</option>
                                                                         <option value="Home Kitchen" className='text-gray-900 py-4'>Home Kitchen</option>
@@ -167,7 +175,6 @@ const CreateProduct: React.FC<CreateProps>  = (props) => {
                                                                         autoComplete="summary"
                                                                         required
                                                                         className={`appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none  sm:text-sm focus:ring-orange-500 focus:border-orange-500`}
-                                                                        
                                                                         onChange={(event: React.FormEvent<HTMLInputElement>) => {
                                                                             setSummary(event?.currentTarget?.value);
                                                                         }}
