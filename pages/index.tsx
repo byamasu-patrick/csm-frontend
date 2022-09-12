@@ -9,6 +9,8 @@ import Navigation from '../components/widgets/navigation'
 import Testimonials from '../components/widgets/testimonials/testimonials'
 import { useAppDispatch } from '../libs/store';
 import { useRouter } from 'next/router';
+import ProductCarousel from '../components/pages/user/catalog/ProductCarousel';
+import FeaturedProduct from '../components/pages/user/catalog/ProductFeatured';
 
 
 const Home: NextPage = () => {
@@ -16,7 +18,9 @@ const Home: NextPage = () => {
   return (
     <div className="md:bg-gray-50"> 
       <Navigation /> 
+      <ProductCarousel />
       <Products />    
+      <FeaturedProduct />
       <Testimonials />
       <Footer />
     </div>
