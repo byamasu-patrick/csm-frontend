@@ -8,7 +8,7 @@ const FeaturedProduct = () => {
     let featured: number = 0;
 
     const displayFeaturedProducts = () => {
-        return products.map((product, index) => {
+        return products?.results.map((product, index) => {
             featured++;
             return (
                 featured < 4 ? (

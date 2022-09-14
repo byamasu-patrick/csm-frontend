@@ -1,5 +1,5 @@
 import { createAction, createAsyncThunk } from "@reduxjs/toolkit";
-import { AddProductModel, ProductModel } from "../../models/shops/catalogs/ProductModels";
+import { AddProductModel, ProductModel, ProductResponse } from "../../models/shops/catalogs/ProductModels";
 import { AddProduct, GetProductsByName, RemoveProductById, UpdateProduct, getProducts, getProductsByShopOwner } from "../../services/CatalogService/ProductService";
 import { ProductActionType } from "./actions-type";
 
@@ -18,7 +18,7 @@ export const editFailed = createAction<string>(ProductActionType.EDIT_FAILED);
 export const editingProduct = createAction<boolean>(ProductActionType.EDITING_PRODUCT);
 // get all product
 export const gettingAllProducts  = createAction<boolean>(ProductActionType.GET_ALL_PRODUCTS);
-export const getAllProductsSuccess = createAction<ProductModel[]>(ProductActionType.GET_ALL_PRODUCTS_SUCCESS)
+export const getAllProductsSuccess = createAction<ProductResponse>(ProductActionType.GET_ALL_PRODUCTS_SUCCESS)
 export const getAllProductsFailed = createAction<string>(ProductActionType.GET_ALL_PRODUCTS_FAILED);
 // get all product by shop owner
 export const gettingAllProductsByShopOwner  = createAction<boolean>(ProductActionType.GET_ALL_PRODUCTS_BY_OWNER);
@@ -83,11 +83,11 @@ export const UpdateProductEntity = createAsyncThunk(ProductActionType.UPDATE_PRO
 });
 
 export const GetAllProducts = createAsyncThunk(ProductActionType.GET_ALL_PRODUCTS, 
-   async(id: string, thunkAPI) =>{
+   async(page: number, thunkAPI) =>{
        try{
 
             thunkAPI.dispatch(gettingAllProducts(true));
-            let result = await getProducts();
+            let result = await getProducts(page);
             thunkAPI.dispatch(getAllProductsSuccess(result));
             console.log(result);
 

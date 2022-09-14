@@ -21,7 +21,7 @@ const ProductCarousel = () => {
     const displayCarousel = () => {
         var counter: number = 0;
 
-        return [...products].reverse().map((product, index) => {
+        return [...products.results].reverse().map((product, index) => {
             counter++;
             return (            
                 (counter) < 5 ? 
@@ -48,7 +48,7 @@ const ProductCarousel = () => {
     const displayCarouselLargeScreen = () => {
         var counter: number = 0;
 
-        return [...products].reverse().map((product, index) => {
+        return [...products.results].reverse().map((product, index) => {
             counter++;
             return (            
                 (counter) < 6 ? 

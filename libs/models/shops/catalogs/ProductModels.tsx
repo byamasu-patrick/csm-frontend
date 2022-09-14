@@ -11,6 +11,12 @@ export interface ProductModel {
     userId: string;
 };
 
+export interface ProductResponse {
+    currentPage: number;
+    results: ProductModel[];
+    totalPages: number;
+}
+
 export interface AddProductModel {
     name: string;
     category: string;

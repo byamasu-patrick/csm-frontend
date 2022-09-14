@@ -24,7 +24,7 @@ const Products = () => {
 
     useEffect(() => {
        const fetchProducts = async () => {
-            await dispatch(GetAllProducts(""));
+            await dispatch(GetAllProducts(1));
        };
        fetchProducts().catch((error) => console.log(error));
 
@@ -40,7 +40,7 @@ const Products = () => {
 
     useEffect(() => {
         const fetchProducts = async () => {
-             await dispatch(GetAllProducts(""));
+             await dispatch(GetAllProducts(1));
         };
         fetchProducts().catch((error) => console.log(error));
  
@@ -82,7 +82,7 @@ const Products = () => {
                             <div className="mx-auto container pb-8">
                                 <div className="flex flex-wrap items-center lg:justify-between justify-center">
                                     {
-                                        products.map((product, key) => {
+                                        products?.results.map((product, key) => {
                                             return (
                                                 <div key={key} className="mx-2 w-64 lg:mb-4 mb-8 hover:bg-gray-100 hover:cursor-pointer hover:shadow">
                                                     <div>

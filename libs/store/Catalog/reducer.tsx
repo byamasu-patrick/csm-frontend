@@ -1,5 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit';   
-import { ProductModel, ProductSearchModel } from '../../models/shops/catalogs/ProductModels';
+import { ProductModel, ProductResponse, ProductSearchModel } from '../../models/shops/catalogs/ProductModels';
 import { adddProductFailed, addingProduct, addProductSuccess, editFailed, editingProduct, editSuccess, getAllProductsByShopOwnerFailed, getAllProductsByShopOwnerSuccess, getAllProductsFailed, getAllProductsSuccess, gettingAllProducts, gettingAllProductsByShopOwner, productSearching, productSearchingFailed, productSearchingSuccess } from './actions';
 
 export type ProductState = {
@@ -11,7 +11,7 @@ export type ProductState = {
    isGettingByOwner : boolean,
    successMessage : string,
    warningMessage : string,
-   products : ProductModel[], 
+   products : ProductResponse, 
    productsOwner: ProductModel[],
    productSearch : ProductSearchModel
 };
@@ -25,7 +25,11 @@ const initialState: ProductState = {
    isGettingByOwner : false,
    successMessage : "",
    warningMessage : "",
-   products : [], 
+   products : {
+      currentPage: 0,
+      results: [],
+      totalPages: 0
+   }, 
    productsOwner: [],
    productSearch : {
       isSearching: false,
@@ -111,14 +115,10 @@ export const ProductReducer = createReducer(initialState, (builder) => {
    });
 
    builder.addCase(getAllProductsSuccess , (state , {payload}) =>{
-
-
-
-
       return {
          ...state,  
          isGetting: false,
-         products: payload       
+         products: {...payload}       
       }
    });
 
@@ -142,7 +142,7 @@ export const ProductReducer = createReducer(initialState, (builder) => {
       return {
          ...state,  
          isGettingByOwner: false,
-         productsOwner: payload         
+         productsOwner: [...payload]         
       }
    });
 

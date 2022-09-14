@@ -32,7 +32,7 @@ const ShoppingCart: NextPageWithLayout = () => {
                                 {
                                     cart !== null ? (                                        
                                             cart.items.map((productItem) => {
-                                                return products.filter((product) => product.id === productItem.productId).map((product) => {
+                                                return products?.results.filter((product) => product.id === productItem.productId).map((product) => {
                                                     return (
                                                         <div className="md:flex items-center mt-14 py-8 border-t border-gray-200">
                                                         <div className="w-1/4">
