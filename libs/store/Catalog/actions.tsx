@@ -89,7 +89,7 @@ export const GetAllProducts = createAsyncThunk(ProductActionType.GET_ALL_PRODUCT
             thunkAPI.dispatch(gettingAllProducts(true));
             let result = await getProducts(page);
             thunkAPI.dispatch(getAllProductsSuccess(result));
-            console.log(result);
+            // console.log(result);
 
        }catch(error){
             var errorMessage = (error as string);

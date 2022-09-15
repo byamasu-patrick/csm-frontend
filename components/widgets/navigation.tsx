@@ -24,6 +24,15 @@ const Navigation = () => {
         dispatch(logOut());
         router.push('/signin');
     }
+    // useEffect(() => {        
+    //    if(isAuthenticated && basketSearch.searchResult  ===  null){            
+    //         const fetchShoppingCart = async () => {
+    //             await dispatch(searchBasketsData(user?.profile?.firstName +" "+ user?.profile?.lastName));
+    //             console.log("Cart Search: ", basketSearch.searchResult);
+    //         }
+    //         fetchShoppingCart().catch((error) => console.log(error));
+    //     }
+    // }, [isAuthenticated]);
 
     return (
         <div className="dark:bg-gray-900 bg-gray-50">
@@ -92,10 +101,10 @@ const Navigation = () => {
                                         <a aria-label="go to cart" className="text-gray-800 hover:cursor-pointer dark:hover:text-gray-300 hover:text-gray-900 dark:text-white">
                                             <AddShoppingCartIcon  sx={{ fontSize: 28 }}/>
                                             {
-                                                (cart?.items.length !== 0) && (cart !== null) || (basketSearch.searchResult?.items.length !== 0) && (cart !== null)  ?
+                                                (cart?.items.length >= 1) && (cart !== null) || (basketSearch.searchResult?.items.length >= 1) && (cart !== null)  ?
                                                 (
                                                     <div className="inline-flex relative -top-4 right-2 justify-center items-center w-6 h-6 text-sm font-bold text-white bg-[rgb(11,115,164)] rounded-full border-2 border-white dark:border-gray-900">
-                                                        { cart?.items.length || basketSearch.searchResult?.items.length }
+                                                        { cart.items.length === 0 ?  basketSearch.searchResult.items.length : cart.items.length }
                                                     </div>
                                                 ) : (<></>)
                                             }

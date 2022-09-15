@@ -55,16 +55,16 @@ const OrderDetails = () => {
     }, []);
 
     useEffect(() => {
-        if(cart == null && basketSearch.searchResult == null){
-            setCardName("");
-            setCardNumber("");
-            setAddressLine("");
-            setCvv("");
-            setCountry("Country");
-            setDistrict("City");
-            setEmail("");
-            setExpireDate("");
-            setZipCode("");
+        if(cart === null && basketSearch.searchResult === null){
+            // setCardName("");
+            // setCardNumber("");
+            // setAddressLine("");
+            // setCvv("");
+            // setCountry("Country");
+            // setDistrict("City");
+            // setEmail("");
+            // setExpireDate("");
+            // setZipCode("");
 
             router.push('/');
         }
@@ -97,11 +97,10 @@ const OrderDetails = () => {
             };
 
             shopInfo.products = [...productIds];
+            console.log("Ordering Info: ", shopInfo);
             await dispatch(CheckoutBasket(shopInfo));            
         }
         else{
-            // var productIds = cart !== null ? getProductId(cart.items) : getProductId(basketSearch?.searchResult?.items);
-            // console.log(productIds);
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',

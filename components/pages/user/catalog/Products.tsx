@@ -8,7 +8,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { AuthSelector } from "../../../../libs/store/Auth";
 import { UserType } from "../../../../libs/models/auth/AuthModels";
 import { useRouter } from "next/router";
-import { AddBasketToDB, BasketSelector, searchBasketsData } from "../../../../libs/store/Basket";
+import { AddBasketToDB, BasketSelector, searchBasketsData, UpdateBasketDB } from "../../../../libs/store/Basket";
 import ProductDetails from "./ProductDetails";
 
 
@@ -19,24 +19,28 @@ const Products = () => {
     const dispatch = useAppDispatch();
     const { products, isGetting, productsOwner } = useAppSelector(ProductSelector);
     const { user, isAuthenticated } = useAppSelector(AuthSelector);
-    const { isAdding, cart, basketSearch } = useAppSelector(BasketSelector);
+    const { isAdding, cart, basketSearch, isUpdating, successMessage } = useAppSelector(BasketSelector);
     const router = useRouter();
 
     useEffect(() => {
        const fetchProducts = async () => {
             await dispatch(GetAllProducts(1));
        };
-       fetchProducts().catch((error) => console.log(error));
+       fetchProducts().catch((error) => console.log(error));       
+    }, []);
 
-       if(isAuthenticated && basketSearch.searchResult  ===  null){            
+    useEffect(() => {
+        if(isAuthenticated){            
             const fetchShoppingCart = async () => {
                 await dispatch(searchBasketsData(user?.profile?.firstName +" "+ user?.profile?.lastName));
-                console.log("Cart Length: ", cart?.items.length, user?.profile?.firstName +" "+ user?.profile?.lastName);
-                console.log("Cart Search: ", basketSearch.searchResult);
+                // console.log("Cart Length: ", cart?.items.length, user?.profile?.firstName +" "+ user?.profile?.lastName);
+                console.log("Cart Search Result: ", basketSearch.searchResult);
             }
             fetchShoppingCart().catch((error) => console.log(error));
         }
-    }, []);
+        // console.log("Cart Length: ", cart?.items.length, user?.profile?.firstName +" "+ user?.profile?.lastName);
+        // console.log("Cart Search: ", basketSearch.searchResult);
+    }, [isAuthenticated])
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -46,6 +50,18 @@ const Products = () => {
  
      }, [productsOwner]);
 
+     useEffect(() => {
+        const updatingBasketToDb = async () => {           
+            if(!isUpdating && successMessage === "Successfully updated to basket"){
+                await dispatch(AddBasketToDB({
+                    userName: cart.userName,
+                    items: cart.items                   
+                }));       
+            }
+        }
+        updatingBasketToDb().catch((error) => console.log(error));
+     }, [cart.items])
+
     const addToBasket = async (productPrice: number, productId: string, name: string,  ) => {
         if(user == null){
             if(!isAuthenticated && user?.userType !== UserType.FreeUser){
@@ -54,16 +70,28 @@ const Products = () => {
         }
         else{
             
-            await dispatch(AddBasketToDB({
-                userName: user?.profile?.firstName +" "+ user?.profile?.lastName,
-                items: [{
+            if(cart.items.length === 0){
+                await dispatch(AddBasketToDB({
+                    userName: user?.profile?.firstName +" "+ user?.profile?.lastName,
+                    items: [{
+                        quantity: 1,
+                        color: "blue",
+                        price: productPrice,
+                        productId: productId,
+                        productName: name
+                    }]                    
+                }));
+            }
+            else{
+
+                await dispatch(UpdateBasketDB({
                     quantity: 1,
                     color: "blue",
                     price: productPrice,
                     productId: productId,
                     productName: name
-                }]
-            }));
+                }));
+            }
             if(!isAdding){
                 setAddCart(0);
             }
@@ -73,7 +101,7 @@ const Products = () => {
     return (
         <>
             <div className="w-full md:flex md:flex-cols bg-gray-100 py-8 px-4 overflow-hidden sm:px-6 lg:px-8 lg:py-12">  
-                <div className="w-full sm:w-full md:w-4/12 lg:w-3/12 bg-white mr-12">
+                <div className="w-full sm:w-full md:w-4/12 lg:w-3/12 bg-white mr-6 h-[530px] mb-6">
                     <ProductSort />
                 </div>  
                 {

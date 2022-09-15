@@ -21,13 +21,41 @@ const Pagination = () => {
 
     return (
         <>
-            <div className="flex items-center justify-center py-10 lg:px-0 sm:px-6 px-4">
-                <div className="lg:w-3/5 w-full  flex items-center justify-between border-t border-gray-200">
+            <div 
+                className="
+                    bg-white
+                    rounded-md
+                    items-center 
+                    justify-center 
+                    flex
+                    py-6
+                    lg:px-0 
+                    sm:px-6 px-4">
+                <div 
+                    className="
+                        lg:w-3/5
+                        w-full  
+                        flex 
+                        items-center 
+                        justify-between">
                     <div 
                         onClick={() => fetchPageData(
                             currentPage === 1 ? 1 : currentPage - 1 
                         )}
-                        className="flex items-center pt-3 text-gray-600 hover:text-orange-500 cursor-pointer">
+                        className="
+                            flex 
+                            items-center                            
+                            text-gray-600 
+                            border
+                            rounded-md
+                            hover:text-orange-500 
+                            py-3 
+                            px-3
+                            hover:bg-white
+                            hover:rounded-md
+                            hover:border-orange-500
+                            justify-center
+                            cursor-pointer">
                         <svg width={14} height={8} viewBox="0 0 14 8" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M1.1665 4H12.8332" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
                             <path d="M1.1665 4L4.49984 7.33333" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
@@ -46,41 +74,96 @@ const Pagination = () => {
                                         font-medium 
                                         leading-none 
                                         cursor-pointer 
-                                        text-orange-500 
-                                        border-t 
+                                        text-white 
+                                        bg-orange-500 
+                                        border
                                         border-orange-500 
-                                        pt-3 
-                                        mr-4 
-                                        px-2">{products.currentPage}</p>)
+                                        rounded-md
+                                        py-3 
+                                        mr-2 
+                                        px-3">{products.currentPage}</p>)
                                 : (<p 
                                     onClick={() => fetchPageData(index + 1)}
                                     className="
                                         text-sm 
                                         font-medium 
                                         leading-none 
-                                        cursor-pointer t
-                                        ext-gray-600 
+                                        cursor-pointer 
+                                        text-gray-600 
                                         hover:text-orange-500 
-                                        border-t border-transparent 
+                                        rounded-md
+                                        border 
+                                        border-transparent 
                                         hover:border-orange-500 
-                                        pt-3 mr-4 
-                                        px-2">{index + 1}</p>)
+                                        pt-3 
+                                        mr-2 
+                                        px-3">{index + 1}</p>)
                             })
-                        }
-                        
+                        }                        
                         
                     </div>
                     <div 
                         onClick={() => fetchPageData(
                             currentPage < products.totalPages ? currentPage + 1 : 1
-                        )}className="flex items-center pt-3 text-gray-600 hover:text-orange-500 cursor-pointer">
+                        )}
+                        className="
+                            flex 
+                            items-center                            
+                            text-gray-600 
+                            border
+                            rounded-md
+                            hover:text-orange-500 
+                            py-3 
+                            px-4
+                            hover:bg-white
+                            hover:rounded-md
+                            hover:border-orange-500
+                            justify-center
+                            cursor-pointer">
                         <p className="text-sm font-medium leading-none mr-3">Next</p>
-                        <svg width={14} height={8} viewBox="0 0 14 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <svg 
+                            width={14} 
+                            height={8} 
+                            viewBox="0 0 14 8" 
+                            fill="none" 
+                            xmlns="http://www.w3.org/2000/svg">
                             <path d="M1.1665 4H12.8332" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
                             <path d="M9.5 7.33333L12.8333 4" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
                             <path d="M9.5 0.666687L12.8333 4.00002" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
                     </div>
+                </div>
+                <div 
+                    className="
+                        flex 
+                        items-center 
+                        py-3 
+                        text-gray-600">
+                    <p
+                        className="
+                        text-md
+                        leading-none 
+                        text-gray-600 
+                        mr-4 
+                        px-2"
+                    >
+                        Total {products.totalPages} pages Go to Page 
+                    </p>                    
+                    <input 
+                        type="text" 
+                        placeholder="Go To" 
+                        className="
+                            w-[80px]
+                            text-base  
+                            placeholder-gray-700     
+                            leading-4         
+                            py-2
+                            pl-2
+                            focus:outline-none 
+                            focus:ring-2 
+                            focus:ring-offset 
+                            focus:ring-gray-600 
+                            rounded " />
                 </div>
             </div>
         </>

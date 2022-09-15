@@ -6,7 +6,7 @@ export interface BasketModel {
 
 export interface BasketInfoModel {
     userName: string;
-    items: Array<BasketItem>;
+    items: BasketItem[];
     totalPrice: number;
 };
 
@@ -19,7 +19,7 @@ export interface BasketItem{
 }
 
 export interface BasketSearchModel {
-    searchResult : BasketInfoModel | null,
+    searchResult : BasketInfoModel,
     isSearching : boolean,
     error : string | null 
 }

@@ -1,6 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit';   
 import { AuthError, TokenModel, User } from '../../models/auth/AuthModels';
-import { authError, authLoading, authSuccess, clearAuthError, logOut, registerCompleted } from './actions';
+import { authError, authLoading, authSuccess, clearAuthError, logOut, logoutUser, registerCompleted } from './actions';
 
 export type AuthState = {
    user: User | null,
@@ -39,7 +39,7 @@ export const AuthReducer = createReducer(initialState, (builder) => {
       return { ...state, error: null, isLoading: false }
    });
 
-   builder.addCase(logOut, (state) => {
-      return { ...state, error: null, isLoading: false, isAuthenticated: false, tokenModel: null, user: null }
+   builder.addCase(logoutUser, (state, {payload}) => {
+      return { ...state, error: null, isLoading: false, isAuthenticated: payload, tokenModel: null, user: null }
    });
 });

@@ -1,5 +1,5 @@
 import { createAction, createAsyncThunk } from "@reduxjs/toolkit";
-import { BasketInfoModel, BasketModel, OrderDetails, CheckoutResult } from "../../models/user/basket/BasketModels";
+import { BasketInfoModel, BasketModel, OrderDetails, CheckoutResult, BasketItem } from "../../models/user/basket/BasketModels";
 import { AddToCart, BasketCheckoutAndOrder, GetBasketByUserName, RemoveCart } from "../../services/BasketService/BasketService";
 import { GetAllOrders,GetOrdersByUsername } from "../../services/OrderingService/OrderService";
 import { BasketActionType } from "./actions-type";
@@ -12,6 +12,10 @@ export const basketSearchingFailed = createAction<string>(BasketActionType.BASKE
 export const addingBasket  = createAction<boolean>(BasketActionType.ADD_BASKET_TO_DB);
 export const addBasketSuccess = createAction<BasketInfoModel>(BasketActionType.ADD_BASKET_SUCCESS)
 export const addBasketFailed = createAction<string>(BasketActionType.ADD_BASKET_FAILED);
+// update basket
+export const updateBasket  = createAction<boolean>(BasketActionType.UPDATE_BASKET_DB);
+export const updateBasketSuccess = createAction<BasketItem>(BasketActionType.UPDATE_BASKET_SUCCESS)
+export const updateBasketFailed = createAction<string>(BasketActionType.UPDATE_BASKET_FAILED);
 // Checkout basket
 export const checkoutBasket  = createAction<boolean>(BasketActionType.BASKET_CHECKOUT);
 export const checkoutBasketSuccess = createAction<CheckoutResult>(BasketActionType.BASKET_CHECKOUT_SUCCESS)
@@ -37,7 +41,7 @@ export const searchBasketsData = createAsyncThunk( BasketActionType.BASKET_SEARC
     try{
        
        const response = await GetBasketByUserName(keyword);
-       thunkAPI.dispatch(basketSearchingSuccess(response.data));
+       thunkAPI.dispatch(basketSearchingSuccess(response));
 
     }catch(error){
 
@@ -63,6 +67,20 @@ export const AddBasketToDB = createAsyncThunk(BasketActionType.ADD_BASKET_TO_DB,
            var erroMessage = (e as string);
            thunkAPI.dispatch(addBasketFailed(erroMessage));
       }
+});
+
+
+export const UpdateBasketDB = createAsyncThunk(BasketActionType.UPDATE_BASKET_DB,
+   async(basketItem: BasketItem, thunkAPI) =>{
+     try{
+
+        await thunkAPI.dispatch(updateBasket(true));
+        await thunkAPI.dispatch(updateBasketSuccess(basketItem));
+
+      }catch(e){
+          var erroMessage = (e as string);
+          await thunkAPI.dispatch(updateBasketFailed(erroMessage));
+     }
 });
 
 export const RemoveBasketById = createAsyncThunk(BasketActionType.REMOVE_BASKET_BY_USERNAME , async(id : string, thunkAPI) =>{

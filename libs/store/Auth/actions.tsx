@@ -24,6 +24,7 @@ export const authError = createAction<AuthError>(ActionType.AUTH_ERROR);
 export const clearAuthError = createAction<void>(ActionType.CLEAR_AUTH_ERROR);
 export const authSuccess = createAction<User & TokenModel>(ActionType.AUTH_SUCCESS);
 export const registerCompleted = createAction<void>(ActionType.REGISTER_COMPLETED);
+export const logoutUser = createAction<boolean>(ActionType.LOGOUT);
 
 export const signInWithEmailAndPassword = createAsyncThunk<void, { email: string; password: string }>(
     ActionType.SIGN_IN_WITH_EMAIL_AND_PASSWORD,
@@ -67,8 +68,7 @@ export const signInWithEmailAndPassword = createAsyncThunk<void, { email: string
           thunkApi.dispatch(authError({ message: err.message!, code: err.code }))
        }
     }
- );
- 
+ ); 
  
  export const registerOrLogInAsFacebookUser = createAsyncThunk<void, string>(
     ActionType.REGISTER_OR_LOGIN_AS_FACEBOOK_USER,
@@ -86,9 +86,7 @@ export const signInWithEmailAndPassword = createAsyncThunk<void, { email: string
        thunkApi.dispatch(authSuccess(response));
     }
  );
- 
 
- 
 export const registerWithEmailAndPassword = createAsyncThunk<void, {
     email: string,
     password: string,
@@ -135,15 +133,30 @@ export const registerWithEmailAndPassword = createAsyncThunk<void, {
     }
  );
  
- export const logOut = createAction(ActionType.LOGOUT, () => {
-    clearLocalTokenStorage();    
+ export const logOut = createAsyncThunk<void, void>(
+   ActionType.LOGOUT,
+   async (
+      _,
+      thunkApi,
+   ) => {
+      
+      clearLocalTokenStorage(); 
+      thunkApi.dispatch(logoutUser(false));      
+   }
+);
 
-    return {
-       payload: null
-    }
- });
+//  export const logOut = createAsyncThunk<void, boolean>(ActionType.LOGOUT, (
+//    logoutState: boolean, thunkApi) => 
+//    {
+         
+         
+//          thunkApi.dispatch(logoutUser(logoutState));
 
- 
+//          return {
+//             payload: null
+//          }
+//  });
+   
 export const initialLoad = createAsyncThunk<void, void>(
     ActionType.INITIAL_LOAD,
     async (

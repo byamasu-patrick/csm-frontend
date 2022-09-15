@@ -1,12 +1,13 @@
 import { createReducer } from '@reduxjs/toolkit';   
-import { BasketInfoModel, BasketSearchModel, OrderDetails, CheckoutResult } from '../../models/user/basket/BasketModels';
+import { BasketInfoModel, BasketSearchModel, OrderDetails, CheckoutResult, BasketItem } from '../../models/user/basket/BasketModels';
 import { GetAllOrders } from '../../services/OrderingService/OrderService';
-import { addBasketFailed, addBasketSuccess, addingBasket, basketSearching, basketSearchingFailed, basketSearchingSuccess, checkoutBasket, checkoutBasketFailed, checkoutBasketSuccess, getAllOrders, getAllOrdersByUsername, getAllOrdersByUsernameFailed, getAllOrdersByUsernameSuccess, getAllOrdersFailed, getAllOrdersSuccess, removeBasket, removeBasketFailed, removeBasketSuccess } from './actions';
+import { addBasketFailed, addBasketSuccess, addingBasket, basketSearching, basketSearchingFailed, basketSearchingSuccess, checkoutBasket, checkoutBasketFailed, checkoutBasketSuccess, getAllOrders, getAllOrdersByUsername, getAllOrdersByUsernameFailed, getAllOrdersByUsernameSuccess, getAllOrdersFailed, getAllOrdersSuccess, removeBasket, removeBasketFailed, removeBasketSuccess, updateBasket, updateBasketFailed, updateBasketSuccess } from './actions';
 
 export type BasketState = {
-   cart : BasketInfoModel | null,
+   cart : BasketInfoModel,
    error : string  | null,
    isAdding : boolean,
+   isUpdating : boolean,
    isCheckingOut: boolean,
    isRemoving: boolean,
    isOrderFecthing: boolean,
@@ -21,9 +22,14 @@ export type BasketState = {
 };
 
 const initialState: BasketState = {
-   cart : null,
+   cart : {
+      items: [],
+      totalPrice: 0,
+      userName: ""
+   },
    error : null,
    isAdding : false,
+   isUpdating : false,
    isCheckingOut: false,
    isRemoving: false,
    isOrderFecthing: false,
@@ -33,7 +39,11 @@ const initialState: BasketState = {
    basketSearch : {
       isSearching: false,
       error: "",
-      searchResult: null
+      searchResult: {
+         items: [],
+         totalPrice: 0,
+         userName: ""
+      }
    },
    orderInfo: null,
    orders: [],
@@ -56,6 +66,7 @@ export const BasketReducer = createReducer(initialState, (builder) => {
 
          return {
             ...state,
+            cart: payload,
             basketSearch : {
                searchResult : payload,
                isSearching : false,
@@ -90,8 +101,38 @@ export const BasketReducer = createReducer(initialState, (builder) => {
          error : payload,
          isAdding : false, 
       }
-   });   
+   });  
   
+   builder.addCase(updateBasket , (state, {payload}) =>{
+      return {...state, isUpdating : payload , warningMessage : ''}
+   });
+
+   builder.addCase(updateBasketSuccess , (state , {payload}) =>{
+
+      var tempItems: BasketItem[] = [...state.cart?.items];
+
+      tempItems.push(payload);
+
+      return {
+         ...state, 
+         cart : {
+            userName: state.cart.userName,
+            items: tempItems,
+            totalPrice: 0
+         }, 
+         isUpdating : false, 
+         successMessage : "Successfully updated to basket"
+      }
+   });
+
+   builder.addCase(updateBasketFailed , (state,{payload}) =>{
+      return {
+         ...state, 
+         error : payload,
+         isUpdating : false, 
+      }
+   }); 
+
    builder.addCase(removeBasket , (state, {payload}) =>{
       return {...state, isRemoving : payload , warningMessage : ''}
    });
@@ -99,11 +140,19 @@ export const BasketReducer = createReducer(initialState, (builder) => {
    builder.addCase(removeBasketSuccess, (state , {payload}) =>{
       return {
          ...state, 
-         cart : null, 
+         cart : {
+            items: [],
+            totalPrice: 0,
+            userName: ""
+         }, 
          basketSearch: {
             isSearching: false,
             error: '',
-            searchResult: null
+            searchResult: {
+               items: [],
+               totalPrice: 0,
+               userName: ""
+            }
          },
          isRemoving : false, 
          successMessage : payload
@@ -126,11 +175,19 @@ export const BasketReducer = createReducer(initialState, (builder) => {
    builder.addCase(checkoutBasketSuccess , (state , {payload}) =>{
       return {
          ...state, 
-         cart: null,
+         cart: {
+            items: [],
+            totalPrice: 0,
+            userName: ""
+         },
          basketSearch: {
             error: '',
             isSearching: false,
-            searchResult: null
+            searchResult: {
+               items: [],
+               totalPrice: 0,
+               userName: ""
+            }
          },
          isCheckingOut : false, 
          successMessage : "Successfully ordered",
