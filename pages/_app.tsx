@@ -5,8 +5,11 @@ import type { NextPage } from 'next';
 import { mainStore } from '../libs/store';
 import { configureApp } from '../libs/configureApp';
 import { Provider } from 'react-redux';
+import React from "react" 
 
 configureApp(mainStore);
+
+React.useLayoutEffect = React.useEffect 
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode
