@@ -5,13 +5,12 @@ import type { NextPage } from 'next';
 import { mainStore } from '../libs/store';
 import { configureApp } from '../libs/configureApp';
 import { Provider } from 'react-redux';
-import React from "react" 
+import React, {useLayoutEffect, useEffect} from "react" 
 
 configureApp(mainStore);
 
-if (typeof document === 'undefined') {
-  React.useLayoutEffect = React.useEffect;
-}
+export const useIsomorphicLayoutEffect =
+  typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode
