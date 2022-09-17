@@ -29,7 +29,7 @@
     "mui-datatables": "^4.2.2",
     "next": "12.2.4",
     "pure-react-carousel": "^1.29.0",
-    "react": "17.0.2",
+    "react": "18.2.0",
     "react-chartjs-2": "^4.3.1",
     "react-dom": "18.2.0",
     "react-redux": "^8.0.2",
