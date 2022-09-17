@@ -44,7 +44,7 @@ const OrderSummary: NextPageWithLayout = () => {
                     <div className="mt-10 flex flex-col xl:flex-row jusitfy-center items-stretch  w-full xl:space-x-8 space-y-4 md:space-y-6 xl:space-y-0">
                         <div className="flex flex-col justify-start items-start w-full space-y-4 md:space-y-6 xl:space-y-8">
                             <div className="flex flex-col justify-start items-start bg-gray-50 px-4 py-4 md:py-6 md:p-6 xl:p-8 w-full">
-                                <p className="text-lg md:text-xl font-semibold leading-6 xl:leading-5 text-gray-800">Order's Bag</p>
+                                <p className="text-lg md:text-xl font-semibold leading-6 xl:leading-5 text-gray-800">Order&apos;s Bag</p>
                             {
                                 
                                 isOrdersFetched && ordersByUser.length > 0 ? (ordersByUser.map((order, index) => {
@@ -52,7 +52,7 @@ const OrderSummary: NextPageWithLayout = () => {
                                     return order.products.map((productId) => {
                                         console.log(productId);
                                         
-                                        return products.filter((product) => product.id === productId).
+                                        return products.results.filter((product) => product.id === productId).
                                             map((productData, ind) => {
                                             // console.log("Iteration");
                                             return (                                               

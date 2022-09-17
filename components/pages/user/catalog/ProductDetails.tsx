@@ -1,18 +1,18 @@
 import React, { useState } from "react";
 
 const ProductDetails = () => {
-    const [color, setColor] = useState("White");
-    const [size, setSize] = useState("");
-    const [menu, setMenu] = useState(true);
-    const [slide, setSlide] = useState(true);
+    const [color, setColor] = useState<string>("White");
+    const [size, setSize] = useState<string>("");
+    const [menu, setMenu] = useState<boolean>(true);
+    const [slide, setSlide] = useState<boolean>(true);
 
     const slideToggle = () => setSlide(!slide);
 
-    const getColor = (value) => {
+    const getColor = (value: string) => {
         setColor(value);
     };
 
-    const getSize = (value) => {
+    const getSize = (value: string) => {
         setSize(value);
     };
 

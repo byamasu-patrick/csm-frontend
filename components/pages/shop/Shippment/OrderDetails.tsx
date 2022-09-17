@@ -70,13 +70,13 @@ const OrderDetails = () => {
                             <p className="text-base text-gray-600 dark:text-gray-400" id="page-view">
                                 Viewing 1 - 20 of 60
                             </p>
-                            <a className="text-gray-600 dark:text-gray-400 ml-2 border-transparent border cursor-pointer rounded" onClick="pageView(false)">
+                            <a className="text-gray-600 dark:text-gray-400 ml-2 border-transparent border cursor-pointer rounded" >
                                 <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-chevron-left" width={20} height={20} viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
                                     <path stroke="none" d="M0 0h24v24H0z" />
                                     <polyline points="15 6 9 12 15 18" />
                                 </svg>
                             </a>
-                            <a className="text-gray-600 dark:text-gray-400 border-transparent border rounded focus:outline-none cursor-pointer" onClick="pageView(true)">
+                            <a className="text-gray-600 dark:text-gray-400 border-transparent border rounded focus:outline-none cursor-pointer">
                                 <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-chevron-right" width={20} height={20} viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
                                     <path stroke="none" d="M0 0h24v24H0z" />
                                     <polyline points="9 6 15 12 9 18" />
@@ -129,11 +129,11 @@ const OrderDetails = () => {
                         <tbody>
                             {
                                 orders.map((order) => {
-                                    return order.products.map((productId) => {
+                                    return order.products.map((productId, ind) => {
                                         return productsOwner.filter((productData) => productData.id === productId)
-                                        .map((productInfo) => {
+                                        .map((productInfo, index) => {
                                             return (
-                                                <tr className="h-24 border-gray-300 dark:border-gray-200 border-b">
+                                                <tr key={index + ind} className="h-24 border-gray-300 dark:border-gray-200 border-b">
                                                     {/* <td className="pl-8 pr-6 text-left whitespace-no-wrap text-sm text-gray-800 dark:text-gray-100 tracking-normal leading-4">
                                                         <input type="checkbox" className="cursor-pointer relative w-5 h-5 border rounded border-gray-400 dark:border-gray-200 bg-white dark:bg-gray-800 outline-none" onClick="tableInteract(this)" />
                                                     </td> */}
@@ -171,7 +171,7 @@ const OrderDetails = () => {
                                                             </ul>
                                                         </div>
                                                         <button className="text-gray-500 rounded cursor-pointer border border-transparent focus:outline-none">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" onClick="dropdownFunction(this)" className="icon icon-tabler icon-tabler-dots-vertical dropbtn" width={28} height={28} viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-dots-vertical dropbtn" width={28} height={28} viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
                                                                 <path stroke="none" d="M0 0h24v24H0z" />
                                                                 <circle cx={12} cy={12} r={1} />
                                                                 <circle cx={12} cy={19} r={1} />

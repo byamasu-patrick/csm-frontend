@@ -31,10 +31,10 @@ const ShoppingCart: NextPageWithLayout = () => {
                                 <p className="text-5xl font-black leading-10 text-gray-800 pt-3">Bag</p>
                                 {
                                     cart.items.length >= 0 ? (                                        
-                                            cart.items.map((productItem) => {
+                                            cart.items.map((productItem, index) => {
                                                 return products?.results.filter((product) => product.id === productItem.productId).map((product) => {
                                                     return (
-                                                        <div className="md:flex items-center mt-14 py-8 border-t border-gray-200">
+                                                        <div key={index} className="md:flex items-center mt-14 py-8 border-t border-gray-200">
                                                         <div className="w-1/4">
                                                             <img src={product.imageFile} className="w-full h-full object-center object-cover" />
                                                         </div>

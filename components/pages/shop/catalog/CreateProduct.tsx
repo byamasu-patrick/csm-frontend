@@ -34,7 +34,7 @@ const CreateProduct: React.FC<CreateProps>  = (props) => {
                 "description": description,
                 "price": price,
                 "itemsInStock": itemsInStock,
-                "userId": user.email
+                "userId": String(user?.email)
             }));
             props.setIsCreate(!props.isCreate);
         }
@@ -108,7 +108,7 @@ const CreateProduct: React.FC<CreateProps>  = (props) => {
                                             className="bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-orange-500">
                                             <span className="sr-only">Close menu</span>
                                             <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
                                             </svg>
                                             </button>
                                         </div>                                   
@@ -171,11 +171,10 @@ const CreateProduct: React.FC<CreateProps>  = (props) => {
                                                                         rows={4}
                                                                         id="summary"
                                                                         name="summary"
-                                                                        type="text"
                                                                         autoComplete="summary"
                                                                         required
                                                                         className={`appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none  sm:text-sm focus:ring-orange-500 focus:border-orange-500`}
-                                                                        onChange={(event: React.FormEvent<HTMLInputElement>) => {
+                                                                        onChange={(event: any) => {
                                                                             setSummary(event?.currentTarget?.value);
                                                                         }}
                                                                     />
@@ -198,7 +197,7 @@ const CreateProduct: React.FC<CreateProps>  = (props) => {
                                                                             `}
                                                                             
                                                                         onChange={(event: React.FormEvent<HTMLInputElement>) => {
-                                                                            setPrice(event?.currentTarget?.value);
+                                                                            setPrice(Number(event?.currentTarget?.value));
                                                                         }}
                                                                         />
                                                                     </div>
@@ -220,7 +219,7 @@ const CreateProduct: React.FC<CreateProps>  = (props) => {
                                                                             `}
                                                                             
                                                                             onChange={(event: React.FormEvent<HTMLInputElement>) => {
-                                                                                setItemsInStock(event.currentTarget.value);
+                                                                                setItemsInStock(Number(event.currentTarget.value));
                                                                             }}
                                                                         />
                                                                     </div>
@@ -237,14 +236,13 @@ const CreateProduct: React.FC<CreateProps>  = (props) => {
                                                                         rows={3}
                                                                         id="description"
                                                                         name="description"
-                                                                        type="text"
                                                                         autoComplete="description"
                                                                         required
                                                                         className={`appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none  sm:text-sm
                                                                         focus:ring-orange-500 focus:border-orange-500
                                                                         `}
                                                                         
-                                                                        onChange={(event: React.FormEvent<HTMLInputElement>) => {
+                                                                        onChange={(event: any) => {
                                                                             setDescrition(event?.currentTarget?.value);
                                                                         }}
                                                                     />
@@ -265,11 +263,18 @@ const CreateProduct: React.FC<CreateProps>  = (props) => {
                                                                         required
                                                                         className={`appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none  sm:text-sm focus:ring-orange-500 focus:border-orange-500`}
                                                                         onChange={(event: React.FormEvent<HTMLInputElement>) => {    
-                                                                                                                 
-                                                                            convertSelectedImageToBase64(event?.currentTarget?.files[0], (result: string) => {
-                                                                                setImageFile(result);
-                                                                                console.log(imageFile);
-                                                                            });
+                                                                                const files = event.currentTarget.files;
+
+                                                                                if (!files || !files[0]){
+                                                                                    return;
+                                                                                }else{
+                                                                                                               
+                                                                                    convertSelectedImageToBase64(files[0], (result: string) => {
+                                                                                        setImageFile(result);
+                                                                                        console.log(imageFile);
+                                                                                
+                                                                                    });
+                                                                                }
                                                                             
                                                                         }} 
                                                                     />

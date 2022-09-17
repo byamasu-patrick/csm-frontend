@@ -35,7 +35,7 @@ export const optionsMUITable : MUIDataTableOptions = {
       filename: "catalog.csv",
     },
     onRowClick: (rowData: string[], rowMeta) => {
-        console.log("Clicked row: ", data[rowMeta.dataIndex].name);
+        // console.log("Clicked row: ", data[rowMeta.dataIndex].name);
         
     } 
 };
@@ -49,7 +49,7 @@ export const catalogColumns: Array<CatalogColumn> = [
             sort: false,
             customBodyRender: (imageFile: string): ReactElement => {
                 return (
-                    <img variant="rounded" width="60" height="60" src={`${imageFile}`} />
+                    <img width="60" height="60" src={`${imageFile}`} />
                 );
             }
         }
@@ -60,7 +60,7 @@ export const catalogColumns: Array<CatalogColumn> = [
         options: {
             filter: true,
             sort: false,
-            customBodyRender: (name) => {
+            customBodyRender: (name: string) => {
                 return name.substr(0, 15)
             }
         }
@@ -80,7 +80,7 @@ export const catalogColumns: Array<CatalogColumn> = [
         options: {
             filter: true,
             sort: false,
-            customBodyRender: (summaryData) => {
+            customBodyRender: (summaryData: string) => {
                 return summaryData.substr(0, 25)
             }
         }

@@ -3,7 +3,7 @@ import { AuthError, TokenModel, User } from '../../models/auth/AuthModels';
 import { authError, authLoading, authSuccess, clearAuthError, logOut, logoutUser, registerCompleted } from './actions';
 
 export type AuthState = {
-   user: User | null,
+   user: User | any,
    tokenModel: TokenModel | null,
    isAuthenticated: boolean,
    isLoading: boolean,

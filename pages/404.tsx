@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 
 const Error = () => {
@@ -9,11 +10,11 @@ const Error = () => {
                 <img className="md:hidden" src="404.jpg" alt="" />
             </div>
             <div className="w-full lg:w-1/2">
-                <h1 className="py-4 text-3xl lg:text-4xl font-extrabold text-gray-800">Looks like you've found the doorway to the great nothing</h1>
-                <p className="py-4 text-base text-gray-800">The content you’re looking for doesn’t exist. Either it was removed, or you mistyped the link.</p>
+                <h1 className="py-4 text-3xl lg:text-4xl font-extrabold text-gray-800">Looks like you&apos;ve found the doorway to the great nothing</h1>
+                <p className="py-4 text-base text-gray-800">The content you&apos;re looking for doesn&apos;t exist. Either it was removed, or you mistyped the link.</p>
                 <p className="py-2 text-base text-gray-800">Sorry about that! Please visit our hompage to get where you need to go.</p>
                 <p className="py-6">
-                    <a href="/" className="w-full lg:w-auto leading-4 my-4 focus:ring-offset-2 border rounded-md px-1 sm:px-16 py-5 bg-orange-500 text-white hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500">Go back to Homepage</a>
+                    <Link href="/" className="w-full lg:w-auto leading-4 my-4 focus:ring-offset-2 border rounded-md px-1 sm:px-16 py-5 bg-orange-500 text-white hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500">Go back to Homepage</Link>
                 </p>
             </div>
         </div>

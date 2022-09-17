@@ -1,4 +1,4 @@
-export const convertSelectedImageToBase64 = (file: File, cbfunction: Function) => {
+export const convertSelectedImageToBase64 = (file: File , cbfunction: Function) => {
     let reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = function () {

@@ -39,9 +39,9 @@ const Shop: NextPageWithLayout = () => {
    
     return (
       <>      
-        <Head>
+        {/* <Head>
             <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
-        </Head>
+        </Head> */}
         <div className="w-full flex items-center py-6 justify-center">
             <div className="py-4 sm:py-6 md:py-8 bg-white shadow rounded-lg">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 px-6 xl:px-10 gap-y-8 gap-x-3 2xl:gap-x-20">
