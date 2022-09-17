@@ -9,7 +9,9 @@ import React from "react"
 
 configureApp(mainStore);
 
-React.useLayoutEffect = React.useEffect 
+if (typeof document === 'undefined') {
+  React.useLayoutEffect = React.useEffect;
+}
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode
