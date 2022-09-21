@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 import { useAppDispatch, useAppSelector } from '../../../../libs/store';
 import { AuthSelector } from '../../../../libs/store/Auth';
 import { AddProductToDB, ProductSelector } from '../../../../libs/store/Catalog';
-import { convertSelectedImageToBase64 } from '../../../../libs/utils/common';
+import { convertSelectedImageToBase64, ProductCategories } from '../../../../libs/utils/common';
 
 interface CreateProps{
     isCreate: boolean;
@@ -153,9 +153,13 @@ const CreateProduct: React.FC<CreateProps>  = (props) => {
                                                                         }}
                                                                     >
                                                                         <option value={category} className='text-gray-900 py-4'>{category}</option>
-                                                                        <option value="Smart Phone" className='text-gray-900 py-4'>Smart Phone</option>
-                                                                        <option value="White Appliances" className='text-gray-900 py-4'>White Appliances</option>
-                                                                        <option value="Home Kitchen" className='text-gray-900 py-4'>Home Kitchen</option>
+                                                                        {
+                                                                            ProductCategories.map((category, index) => {
+                                                                                return (
+                                                                                    <option key={index} value={category} className='text-gray-900 py-4'>{category}</option>
+                                                                                )
+                                                                            })
+                                                                        }
                                                                     
                                                                     </select>
                                                                 </div>

@@ -15,8 +15,21 @@ export const MalawiDistricts = [
     "Chitipa", "Karonga", "Likoma", "Mzimba", "Nkhata Bay", "Rumphi", "Balaka", "Blantyre", "Chikwawa",
     "Chiradzulu", "Machinga", "Mangochi", "Mulanje", "Mwanza", "Nsanje", "Thyolo", "Phalombe", "Zomba",
     "Neno"
-]
+];
 
 export const MalawiRegions = [
     "Country", "Central Region", "Northern Region", "Southern Region"
-]
+];
+
+export const ProductCategories = [
+    "Jewelry", "Women fashion", "Men fashion", "Kids fashion", "Beauty and hair", "Sports", "Consumer electronics",
+    "Telecommunications", "Kitchen ware", "Construction"
+];
+
+
+
+
+
+
+
+

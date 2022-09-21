@@ -19,7 +19,7 @@ const registerWithEmailAndPassword = async (
     };
  
     try {
-       await authClient.post<ApiResponse>('register', data);
+       await authClient.post<ApiResponse>('Register', data);
        await authClient.post<ApiResponse>('SendActivationEmail', { email });
     } catch (error) {
        const err = (error as AxiosError<ApiResponse>).response!.data;
@@ -59,7 +59,6 @@ const registerWithEmailAndPassword = async (
     };
     return result;
  };
-
  
 const exchangeFacebookCode = async (
     code: string

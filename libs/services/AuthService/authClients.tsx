@@ -1,8 +1,14 @@
 import axios from 'axios';
 
 const authClient = axios.create({
-   baseURL: `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/`,
+   baseURL: `${process.env.NEXT_PUBLIC_API_BASE_URL}/`,
 });
+
+
+const loginClient = axios.create({
+   baseURL: `http://localhost:8010/`,
+});
+
 
 const tokenClient = axios.create({
    baseURL: `${process.env.NEXT_PUBLIC_API_BASE_URL}/token/`,
@@ -18,4 +24,4 @@ const googleTokenClient = axios.create({
 
 
 
-export { authClient, tokenClient, facebookTokenClient, googleTokenClient };
+export { authClient, tokenClient, facebookTokenClient, googleTokenClient, loginClient };
