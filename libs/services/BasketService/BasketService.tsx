@@ -3,7 +3,7 @@ import axios from "axios"
 import { BasketModel, OrderDetails } from "../../models/user/basket/BasketModels";
 import { authClient } from "../AuthService/authClients";
 // import { basketClient } from "./basketClient";
-const basketClient = 'http://localhost:8002/api/v1';
+const basketClient = 'http://localhost:5002/api/v1';
 
 export const AddToCart = async(addProductModel : BasketModel) =>{
     var result = await axios.post(`${basketClient}/Basket`, addProductModel);

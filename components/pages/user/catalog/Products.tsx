@@ -10,11 +10,17 @@ import { UserType } from "../../../../libs/models/auth/AuthModels";
 import { useRouter } from "next/router";
 import { AddBasketToDB, BasketSelector, searchBasketsData, UpdateBasketDB } from "../../../../libs/store/Basket";
 import ProductDetails from "./ProductDetails";
+import ProductDialog from "./ProductDialog";
+import { ProductModel } from "../../../../libs/models/shops/catalogs/ProductModels";
 
+interface ProductProps{
+    isHome: boolean;
+}
 
-const Products = () => {
-
+const Products: React.FC<ProductProps> = (props) => {
     const [addCart, setAddCart] = useState<number>(0);
+    const [isOpen, setIsOpen] = useState<boolean>(false);
+    const [product, setProduct] = useState<ProductModel | null>(null);
     
     const dispatch = useAppDispatch();
     const { products, isGetting, productsOwner } = useAppSelector(ProductSelector);
@@ -33,13 +39,9 @@ const Products = () => {
         if(isAuthenticated){            
             const fetchShoppingCart = async () => {
                 await dispatch(searchBasketsData(user?.profile?.firstName +" "+ user?.profile?.lastName));
-                // console.log("Cart Length: ", cart?.items.length, user?.profile?.firstName +" "+ user?.profile?.lastName);
-                console.log("Cart Search Result: ", basketSearch.searchResult);
             }
             fetchShoppingCart().catch((error) => console.log(error));
         }
-        // console.log("Cart Length: ", cart?.items.length, user?.profile?.firstName +" "+ user?.profile?.lastName);
-        // console.log("Cart Search: ", basketSearch.searchResult);
     }, [isAuthenticated])
 
     useEffect(() => {
@@ -68,8 +70,7 @@ const Products = () => {
                 router.push("/signin");
             }
         }
-        else{
-            
+        else{            
             if(cart.items.length === 0){
                 await dispatch(AddBasketToDB({
                     userName: user?.profile?.firstName +" "+ user?.profile?.lastName,
@@ -83,7 +84,6 @@ const Products = () => {
                 }));
             }
             else{
-
                 await dispatch(UpdateBasketDB({
                     quantity: 1,
                     color: "blue",
@@ -98,11 +98,16 @@ const Products = () => {
         }
     }
 
+    const handleOnProductClicked = (product: ProductModel) => {
+      setProduct(product);
+      setIsOpen(!isOpen);
+    }
+
     return (
         <>
             <div className="w-full md:flex md:flex-cols bg-gray-100 py-8 px-4 overflow-hidden sm:px-6 lg:px-8 lg:py-12">  
                 <div className="w-full sm:w-full md:w-4/12 lg:w-3/12 bg-white mr-6 h-[530px] mb-6">
-                    <ProductSort />
+                    <ProductSort isProductPage={false}/>
                 </div>  
                 {
                     isGetting ? (<></>) : (
@@ -114,7 +119,7 @@ const Products = () => {
                                             return (
                                                 <div key={key} className="mx-2 w-64 lg:mb-4 mb-8 hover:bg-gray-100 hover:cursor-pointer hover:shadow">
                                                     <div>
-                                                        <img src={product.imageFile} className="w-full h-44" />
+                                                        <img src={product.imageFile} onClick={() => handleOnProductClicked(product)} className="w-full h-44" />
                                                     </div>
                                                     <div className="bg-white">
                                                         <div className="flex items-center justify-between px-4 pt-4">
@@ -124,7 +129,7 @@ const Products = () => {
                                                                     <path d="M9 4h6a2 2 0 0 1 2 2v14l-5-3l-5 3v-14a2 2 0 0 1 2 -2" />
                                                                 </svg>
                                                             </div>
-                                                            <div className={`${addCart == key + 1 ? "bg-[#3d9dc9]": "main-bg" } py-1.5 px-6 rounded`}
+                                                            <div className={`${addCart == key + 1 ? "bg-[#3d9dc9]": "main-bg" } py-1.5 px-6 rounded  hover:bg-orange-500`}
                                                                 onClick={() =>{
                                                                     setAddCart(key + 1);
                                                                     addToBasket(product.price, product.id, product.name)
@@ -156,7 +161,7 @@ const Products = () => {
                                                                 </div>
                                                             </div>
                                                             <div className="flex items-center justify-between py-4">
-                                                                <h2 className="text-gray-800 text-xs font-semibold">Bay Area, San Francisco</h2>
+                                                                <h2 className="text-gray-800 text-xs font-semibold">Malawi</h2>
                                                                 <h3 className="text-gray-800 text-xl font-semibold">MK {product.price}</h3>
                                                             </div>                                    
                                                             <div className="flex justify-center xl:justify-end w-full">
@@ -191,11 +196,12 @@ const Products = () => {
                                     }
                                 </div>
                             </div>
-                            <Pagination />
                         </div>
                     )
-                } 
-                {/* <ProductDetails /> */}
+                }    
+                {
+                  isOpen ? <ProductDialog isOpen={isOpen} setIsOpen={setIsOpen} data={product as ProductModel}/> : (<></>)
+                }
             </div>
         </>
     );

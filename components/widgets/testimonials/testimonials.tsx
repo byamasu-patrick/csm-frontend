@@ -25,8 +25,8 @@ const Testimonials = () => {
                                 <img src="https://i.ibb.co/R6WQhYj/Mask-Group.png" className="w-10 h-10 rounded-full" alt="profile" />
                             </div>
                             <div className="flex flex-col items-start ml-4">
-                                <p className="text-base font-semibold leading-4 text-gray-800">Alisha Cooper</p>
-                                <p className="text-base leading-4 mt-2 text-center text-gray-600">Developer</p>
+                                <p className="text-base font-semibold leading-4 text-gray-800">Mercy Gondwe</p>
+                                <p className="text-base leading-4 mt-2 text-center text-gray-600">Acoountant at NB</p>
                             </div>
                         </div>
                     </div>
@@ -45,8 +45,8 @@ const Testimonials = () => {
                                 <img src="https://i.ibb.co/C6bwf12/Mask-Group.png" className="w-10 h-10 rounded-full" alt="profile" />
                             </div>
                             <div className="flex flex-col items-start ml-4">
-                                <p className="text-base font-semibold leading-4 text-gray-800">Henry Jack</p>
-                                <p className="text-base leading-4 mt-2 text-center text-gray-600">UI/UX Designer</p>
+                                <p className="text-base font-semibold leading-4 text-gray-800">John Mukandawire</p>
+                                <p className="text-base leading-4 mt-2 text-center text-gray-600">MD at Umodzi</p>
                             </div>
                         </div>
                     </div>

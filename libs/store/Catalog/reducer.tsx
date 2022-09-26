@@ -1,6 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit';   
 import { ProductModel, ProductResponse, ProductSearchModel } from '../../models/shops/catalogs/ProductModels';
-import { adddProductFailed, addingProduct, addProductSuccess, editFailed, editingProduct, editSuccess, getAllProductsByShopOwnerFailed, getAllProductsByShopOwnerSuccess, getAllProductsFailed, getAllProductsSuccess, gettingAllProducts, gettingAllProductsByShopOwner, productSearching, productSearchingFailed, productSearchingSuccess } from './actions';
+import { adddProductFailed, addingProduct, addProductSuccess, editFailed, editingProduct, editSuccess, getAllProductsByCategoryFailed, getAllProductsByCategorySuccess, getAllProductsByShopOwnerFailed, getAllProductsByShopOwnerSuccess, getAllProductsFailed, getAllProductsSuccess, gettingAllProducts, gettingAllProductsByCategory, gettingAllProductsByShopOwner, productSearching, productSearchingFailed, productSearchingSuccess } from './actions';
 
 export type ProductState = {
    product : ProductModel | null,
@@ -9,9 +9,11 @@ export type ProductState = {
    isEditing : boolean,
    isGetting : boolean,
    isGettingByOwner : boolean,
+   isGettingCategory : boolean,
    successMessage : string,
    warningMessage : string,
-   products : ProductResponse, 
+   products : ProductResponse,
+   productsByCategory : ProductResponse,  
    productsOwner: ProductModel[],
    productSearch : ProductSearchModel
 };
@@ -23,6 +25,7 @@ const initialState: ProductState = {
    isEditing : false,
    isGetting : false,
    isGettingByOwner : false,
+   isGettingCategory : false,
    successMessage : "",
    warningMessage : "",
    products : {
@@ -31,6 +34,11 @@ const initialState: ProductState = {
       totalPages: 0
    }, 
    productsOwner: [],
+   productsByCategory: {
+      currentPage: 0,
+      results: [],
+      totalPages: 0
+   },  
    productSearch : {
       isSearching: false,
       error: "",
@@ -147,6 +155,24 @@ export const ProductReducer = createReducer(initialState, (builder) => {
    });
 
    builder.addCase(getAllProductsByShopOwnerFailed , (state , {payload}) =>{
+      return {...state, isGettingByOwner : false, error: payload}
+   }); 
+
+   builder.addCase(gettingAllProductsByCategory , (state , {payload}) =>{
+      return {...state, isGettingCategory : payload}
+   });
+
+   builder.addCase(getAllProductsByCategorySuccess , (state , {payload}) =>{
+      return {
+         ...state,  
+         isGettingCategory: false,
+         productsByCategory: {
+            ...payload
+         }         
+      }
+   });
+
+   builder.addCase(getAllProductsByCategoryFailed , (state , {payload}) =>{
       return {...state, isGettingByOwner : false, error: payload}
    });
 

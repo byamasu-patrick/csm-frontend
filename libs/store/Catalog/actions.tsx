@@ -1,6 +1,6 @@
 import { createAction, createAsyncThunk } from "@reduxjs/toolkit";
-import { AddProductModel, ProductModel, ProductResponse } from "../../models/shops/catalogs/ProductModels";
-import { AddProduct, GetProductsByName, RemoveProductById, UpdateProduct, getProducts, getProductsByShopOwner } from "../../services/CatalogService/ProductService";
+import { AddProductModel, GetProductByCategoryModel, ProductModel, ProductResponse } from "../../models/shops/catalogs/ProductModels";
+import { AddProduct, GetProductsByName, RemoveProductById, UpdateProduct, getProducts, getProductsByShopOwner, getProductsByCategory } from "../../services/CatalogService/ProductService";
 import { ProductActionType } from "./actions-type";
 
 // search product
@@ -24,6 +24,10 @@ export const getAllProductsFailed = createAction<string>(ProductActionType.GET_A
 export const gettingAllProductsByShopOwner  = createAction<boolean>(ProductActionType.GET_ALL_PRODUCTS_BY_OWNER);
 export const getAllProductsByShopOwnerSuccess = createAction<ProductModel[]>(ProductActionType.GET_ALL_PRODUCTS_BY_OWNER_SUCCESS)
 export const getAllProductsByShopOwnerFailed = createAction<string>(ProductActionType.GET_ALL_PRODUCTS_BY_OWNER_FAILED);
+// get all product by shop owner
+export const gettingAllProductsByCategory  = createAction<boolean>(ProductActionType.GET_ALL_PRODUCTS_BY_CATEGORY);
+export const getAllProductsByCategorySuccess = createAction<ProductResponse>(ProductActionType.GET_ALL_PRODUCTS_BY_CATEGORY_SUCCESS)
+export const getAllProductsByCategoryFailed = createAction<string>(ProductActionType.GET_ALL_PRODUCTS_BY_CATEGORY_FAILED);
 
 
 export const searchProducts = createAsyncThunk( ProductActionType.PRODUCT_SEARCHING, 
@@ -108,5 +112,22 @@ export const GetAllProductsByOwner = createAsyncThunk(ProductActionType.GET_ALL_
        }catch(error){
          var errorMessage = (error as string);
          thunkAPI.dispatch(getAllProductsByShopOwnerFailed(errorMessage));
+   }
+});
+
+export const GetAllProductsByCategory = createAsyncThunk(ProductActionType.GET_ALL_PRODUCTS_BY_CATEGORY, 
+   async(product: GetProductByCategoryModel, thunkAPI) =>{
+       try{
+
+           thunkAPI.dispatch(gettingAllProductsByCategory(true));
+           let result = await getProductsByCategory(product.catName, product.page);    
+           
+           console.log(result);
+           
+           thunkAPI.dispatch(getAllProductsByCategorySuccess(result));
+
+       }catch(error){
+         var errorMessage = (error as string);
+         thunkAPI.dispatch(getAllProductsByCategoryFailed(errorMessage));
    }
 });

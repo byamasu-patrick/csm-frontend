@@ -2,7 +2,7 @@ import axios from "axios"
 import { AddProductModel, ProductModel } from "../../models/shops/catalogs/ProductModels";
 import { authClient } from "../AuthService/authClients";
 // import { catalogClient } from "./catalogClient";
-const catalogClient = 'http://localhost:8000/api/v1';
+const catalogClient = 'http://localhost:5000/api/v1';
 export const getProducts = async (page: number) =>{
     var result  = await axios.get(`${catalogClient}/Catalog/${page}`);
     return result.data;
@@ -10,6 +10,11 @@ export const getProducts = async (page: number) =>{
 
 export const getProductsByShopOwner = async (ownerId: string) =>{
     var result  = await axios.get(`${catalogClient}/Catalog/GetProductByOwner/${ownerId}`);
+    return result.data;
+}
+
+export const getProductsByCategory = async (category: string, page: number) =>{
+    var result  = await axios.get(`${catalogClient}/Catalog/GetProductByCategory/${category}/${page}`);
     return result.data;
 }
 

@@ -3,7 +3,7 @@ import axios from "axios"
 import { BasketModel, OrderDetails } from "../../models/user/basket/BasketModels";
 import { authClient } from "../AuthService/authClients";
 // import { orderingClient } from "./orderingClient";
-const orderingClient = 'http://localhost:8005/api/v1';
+const orderingClient = 'http://localhost:5005/api/v1';
 
 export const GetAllOrders = async() =>{
     var searchResult = await axios.get(`${orderingClient}/Order/`)

@@ -79,7 +79,7 @@ const Navigation = () => {
                                     </Link>
                                 </li>
                                 <li>
-                                    <a href="#" className="dark:text-white text-base text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800 hover:underline">
+                                    <a href="/shops" className="dark:text-white text-base text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800 hover:underline">
                                         Shops
                                     </a>
                                 </li>

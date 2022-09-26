@@ -29,8 +29,13 @@ export interface AddProductModel {
 };
 
 export interface ProductSearchModel {
-    searchResult : ProductModel | null,
-    isSearching : boolean,
-    error : string | null 
+    searchResult : ProductModel | null;
+    isSearching : boolean;
+    error : string | null;
+}
+
+export interface GetProductByCategoryModel {
+    catName : string;
+    page : number;
 }
 
