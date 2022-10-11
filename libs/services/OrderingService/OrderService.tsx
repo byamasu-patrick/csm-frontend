@@ -11,6 +11,7 @@ export const GetAllOrders = async() =>{
 }
 
 export const GetOrdersByUsername = async(username : string) =>{
+    console.log(`Link --------------- ${orderingClient}/Order/${username}`);
     var result = await axios.get(`${orderingClient}/Order/${username}`)
     return result.data;
 }

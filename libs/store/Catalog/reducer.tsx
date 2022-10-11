@@ -105,7 +105,7 @@ export const ProductReducer = createReducer(initialState, (builder) => {
       return {
          ...state, 
          successMessage: payload, 
-         isEditing: !state.isEditing,
+         isEditing: false,
          product: state.product         
       }
    });
@@ -113,7 +113,7 @@ export const ProductReducer = createReducer(initialState, (builder) => {
    builder.addCase(editFailed , (state , {payload}) =>{
       return {
          ...state, 
-         isEditing: !state.isEditing,
+         isEditing: false,
          error: payload       
       }
    });    

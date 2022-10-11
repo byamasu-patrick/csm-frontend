@@ -35,7 +35,7 @@ const Navigation = () => {
     // }, [isAuthenticated]);
 
     return (
-        <div className="dark:bg-gray-900 bg-gray-50">
+        <div className="dark:bg-gray-900 bg-white">
             <div className="flex md:flex-col bg-gray-50">
                 <div className="relative">
                     {/* For md screen size */}
@@ -66,30 +66,29 @@ const Navigation = () => {
                     {/* For large screens */}
                     <div className="dark:bg-gray-90 px-6 py-5">
                         <div className="container mx-auto flex items-center justify-between">
-                            <h1 className="md:w-2/12 cursor-pointer text-orange-600 dark:text-white" aria-label="Cloud Stores MW">
-                               
+                            <h1 className="md:w-2/12 cursor-pointer text-orange-600 dark:text-white" aria-label="Cloud Stores MW">                               
                                 <img src="../../cloud-stores.png" width="60" height="60"/>
                             </h1>
                             <ul className="hidden w-6/12 md:flex items-center justify-center space-x-4">
                                 <li>
                                     <Link href="/">
-                                        <a className="dark:text-white text-base text-gray-800 focus:outline-nonehover:underline">
+                                        <a className="text-base text-gray-800 focus:outline-nonehover:underline">
                                             Home
                                         </a>
                                     </Link>
                                 </li>
                                 <li>
-                                    <a href="/shops" className="dark:text-white text-base text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800 hover:underline">
+                                    <a href="/shops" className="text-base text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800 hover:underline">
                                         Shops
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#" className="dark:text-white text-base text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800 hover:underline">
+                                    <a href="#" className="text-base text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800 hover:underline">
                                         New Products
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#" className="dark:text-white text-base text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800 hover:underline">
+                                    <a href="#" className="text-base text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800 hover:underline">
                                         Support
                                     </a>
                                 </li>
@@ -98,7 +97,7 @@ const Navigation = () => {
                                 
                                 <div className="hidden lg:flex items-center space-x-2 xl:space-x-8">                                    
                                     <Link href="/user/carts">
-                                        <a aria-label="go to cart" className="text-gray-800 hover:cursor-pointer dark:hover:text-gray-300 hover:text-gray-900 dark:text-white">
+                                        <a aria-label="go to cart" className="text-gray-800 hover:cursor-pointer hover:text-gray-900">
                                             <AddShoppingCartIcon  sx={{ fontSize: 28 }}/>
                                             {
                                                 (cart?.items.length >= 1) && (cart !== null) || (basketSearch.searchResult?.items.length >= 1) && (cart !== null)  ?
@@ -247,19 +246,17 @@ const Navigation = () => {
                                                 <a 
                                                     type="button" 
                                                     className="
-                                                        text-gray-900 
-                                                        bg-white border 
+                                                    
+                                                        text-white 
+                                                        bg-[#0b73a4] border 
                                                         rounded-sm
                                                         hover:text-white
                                                         border-gray-300 focus:outline-none 
                                                         hover:bg-[#0b73a4] focus:ringf-4 
                                                         focus:ring-gray-200 font-medium 
                                                         text-sm px-5 py-2.5 
-                                                        mr-2 mb-2 dark:bg-gray-800 
-                                                        dark:text-white dark:border-gray-600 
-                                                        dark:hover:bg-gray-700 
-                                                        dark:hover:border-gray-600 
-                                                        dark:focus:ring-gray-700">Sign In</a>
+                                                        mr-2 mb-2
+                                                        ">Sign In</a>
                                                 </Link>
                                             </>
                                         )

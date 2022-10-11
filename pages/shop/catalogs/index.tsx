@@ -4,17 +4,23 @@ import ShopLayout from '../../../components/layouts/shop-layout';
 import type { NextPageWithLayout } from '../../_app';
 import React, { Component, useEffect, useState } from "react";
 import MUIDataTable, { MUIDataTableOptions } from "mui-datatables";
-import { catalogColumns, optionsMUITable  } from "../../../libs/models/shops/catalogs/CatalogModels";
+// import { catalogColumns, optionsMUITable  } from "../../../libs/models/shops/catalogs/CatalogModels";
 import { createTheme, Theme, ThemeProvider } from '@mui/material/styles';
 import { Fade } from '@mui/material';
 import CreateProduct from '../../../components/pages/shop/catalog/CreateProduct';
 import { useAppDispatch, useAppSelector } from '../../../libs/store';
 import { GetAllProducts, GetAllProductsByOwner, gettingAllProducts, ProductSelector } from '../../../libs/store/Catalog';
 import { AuthSelector } from '../../../libs/store/Auth';
+import { catalogColumns } from '../../../libs/models/shops/catalogs/CatalogModels';
+import ProductDialog from '../../../components/pages/user/catalog/ProductDialog';
+import { ProductModel } from '../../../libs/models/shops/catalogs/ProductModels';
+import ViewEditProduct from '../../../components/pages/shop/catalog/ViewEditProduct';
 
 
 const Catalog: NextPageWithLayout = () => {
     const [isCreate, setIsCreate] = useState<boolean>(false);
+    const [isOpen, setIsOpen] = useState<boolean>(false);
+    const [product, setProduct] = useState<ProductModel | null>(null);
 
     const title: string = "Catalog List of Products";
     const dispatch = useAppDispatch();
@@ -30,6 +36,22 @@ const Catalog: NextPageWithLayout = () => {
       }
       
     }, []);
+
+    const optionsMUITable : MUIDataTableOptions = {
+      selectableRows: "none",
+      filter: true,
+      print: true,
+      responsive: "standard",
+      download: true,
+      downloadOptions: {
+        filename: "catalog.csv",
+      },
+      onRowClick: (rowData: string[], rowMeta) => {
+          // console.log("Clicked row: ", data[rowMeta.dataIndex].name);
+          setProduct(productsOwner.filter((product) => product.id == productsOwner[rowMeta.dataIndex].id)[0])
+          setIsOpen(!isOpen);
+      } 
+    };
     
 
     return (
@@ -52,7 +74,7 @@ const Catalog: NextPageWithLayout = () => {
             
             <div className="align-middle inline-block min-w-full  mt-5">
                 {
-                  !isCreate ? <MUIDataTable
+                  !isCreate && !isOpen ? <MUIDataTable
                         title={ title }
                         data={ productsOwner }
                         columns={ catalogColumns }
@@ -66,7 +88,10 @@ const Catalog: NextPageWithLayout = () => {
             {
               isCreate ? <CreateProduct isCreate={isCreate} setIsCreate={setIsCreate}/> : (<></>)
             }      
-            </div>  
+          </div>  
+            {
+              isOpen ? <ViewEditProduct isOpen={isOpen} setIsOpen={setIsOpen} data={product as ProductModel}/> : (<></>)
+            }
         </>
       );
 }

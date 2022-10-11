@@ -30,7 +30,6 @@ const OrderDetails = () => {
     const dispatch = useAppDispatch();
 
     const router = useRouter();
-
     
     var tax = 2500;
     var shippment = 12000;
@@ -55,17 +54,7 @@ const OrderDetails = () => {
     }, []);
 
     useEffect(() => {
-        if(cart === null && basketSearch.searchResult === null){
-            // setCardName("");
-            // setCardNumber("");
-            // setAddressLine("");
-            // setCvv("");
-            // setCountry("Country");
-            // setDistrict("City");
-            // setEmail("");
-            // setExpireDate("");
-            // setZipCode("");
-
+        if(cart === null && basketSearch.searchResult === null){            
             router.push('/');
         }
     }, [isCheckingOut]);
@@ -80,7 +69,7 @@ const OrderDetails = () => {
 
             var shopInfo: OrderDetails = {
                 userName: cart !== null ? String(cart?.userName) : String(basketSearch.searchResult?.userName),
-                products: [],
+                products: productIds,
                 firstName: String( user?.profile?.firstName),
                 lastName: String( user?.profile?.lastName),
                 cardName: cardName,
@@ -95,10 +84,21 @@ const OrderDetails = () => {
                 totalPrice: Number(cart?.totalPrice),
                 zipCode: zipCode
             };
+            await dispatch(CheckoutBasket(shopInfo));        
+            setCardName("");
+            setCardNumber("");
+            setAddressLine("");
+            setCvv("");
+            setCountry("Country");
+            setDistrict("City");
+            setEmail("");
+            setExpireDate("");
+            setZipCode("");
+            setAddressLine("");
+            setRegion("Region");
 
-            shopInfo.products = [...productIds];
-            console.log("Ordering Info: ", shopInfo);
-            await dispatch(CheckoutBasket(shopInfo));            
+            router.push("/user/order-summary");
+    
         }
         else{
             Swal.fire({

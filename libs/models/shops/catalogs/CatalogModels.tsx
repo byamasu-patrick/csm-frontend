@@ -25,21 +25,6 @@ export interface CatalogData {
     itemsInStock: number;
 };
 
-export const optionsMUITable : MUIDataTableOptions = {
-    selectableRows: "none",
-    filter: true,
-    print: true,
-    responsive: "standard",
-    download: true,
-    downloadOptions: {
-      filename: "catalog.csv",
-    },
-    onRowClick: (rowData: string[], rowMeta) => {
-        // console.log("Clicked row: ", data[rowMeta.dataIndex].name);
-        
-    } 
-};
-
 export const catalogColumns: Array<CatalogColumn> = [
     {
         name: "imageFile",

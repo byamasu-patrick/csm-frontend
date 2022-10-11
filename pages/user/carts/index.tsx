@@ -9,7 +9,7 @@ import { ProductSelector } from "../../../libs/store/Catalog";
 import { NextPageWithLayout } from "../../_app";
 
 const ShoppingCart: NextPageWithLayout = () => {
-    const [show, setShow] = useState(false);
+    const [show, setShow] = useState<boolean>(false);
     const { cart, basketSearch } = useAppSelector(BasketSelector);
     const { products } = useAppSelector(ProductSelector);
 

@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import React, {ReactElement,useState,  useEffect} from "react";
 import ClientLayout from "../../components/layouts/clients-layout";
 import { OrderDetails } from "../../libs/models/user/basket/BasketModels";
+import { GetProductsById } from "../../libs/services/CatalogService/ProductService";
 import { GetOrdersByUsername } from "../../libs/services/OrderingService/OrderService";
 import { useAppDispatch, useAppSelector } from "../../libs/store";
 import { AuthSelector } from "../../libs/store/Auth";
@@ -13,7 +14,7 @@ const OrderSummary: NextPageWithLayout = () => {
 
     const { user } = useAppSelector(AuthSelector);
     const { products  } = useAppSelector(ProductSelector);
-    const { ordersByUser } = useAppSelector(BasketSelector);
+    const { ordersByUser, isOrderedFecthing } = useAppSelector(BasketSelector);
     const [isOrdersFetched, setIsOrdersFetched] = useState<boolean>(false);
     const dispatch = useAppDispatch();
     const router = useRouter();
@@ -27,11 +28,10 @@ const OrderSummary: NextPageWithLayout = () => {
         const fetchData = async () => {
             await dispatch(GetOrderedProductsByUsername(user?.profile?.firstName +" "+ user?.profile?.lastName));
 
-            console.log("Order Info: ", ordersByUser);
-            // console.log("Product Info: ", products);
-            setIsOrdersFetched(true);
+            // console.log("Ordered Product Info: ", ordersByUser);
         }
-        fetchData().catch(error => console.log(error));
+        fetchData().catch(error => console.log("Error occured"));
+        setIsOrdersFetched(true);
     }, []);
 
     return (        
@@ -48,13 +48,13 @@ const OrderSummary: NextPageWithLayout = () => {
                             {
                                 
                                 isOrdersFetched && ordersByUser.length > 0 ? (ordersByUser.map((order, index) => {
-                                    // console.log(order);
                                     return order.products.map((productId) => {
-                                        console.log(productId);
+                                        let product = GetProductsById(productId)                                        
+                                        .catch(error => console.log(error));
                                         
-                                        return products.results.filter((product) => product.id === productId).
-                                            map((productData, ind) => {
-                                            // console.log("Iteration");
+                                        console.log("Fetched order: ", product);
+                                        return products.results.filter((product) => product.id == productId).map((productData, ind) => {
+                                        
                                             return (                                               
                                                 <div key={ind + index} className="mt-4 md:mt-6 flex  flex-col md:flex-row justify-start items-start md:items-center md:space-x-6 xl:space-x-8 w-full ">
                                                     <div className="pb-4 md:pb-8 w-full md:w-40">

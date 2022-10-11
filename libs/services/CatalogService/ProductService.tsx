@@ -36,6 +36,11 @@ export const GetProductsByName= async(keyword : string) =>{
     return searchResult;
 }
 
+export const GetProductsById= async(keyword : string) =>{
+    var searchResult = await axios.get(`${catalogClient}/Catalog/${keyword}`)
+    return searchResult.data;
+}
+
 export const UpdateProduct = async(updateProductmodel : ProductModel) => {
     var result = await axios.put(`${catalogClient}/Catalog`, updateProductmodel);
     return result.data;

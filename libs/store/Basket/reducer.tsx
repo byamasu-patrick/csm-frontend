@@ -190,8 +190,7 @@ export const BasketReducer = createReducer(initialState, (builder) => {
             }
          },
          isCheckingOut : false, 
-         successMessage : "Successfully ordered",
-         checkoutResult: payload
+         successMessage : "Successfully ordered"
       }
    });
 

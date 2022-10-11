@@ -104,14 +104,10 @@ export const CheckoutBasket = createAsyncThunk(BasketActionType.BASKET_CHECKOUT,
     async(checkoutBasketData : OrderDetails, thunkAPI) =>{
       try{
 
-         console.log("Checkout Data: ", checkoutBasketData);
-
          thunkAPI.dispatch(checkoutBasket(true));
          let result = await BasketCheckoutAndOrder(checkoutBasketData);
 
          thunkAPI.dispatch(checkoutBasketSuccess(result));
-
-         // return result;
 
        }catch(e){
            var erroMessage = (e as string);

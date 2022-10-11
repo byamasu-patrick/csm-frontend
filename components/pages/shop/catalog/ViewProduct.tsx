@@ -6,17 +6,12 @@ import { useAppDispatch, useAppSelector } from "../../../../libs/store";
 import { AuthSelector } from "../../../../libs/store/Auth";
 import { AddBasketToDB, BasketSelector, UpdateBasketDB } from "../../../../libs/store/Basket";
 import { ProductSelector } from "../../../../libs/store/Catalog";
-import CreateProductReviewForm from "../review/CreateProductReviewFrom";
 
 interface ProductProps{
-    isOpen: boolean;
-    setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
     data: ProductModel;
-    //(isCreate: boolean) => React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-
-const ProductDetails: React.FC<ProductProps> = (props) => {
+const ViewProductDetails: React.FC<ProductProps> = (props) => {
     const [slide, setSlide] = useState<boolean>(true);
     const [addCart, setAddCart] = useState<number>(0);
     const router = useRouter()
@@ -28,49 +23,9 @@ const ProductDetails: React.FC<ProductProps> = (props) => {
 
     const slideToggle = () => setSlide(!slide);
     
-  const addToBasket = async (productPrice: number, productId: string, name: string,  ) => {
-    if(user == null){
-        if(!isAuthenticated && user?.userType !== UserType.FreeUser){
-            router.push("/signin");
-        }
-    }
-    else{
-        
-        if(cart.items.length === 0){
-            await dispatch(AddBasketToDB({
-                userName: user?.profile?.firstName +" "+ user?.profile?.lastName,
-                items: [{
-                    quantity: 1,
-                    color: "blue",
-                    price: productPrice,
-                    productId: productId,
-                    productName: name
-                }]                    
-            }));
-            props.setIsOpen(!props.isOpen);
-        }
-        else{
-
-            await dispatch(UpdateBasketDB({
-                quantity: 1,
-                color: "blue",
-                price: productPrice,
-                productId: productId,
-                productName: name
-            }));
-            props.setIsOpen(!props.isOpen);
-            
-        }
-        if(!isAdding){
-            setAddCart(0);
-        }
-    }
-  }
-
-
     return (
         <div>
-            <div className="w-full flex sm:flex-col md:flex-col lg:flex-row xl:flex-row justify-center items-center bg-white ">                
+            <div className="w-full py-6 flex sm:flex-col md:flex-col lg:flex-row xl:flex-row justify-center items-center bg-white ">                
                 <div className="w-full lg:ml-6 mb-6">
                     <div className="relative">
                         <div className="slider">
@@ -102,14 +57,6 @@ const ProductDetails: React.FC<ProductProps> = (props) => {
                             </button>
                         </div>
                     </div>
-                     {/* <div className="flex flex-col w-full space-y-4 mt-10">
-                            
-                        <button 
-                            onClick={() => addToBasket(props.data.price, props.data.id, props.data.name)}
-                            className="
-                                border border-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-600 md:w-96 w-full hover:bg-orange-600 text-base font-medium leading-4 bg-orange-500 py-4 text-white">Add to Bag</button>
-                        <button className="border border-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-600 md:w-96 w-full hover:bg-gray-50 text-base font-medium leading-4 text-orange-500 py-4 bg-white">Add to Wishlist</button>
-                    </div> */}
                 </div>
                 <div className="lg:mt-0 flex justify-start items-start w-full flex-col mx-6 sm:px-3 mb-6">
                     <h2 className=" lg:text-2xl text-xl lg:leading-6 leading-5 text-gray-800 font-semibold">{props.data.name} | {props.data.category}</h2>
@@ -198,24 +145,14 @@ const ProductDetails: React.FC<ProductProps> = (props) => {
                     <div className=" mt-10 w-full">
                         <div className=" flex justify-between">
                             <p className="font-semibold text-base leading-4 text-gray-800">Description</p>
-                            {/* <p className="cursor-pointer hover:text-gray-800 font-medium text-base leading-4 text-gray-500">
-                                
-                            </p> */}
+                            <p className="cursor-pointer hover:text-gray-800 font-medium text-base leading-4 text-gray-500">
+                               Stock: {props.data.itemsInStock}
+                            </p>
                         </div>                                
                     </div>
                     <p className=" mt-4 font-normal text-sm leading-3 text-gray-500 hover:text-gray-600 duration-100 cursor-pointer">
                         {props.data.description}
                     </p>
-
-                    <div className="flex flex-col w-full space-y-4 mt-10">
-                            
-                        <button 
-                            onClick={() => addToBasket(props.data.price, props.data.id, props.data.name)}
-                            className="
-                                border border-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-600 md:w-96 w-full hover:bg-orange-600 text-base font-medium leading-4 bg-orange-500 py-4 text-white">Add to Bag</button>
-                        <button className="border border-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-600 md:w-96 w-full hover:bg-gray-50 text-base font-medium leading-4 text-orange-500 py-4 bg-white">Add to Wishlist</button>
-                    </div>
-                    <CreateProductReviewForm productId={props.data.id} />
                 </div>                       
             </div>
             <style>
@@ -242,4 +179,4 @@ const ProductDetails: React.FC<ProductProps> = (props) => {
     );
 };
 
-export default ProductDetails;
+export default ViewProductDetails;

@@ -18,7 +18,7 @@ export const MalawiDistricts = [
 ];
 
 export const MalawiRegions = [
-    "Country", "Central Region", "Northern Region", "Southern Region"
+    "Region", "Central Region", "Northern Region", "Southern Region"
 ];
 
 export const ProductCategories = [

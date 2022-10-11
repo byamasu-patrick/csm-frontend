@@ -3,7 +3,7 @@ import React, { Fragment, useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import { useAppDispatch, useAppSelector } from '../../../../libs/store';
 import { AuthSelector } from '../../../../libs/store/Auth';
-import { AddProductToDB, ProductSelector } from '../../../../libs/store/Catalog';
+import { AddProductToDB, GetAllProductsByOwner, ProductSelector } from '../../../../libs/store/Catalog';
 import { convertSelectedImageToBase64, ProductCategories } from '../../../../libs/utils/common';
 
 interface CreateProps{
@@ -21,12 +21,12 @@ const CreateProduct: React.FC<CreateProps>  = (props) => {
     const [itemsInStock, setItemsInStock] = useState<number>(0);
 
     const dispatch = useAppDispatch();
-    const { product } = useAppSelector(ProductSelector);
+    const { product, isAdding } = useAppSelector(ProductSelector);
     const { user } = useAppSelector(AuthSelector);        
 
-    const addNewProduct = () => {
+    const addNewProduct = async () => {
         if(category !== "Default"){
-            dispatch(AddProductToDB({
+            await dispatch(AddProductToDB({
                 "name": name,
                 "category": category,
                 "summary": summary,
@@ -36,7 +36,20 @@ const CreateProduct: React.FC<CreateProps>  = (props) => {
                 "itemsInStock": itemsInStock,
                 "userId": String(user?.email)
             }));
-            props.setIsCreate(!props.isCreate);
+            if(!isAdding){
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    text: 'Product added successfully',
+                    showConfirmButton: false,
+                    timer: 1500,
+                    width: '400px',
+                    imageWidth: 10,
+                    imageHeight: 10
+                });
+                await dispatch(GetAllProductsByOwner(user?.email));
+                props.setIsCreate(!props.isCreate);
+            }
         }
         else{
             Swal.fire({
@@ -45,7 +58,7 @@ const CreateProduct: React.FC<CreateProps>  = (props) => {
                 text: "Please choose the category which the product belongs to",
                 confirmButtonText: 'OK',
                  confirmButtonColor: 'rgb(249 115 22)',
-              });
+            });
         }
             
     };

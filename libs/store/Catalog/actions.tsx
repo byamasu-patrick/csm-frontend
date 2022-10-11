@@ -77,7 +77,8 @@ export const UpdateProductEntity = createAsyncThunk(ProductActionType.UPDATE_PRO
        try{
 
            thunkAPI.dispatch(editingProduct(true));
-           await UpdateProduct(updateProductModel);
+           let result = await UpdateProduct(updateProductModel);
+           console.log(result);
            thunkAPI.dispatch(editSuccess("You have succesfully Updated the Product!"))
 
        }catch(error){
