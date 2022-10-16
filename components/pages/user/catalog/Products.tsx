@@ -12,6 +12,7 @@ import { AddBasketToDB, BasketSelector, searchBasketsData, UpdateBasketDB } from
 import ProductDetails from "./ProductDetails";
 import ProductDialog from "./ProductDialog";
 import { ProductModel } from "../../../../libs/models/shops/catalogs/ProductModels";
+import Link from "next/link";
 
 interface ProductProps{
     isHome: boolean;
@@ -161,7 +162,9 @@ const Products: React.FC<ProductProps> = (props) => {
                                                                         <p className="text-xs text-gray-600 px-2 bg-gray-200 py-1">12 months warranty</p>
                                                                     </div>
                                                                     <div className="pl-2">
-                                                                        <p className="text-xs text-gray-600 px-2 bg-gray-200 py-1">Complete box</p>
+                                                                        <Link href={`/user/chats/${product.name}?shopId=${product.userId}`}>
+                                                                            <a className="text-xs text-gray-600 px-2 py-1">Start Chat</a>
+                                                                        </Link>
                                                                     </div>
                                                                 </div>
                                                                 <div className="flex items-center justify-between py-4">

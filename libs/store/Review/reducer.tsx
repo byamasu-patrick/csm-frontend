@@ -1,6 +1,6 @@
 import { createReducer } from "@reduxjs/toolkit";
 import { ProductReviewModel, ProductReviewResponse } from "../../models/reviews/ReviewModels";
-import { addingProductReview, addProductReviewFailed, addProductReviewSuccess } from "./actions";
+import { addingProductReview, addProductReviewFailed, addProductReviewSuccess, getAllProductReviewsFailed, getAllProductReviewsSuccess, gettingAllProductReviews } from "./actions";
 
 export type ReviewState = {
     reviewsResponse : ProductReviewResponse,
@@ -50,5 +50,30 @@ export type ReviewState = {
             isAdding: false,
             error: payload
         }
+    });      
+
+    builder.addCase(gettingAllProductReviews , (state , {payload}) =>{
+        return {...state, isGetting : payload}
     });
+
+    builder.addCase(getAllProductReviewsSuccess , (state , {payload}) =>{
+        return {
+            ...state,  
+            isGetting: false,
+            reviewsResponse: {
+                currentPage: payload.currentPage,
+                results: payload.results,
+                totalPages: payload.totalPages
+            }     
+        }
+    });
+
+    builder.addCase(getAllProductReviewsFailed , (state , {payload}) =>{
+
+        return {
+            ...state, 
+            isGetting : false, 
+            error: payload
+        }
+    });   
  });

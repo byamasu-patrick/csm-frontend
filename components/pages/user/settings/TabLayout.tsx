@@ -1,10 +1,12 @@
 import React, { useState } from "react";
+import ChangePassword from "./Account/Change Password";
+import BillingAddress from "./Billing/BillingAddress";
 import Settings from "./Setting";
 const TabLayout = () => {
     const [activeStatus, setActiveStatus] = useState(1);
     return (
         <div>
-            <div className="sm:hidden relative w-11/12 mx-auto bg-white rounded">
+            <div className="sm:hidden relative w-11/12 mx-auto bg-white">
                 <div className="absolute inset-0 m-auto mr-4 z-0 w-6 h-6">
                     <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-selector" width={24} height={24} viewBox="0 0 24 24" strokeWidth="1.5" stroke="#A0AEC0" fill="none" strokeLinecap="round" strokeLinejoin="round">
                         <path stroke="none" d="M0 0h24v24H0z" />
@@ -20,8 +22,8 @@ const TabLayout = () => {
                     </option>
                 </select>
             </div>
-            <div className="xl:w-full xl:mx-0 h-12 hidden sm:block bg-white shadow rounded my-5">
-                <ul className="flex border-b px-5">
+            <div className="xl:w-full xl:mx-0 h-12 hidden sm:block bg-white my-5">
+                <ul className="flex px-5">
                     <li onClick={() => setActiveStatus(1)} className={activeStatus == 1 ? "text-sm border-orange-500 pt-3 rounded-t text-orange-600 mr-12" : "text-sm text-gray-600 py-3 flex items-center mr-12 hover:text-orange-600 cursor-pointer"}>
                         <div className="flex items-center mb-3">
                             <span>
@@ -74,7 +76,7 @@ const TabLayout = () => {
                                     <path d="M2 12l1.5 -2a11 11 0 0 1 17 0l1.5 2" />
                                 </svg>
                             </span>
-                            <span className="ml-1 font-normal">Shipping Addresses</span>
+                            <span className="ml-1 font-normal">Billing Addresses</span>
                         </div>
                         {activeStatus == 4 && <div className="w-full h-1 bg-orange-600 rounded-t-md" />}
                     </li>
@@ -83,6 +85,14 @@ const TabLayout = () => {
             </div>
             {
                 activeStatus === 1 ? (<Settings />) : <></>
+            
+            }
+            {
+                activeStatus === 4 ? (<BillingAddress />) : <></>
+            
+            }
+            {
+                activeStatus === 2 ? (<ChangePassword />) : <></>
             }
         </div>
     );

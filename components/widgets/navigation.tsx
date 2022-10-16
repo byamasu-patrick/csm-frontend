@@ -78,19 +78,25 @@ const Navigation = () => {
                                     </Link>
                                 </li>
                                 <li>
-                                    <a href="/shops" className="text-base text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800 hover:underline">
-                                        Shops
-                                    </a>
+                                    <Link href="/shops">
+                                        <a className="text-base text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800 hover:underline">
+                                            Shops
+                                        </a>
+                                    </Link>
                                 </li>
                                 <li>
-                                    <a href="#" className="text-base text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800 hover:underline">
-                                        New Products
-                                    </a>
+                                    <Link href="/user/chats" >
+                                        <a className="text-base text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800 hover:underline">
+                                            Chat
+                                        </a>                                    
+                                    </Link>
                                 </li>
                                 <li>
-                                    <a href="#" className="text-base text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800 hover:underline">
-                                        Support
-                                    </a>
+                                    <Link href="#">
+                                        <a  className="text-base text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800 hover:underline">
+                                            Support
+                                        </a>                                    
+                                    </Link>
                                 </li>
                             </ul>
                             <div className="md:w-6/12 justify-end flex items-center space-x-4 xl:space-x-8">

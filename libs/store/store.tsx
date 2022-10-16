@@ -2,6 +2,7 @@ import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
 import { AuthReducer } from "./Auth/reducer";
 import { BasketReducer } from "./Basket";
 import { ProductReducer } from "./Catalog";
+import { ChatReducer } from "./Chat";
 import { ProductReviewReducer } from './Review'
 
 export const mainStore = configureStore({
@@ -9,7 +10,8 @@ export const mainStore = configureStore({
         Auth: AuthReducer,
         Product: ProductReducer,
         Basket: BasketReducer,
-        ProductReview: ProductReviewReducer
+        ProductReview: ProductReviewReducer,
+        Chat: ChatReducer
     }
 });
 

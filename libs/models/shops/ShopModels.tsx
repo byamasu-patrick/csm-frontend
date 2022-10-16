@@ -46,7 +46,7 @@ export const navList: Array<NavigationObject> = [
         current: false,
     }, 
     {
-        name: "Carts",
+        name: "Chats",
         href: "/shop/carts",
         icon: ShoppingCartIcon,
         current: false,
@@ -110,6 +110,7 @@ export const userNavigation: Array<UserNavigation> = [
 export const clientNavigation: Array<UserNavigation> = [
     { name: "Your Profile", href: "/user/settings/edit" },
     { name: "Ordered Products", href: "/user/order-summary" },
+    { name: "Billing Addresses Products", href: "/user/billing-addresses" },
     { name: "Settings", href: "/user/settings" },
 ];
   

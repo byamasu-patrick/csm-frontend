@@ -1,201 +1,112 @@
-import React from 'react'
+import React, {useState, useRef, useEffect} from 'react';
+import { HubConnectionBuilder } from '@microsoft/signalr';
+import ChatForm, { MessageInfo } from './ChatForm';
+import { AuthSelector } from '../../../libs/store/Auth';
+import { ProductSelector } from '../../../libs/store/Catalog';
+import { useAppDispatch, useAppSelector } from '../../../libs/store';
+import { ChatSelector, GetChatMessageToRoom, joinChatRooomSuccess } from '../../../libs/store/Chat';
+import { joinRoomResponses, state } from '../../../libs/services/ChatService/ChatService';
 
-const ChatDisplay: React.FC = () => {
+interface Conversations{
+    setChat: any;
+    latestChat: any;
+    chat: Array<MessageInfo>;
+}  
+
+const ChatDisplay: React.FC<Conversations> = (props) => {
+    
+    const { user } = useAppSelector(AuthSelector);
+    const { joinRoomResponse  } = useAppSelector(ChatSelector);
+    const dispatch = useAppDispatch();
+
+    let username = user?.profile?.firstName +" "+ user?.profile.lastName;
+    // console.log("Data from the room: ", joinRoomResponse)
+    useEffect(() => {
+
+        const getMssage = async () => {           
+            await dispatch(joinChatRooomSuccess(joinRoomResponses));        
+            console.log("Watched variables: ", joinRoomResponse);
+        }
+
+        getMssage().catch(error => console.log(error));
+        // console.log("Data from the room: ", joinRoomResponse)
+
+    }, [joinRoomResponses.messages, joinRoomResponses.joinedMessages, joinRoomResponses.connectedUsers, state]);
+
     return (
         <>
-            
-            <div className="flex flex-col h-full overflow-x-auto mb-4">
-                <div className="flex flex-col h-full">
-                <div className="grid grid-cols-12 gap-y-2">
-                    <div className="col-start-1 col-end-8 p-3 rounded-lg">
-                    <div className="flex flex-row items-center">
-                        <div
-                        className="flex items-center justify-center h-10 w-10 text-white rounded-full bg-gray-500 flex-shrink-0"
-                        >
-                        A
-                        </div>
-                        <div
-                        className="relative ml-3 text-sm bg-white py-2 px-4 shadow rounded-xl"
-                        >
-                        <div>Hey How are you today?</div>
-                        </div>
-                    </div>
-                    </div>
-                    <div className="col-start-1 col-end-8 p-3 rounded-lg">
-                    <div className="flex flex-row items-center">
-                        <div
-                        className="flex items-center justify-center text-white h-10 w-10 rounded-full bg-gray-500 flex-shrink-0"
-                        >
-                        A
-                        </div>
-                        <div
-                        className="relative ml-3 text-sm bg-white py-2 px-4 shadow rounded-xl"
-                        >
-                        <div>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing
-                            elit. Vel ipsa commodi illum saepe numquam maxime
-                            asperiores voluptate sit, minima perspiciatis.
-                        </div>
-                        </div>
-                    </div>
-                    </div>
-                    <div className="col-start-6 col-end-13 p-3 rounded-lg">
-                    <div className="flex items-center justify-start flex-row-reverse">
-                        <div
-                        className="flex items-center justify-center h-10 w-10 rounded-full bg-indigo-100 flex-shrink-0"
-                        >
-                        A
-                        </div>
-                        <div
-                        className="relative mr-3 text-sm bg-gray-100 py-2 px-4 shadow rounded-xl"
-                        >
-                        <div>I'm ok what about you?</div>
-                        </div>
-                    </div>
-                    </div>
-                    <div className="col-start-6 col-end-13 p-3 rounded-lg">
-                    <div className="flex items-center justify-start flex-row-reverse">
-                        <div
-                        className="flex items-center justify-center h-10 w-10 rounded-full bg-indigo-100 flex-shrink-0"
-                        >
-                        A
-                        </div>
-                        <div
-                        className="relative mr-3 text-sm bg-gray-100 py-2 px-4 shadow rounded-xl"
-                        >
-                        <div>
-                            Lorem ipsum dolor sit, amet consectetur adipisicing. ?
-                        </div>
-                        </div>
-                    </div>
-                    </div>
-                    <div className="col-start-1 col-end-8 p-3 rounded-lg">
-                    <div className="flex flex-row items-center">
-                        <div
-                        className="flex items-center justify-center h-10 w-10 rounded-full text-white bg-gray-500 flex-shrink-0"
-                        >
-                        A
-                        </div>
-                        <div
-                        className="relative ml-3 text-sm bg-white py-2 px-4 shadow rounded-xl"
-                        >
-                        <div>Lorem ipsum dolor sit amet !</div>
-                        </div>
-                    </div>
-                    </div>
-                    <div className="col-start-6 col-end-13 p-3 rounded-lg">
-                    <div className="flex items-center justify-start flex-row-reverse">
-                        <div
-                        className="flex items-center justify-center h-10 w-10 rounded-full bg-indigo-100 flex-shrink-0"
-                        >
-                        A
-                        </div>
-                        <div
-                        className="relative mr-3 text-sm bg-gray-100 py-2 px-4 shadow rounded-xl"
-                        >
-                        <div>
-                            Lorem ipsum dolor sit, amet consectetur adipisicing. ?
-                        </div>
-                        <div
-                            className="absolute text-xs bottom-0 right-0 -mb-5 mr-2 text-gray-500"
-                        >
-                            Seen
-                        </div>
-                        </div>
-                    </div>
-                    </div>
-                    <div className="col-start-1 col-end-8 p-3 rounded-lg">
-                    <div className="flex flex-row items-center">
-                        <div
-                        className="flex items-center justify-center h-10 w-10 rounded-full text-white bg-gray-500  flex-shrink-0"
-                        >
-                        A
-                        </div>
-                        <div
-                        className="relative ml-3 text-sm bg-white py-2 px-4 shadow rounded-xl"
-                        >
-                        <div>
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                            Perspiciatis, in.
-                        </div>
-                        </div>
-                    </div>
-                    </div>
-                    <div className="col-start-1 col-end-8 p-3 rounded-lg">
-                    <div className="flex flex-row items-center">
-                        <div
-                        className="flex items-center justify-center h-10 w-10 rounded-full text-white bg-gray-500  flex-shrink-0"
-                        >
-                        A
-                        </div>
-                        <div
-                        className="relative ml-3 text-sm bg-white py-2 px-4 shadow rounded-xl"
-                        >
-                        <div className="flex flex-row items-center">
-                            <button
-                            className="flex items-center justify-center bg-orange-600 hover:bg-orange-800 rounded-full h-8 w-10"
-                            >
-                            <svg
-                                className="w-6 h-6 text-white"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                                xmlns="http://www.w3.org/2000/svg"
-                            >
-                                <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="1.5"
-                                d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
-                                ></path>
-                                <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="1.5"
-                                d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                                ></path>
-                            </svg>
-                            </button>
-                            <div className="flex flex-row items-center space-x-px ml-4">
-                            <div className="h-2 w-1 bg-gray-500 rounded-lg"></div>
-                            <div className="h-2 w-1 bg-gray-500 rounded-lg"></div>
-                            <div className="h-4 w-1 bg-gray-500 rounded-lg"></div>
-                            <div className="h-8 w-1 bg-gray-500 rounded-lg"></div>
-                            <div className="h-8 w-1 bg-gray-500 rounded-lg"></div>
-                            <div className="h-10 w-1 bg-gray-500 rounded-lg"></div>
-                            <div className="h-10 w-1 bg-gray-500 rounded-lg"></div>
-                            <div className="h-12 w-1 bg-gray-500 rounded-lg"></div>
-                            <div className="h-10 w-1 bg-gray-500 rounded-lg"></div>
-                            <div className="h-6 w-1 bg-gray-500 rounded-lg"></div>
-                            <div className="h-5 w-1 bg-gray-500 rounded-lg"></div>
-                            <div className="h-4 w-1 bg-gray-500 rounded-lg"></div>
-                            <div className="h-3 w-1 bg-gray-500 rounded-lg"></div>
-                            <div className="h-2 w-1 bg-gray-500 rounded-lg"></div>
-                            <div className="h-2 w-1 bg-gray-500 rounded-lg"></div>
-                            <div className="h-2 w-1 bg-gray-500 rounded-lg"></div>
-                            <div className="h-10 w-1 bg-gray-500 rounded-lg"></div>
-                            <div className="h-2 w-1 bg-gray-500 rounded-lg"></div>
-                            <div className="h-10 w-1 bg-gray-500 rounded-lg"></div>
-                            <div className="h-8 w-1 bg-gray-500 rounded-lg"></div>
-                            <div className="h-8 w-1 bg-gray-500 rounded-lg"></div>
-                            <div className="h-1 w-1 bg-gray-500 rounded-lg"></div>
-                            <div className="h-1 w-1 bg-gray-500 rounded-lg"></div>
-                            <div className="h-2 w-1 bg-gray-500 rounded-lg"></div>
-                            <div className="h-8 w-1 bg-gray-500 rounded-lg"></div>
-                            <div className="h-8 w-1 bg-gray-500 rounded-lg"></div>
-                            <div className="h-2 w-1 bg-gray-500 rounded-lg"></div>
-                            <div className="h-2 w-1 bg-gray-500 rounded-lg"></div>
-                            <div className="h-2 w-1 bg-gray-500 rounded-lg"></div>
-                            <div className="h-2 w-1 bg-gray-500 rounded-lg"></div>
-                            <div className="h-4 w-1 bg-gray-500 rounded-lg"></div>
-                            </div>
-                        </div>
-                        </div>
-                    </div>
-                    </div>
+             <div className="relative flex items-center space-x-4">
+                <div className="relative">
+                    <span className="absolute text-green-500 -right-2 bottom-0">
+                        <svg width="20" height="20">
+                            <circle cx="8" cy="8" r="8" fill="currentColor"></circle>
+                        </svg>
+                    </span>
+                    <img src="https://images.unsplash.com/photo-1549078642-b2ba4bda0cdb?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=facearea&amp;facepad=3&amp;w=144&amp;h=144" alt="" className="w-10 sm:w-12 h-8 sm:h-12 rounded-full" />
                 </div>
+                <div className="flex flex-col leading-tight">
+                    <div className="text-lg mt-1 flex items-center">
+                        <span className="text-gray-700 mr-3">{user?.profile?.firstName +" "+ user?.profile?.lastName}</span>
+                    </div>
+                    <span className="text-sm text-gray-600">Junior Developer</span>
                 </div>
             </div>
+            <div className="flex flex-col h-full overflow-x-auto mb-4">
+                <div className="flex flex-col h-full">
+                <div className="w-full">
+                    {
+                        // joinRoomResponse.messages.length > 0 ? (
+                            joinRoomResponse.messages.map((data) => {
+                                // console.log("Data from the Team: ", data);
+                                if(data !== undefined){
+                                    if(data.user.name === username){                                    
+                                        return (  
+                                            
+                                            <div className="w-full col-start-6 col-end-13 p-3 rounded-lg">
+                                                <div className="flex items-center justify-start flex-row-reverse">
+                                                    <div
+                                                    className="flex items-center justify-center h-10 w-10 rounded-full bg-indigo-100 flex-shrink-0"
+                                                    >
+                                                    { data.user.name[0].toLocaleUpperCase() }
+                                                    </div>
+                                                    <div
+                                                    className="relative mr-3 text-sm bg-white py-2 px-4 shadow rounded-xl"
+                                                    >
+                                                    <div>
+                                                        { data.message }
+                                                    </div>
+                                                    </div>
+                                                </div>
+                                            </div>                   
+                                        )
+                                    }
+                                    else{                                    
+                                        return (                                            
+                                            <div className="w-full col-start-6 col-end-13 p-3 rounded-lg">
+                                                <div className="flex items-center justify-start flex-row ">
+                                                    <div
+                                                    className="flex items-center mr-4 justify-center h-10 w-10 rounded-full bg-orange-100 flex-shrink-0"
+                                                    >
+                                                    { data.user.name[0].toLocaleUpperCase() }
+                                                    </div>
+                                                    <div
+                                                    className="relative mr-3 text-sm bg-gray-100 py-2 px-4 shadow rounded-xl"
+                                                    >
+                                                    <div>{ data.message } </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        );
+                                    }
+
+                                }
+                            })
+                        // ) : (<></>)
+                    }
+                </div>
+                </div>
+            </div>            
+            <ChatForm data={props.chat}/>
         </>
     )
 }

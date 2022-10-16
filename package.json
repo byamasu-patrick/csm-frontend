@@ -15,6 +15,7 @@
     "@heroicons/react": "^2.0.0",
     "@material-ui/icons": "^4.11.3",
     "@material-ui/styles": "^4.11.5",
+    "@microsoft/signalr": "^6.0.10",
     "@mui/icons-material": "^5.8.4",
     "@mui/material": "^5.10.2",
     "@mui/styles": "^5.9.3",

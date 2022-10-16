@@ -23,7 +23,7 @@ const VerticalNavigation = () => {
             </div> */}
             <div id="Main" className={`${show ? 'translate-x-0' : '-translate-x-full'} xl:rounded-r transform  xl:translate-x-0  ease-in-out transition duration-500 flex justify-start items-start h-full  w-full sm:w-64 bg-gray-50 sm:flex-col lg:flex-row`}>
                
-                <div className="flex flex-col justify-start items-center   px-6 border-b border-gray-600 w-full  ">
+                <div className="flex flex-col justify-start items-center px-6 w-full py-8 ">
                     <button onClick={()=>setMenuValue(0)} className="focus:outline-none focus:text-indigo-400  text-gray-900 flex justify-between items-center w-full py-5 space-x-14  ">
                         <p className="text-sm leading-5  uppercase">Profile Overview</p>
                         <svg id="icon1" className={`${menu[0] ? '' : 'rotate-180'} transform duration-100`} width={24} height={24} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

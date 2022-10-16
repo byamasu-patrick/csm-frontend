@@ -46,7 +46,7 @@ const ProductDialog: React.FC<ProductProps>  = (props) => {
                             leaveFrom="opacity-100 translate-y-0 sm:scale-100"
                             leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
                         >
-                            <Dialog.Panel className="flex text-base text-left transform transition w-9/12 md:inline-block md:max-w-full md:max-w-11/12 md:px-4 md:my-8 md:align-middle lg:max-w-9/12">
+                            <Dialog.Panel className="flex text-base text-left transform transition w-full md:inline-block md:max-w-full md:max-w-11/12 md:px-4 md:my-8 md:align-middle lg:max-w-9/12">
                                 <div
                                     className="
                                         modal-header

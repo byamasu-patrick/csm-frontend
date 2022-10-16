@@ -7,6 +7,7 @@ import { AuthSelector } from "../../../../libs/store/Auth";
 import { AddBasketToDB, BasketSelector, UpdateBasketDB } from "../../../../libs/store/Basket";
 import { ProductSelector } from "../../../../libs/store/Catalog";
 import CreateProductReviewForm from "../review/CreateProductReviewFrom";
+import DisplayReview from "../review/DisplayReview";
 
 interface ProductProps{
     isOpen: boolean;
@@ -111,7 +112,7 @@ const ProductDetails: React.FC<ProductProps> = (props) => {
                         <button className="border border-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-600 md:w-96 w-full hover:bg-gray-50 text-base font-medium leading-4 text-orange-500 py-4 bg-white">Add to Wishlist</button>
                     </div> */}
                 </div>
-                <div className="lg:mt-0 flex justify-start items-start w-full flex-col mx-6 sm:px-3 mb-6">
+                <div className="lg:mt-0 flex justify-start items-start w-full flex-col mx-6 sm:px-3">
                     <h2 className=" lg:text-2xl text-xl lg:leading-6 leading-5 text-gray-800 font-semibold">{props.data.name} | {props.data.category}</h2>
                     <div className=" flex justify-start items-center mt-4">
                         <p className="font-normal text-lg leading-6 text-gray-600 mr-4">MK {props.data.price}.00</p>
@@ -206,7 +207,6 @@ const ProductDetails: React.FC<ProductProps> = (props) => {
                     <p className=" mt-4 font-normal text-sm leading-3 text-gray-500 hover:text-gray-600 duration-100 cursor-pointer">
                         {props.data.description}
                     </p>
-
                     <div className="flex flex-col w-full space-y-4 mt-10">
                             
                         <button 
@@ -215,8 +215,18 @@ const ProductDetails: React.FC<ProductProps> = (props) => {
                                 border border-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-600 md:w-96 w-full hover:bg-orange-600 text-base font-medium leading-4 bg-orange-500 py-4 text-white">Add to Bag</button>
                         <button className="border border-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-600 md:w-96 w-full hover:bg-gray-50 text-base font-medium leading-4 text-orange-500 py-4 bg-white">Add to Wishlist</button>
                     </div>
-                    <CreateProductReviewForm productId={props.data.id} />
                 </div>                       
+            </div>
+            {/* <div className="w-full flex justify-start items-start">
+                <p className="text-3xl lg:text-4xl font-semibold leading-7 text-gray-800 bg-white w-full ">Reviews</p>
+            </div> */}
+            <div className="w-full flex sm:flex-col md:flex-col lg:flex-row xl:flex-row justify-center items-center bg-white ">                
+                <div className="w-full lg:ml-6 mb-6">
+                    <DisplayReview productId={props.data.id} />
+                </div>
+                <div className="lg:mt-0 flex justify-start items-start w-full flex-col mx-6 sm:px-3 mb-6">
+                    <CreateProductReviewForm productId={props.data.id} />
+                </div>
             </div>
             <style>
                 {` 
