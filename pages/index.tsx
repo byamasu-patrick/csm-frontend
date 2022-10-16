@@ -6,6 +6,7 @@ import Products from '../components/pages/user/catalog/Products'
 import Order from '../components/pages/user/ordering/OrderDetails'
 import Footer from '../components/widgets/footer'
 import Navigation from '../components/widgets/navigation'
+import Header from '../components/widgets/header'
 import Testimonials from '../components/widgets/testimonials/testimonials'
 import { useAppDispatch } from '../libs/store';
 import { useRouter } from 'next/router';
@@ -17,6 +18,7 @@ const Home: NextPage = () => {
 
   return (
     <div className="md:bg-gray-50"> 
+      <Header />
       <Navigation /> 
       <ProductCarousel />
       <Products isHome={true}/>    
