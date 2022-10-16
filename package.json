@@ -22,6 +22,7 @@
     "@types/mui-datatables": "^3.7.9",
     "axios": "^0.27.2",
     "bootstrap-icons": "^1.9.1",
+    "daisyui": "^2.31.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "formik": "^2.2.9",
     "framer-motion": "^7.3.5",

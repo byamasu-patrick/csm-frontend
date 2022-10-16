@@ -2,7 +2,7 @@ import React from "react";
 import { useAppSelector } from "../../../../libs/store";
 import { ProductSelector } from "../../../../libs/store/Catalog";
 
-const FeaturedProduct = () => {
+const  FeaturedProduct = () => {
     
     const { products } = useAppSelector(ProductSelector);
     let featured: number = 0;
@@ -38,7 +38,10 @@ const FeaturedProduct = () => {
                     </div>
                 </div>
             </div>
+            <div>
+            </div>
         </div>
+        
     );
 };
 
