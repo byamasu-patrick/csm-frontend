@@ -1,4 +1,4 @@
-import { AxiosError } from "axios";
+import axios, { AxiosError } from "axios";
 import { ApiResponse, AuthError, AuthProviderEnum, DecodedToken, FacebookTokenResponse, RegisterParamModel, TokenModel, User } from "../../models/auth/AuthModels";
 import { authClient, facebookTokenClient, tokenClient } from "./authClients";
 import jwt_decode from 'jwt-decode';
@@ -229,6 +229,17 @@ export const decodeJwtToken = (token: string) => {
     return decoded;
  };
 
+ export const GetShopService = async (isShops: boolean) => {
+   try{
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/GetShops/${isShops}`);
+
+      return response.data;
+   }
+   catch(error){
+
+   }
+
+ }
  
 export {
     signInWithFacebook,

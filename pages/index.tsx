@@ -12,21 +12,60 @@ import { useAppDispatch } from '../libs/store';
 import { useRouter } from 'next/router';
 import ProductCarousel from '../components/pages/user/catalog/ProductCarousel';
 import FeaturedProduct from '../components/pages/user/catalog/ProductFeatured';
+import LoginNav from '../components/widgets/loginnav';
+import SubscribeBanner from '../components/pages/user/catalog/SubscribeBanner';
+import MarketingBanner from '../components/pages/user/catalog/MarketingBanner';
+import TredingProducts from '../components/pages/user/catalog/TreddingProducts';
+import DisplayShops from '../components/pages/user/shops/DisplayShops';
+import { getDiscountService } from '../libs/services/DiscountService/DiscountService';
+import { getDiscountsSuccess } from '../libs/store/Discount';
+import { DiscountModel } from '../libs/models/discount/DiscountModel';
 
 
-const Home: NextPage = () => {
+interface PageProps{
+  discountData: DiscountModel[]
+}
+
+const Home: NextPage<PageProps> = ({
+  discountData
+}) => {
+
+  const dispatch = useAppDispatch();
+  
+  useEffect(() => {
+    const saveDiscounts = async () => {
+      await dispatch(getDiscountsSuccess(discountData));
+    }
+
+    saveDiscounts().catch(error => console.log("error has occured"))
+  })
 
   return (
-    <div className="md:bg-gray-50"> 
-      <Header />
+    <div className="bg-white"> 
+      {/* <Header /> */}
+      <LoginNav />
       <Navigation /> 
-      <ProductCarousel />
-      <Products isHome={true}/>    
+      <ProductCarousel /> 
+      <MarketingBanner />
+      <Products isHome={true}/>   
+      <TredingProducts />
+      <SubscribeBanner />
+      <DisplayShops />
       <FeaturedProduct />
       <Testimonials />
       <Footer />
     </div>
   )
+}
+
+export async function getStaticProps(){
+  var result = await getDiscountService();
+
+  return {
+    props: {
+      discountData: result,
+    },
+  };
 }
 
 export default Home

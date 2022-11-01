@@ -1,8 +1,9 @@
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { AxiosError } from 'axios';
-import { ApiResponse, AuthError, LoginParamModel, TokenModel, User } from '../../models/auth/AuthModels';
+import GetShops from '../../../components/pages/user/shops/GetShops';
+import { ApiResponse, AuthError, LoginParamModel, ShopInfo, TokenModel, User } from '../../models/auth/AuthModels';
 import { authClient } from '../../services/AuthService/authClients';
-import { activateUser, decodeJwtToken, initialLoadUser, registerAsFacebookUser, resetPassword, resetPasswordEmail, registerWithEmailAndPassword as register } from '../../services/AuthService/authService';
+import { activateUser, decodeJwtToken, initialLoadUser, registerAsFacebookUser, resetPassword, resetPasswordEmail, registerWithEmailAndPassword as register, GetShopService } from '../../services/AuthService/authService';
 import { ActionType } from './actions-type';
 
 const setLocalTokenStorage = (tokenModel: TokenModel) => {
@@ -20,11 +21,14 @@ const setLocalTokenStorage = (tokenModel: TokenModel) => {
  }
 
 export const authLoading = createAction<boolean>(ActionType.AUTH_LOADING);
-export const authError = createAction<AuthError>(ActionType.AUTH_ERROR);
+export const authError = createAction<AuthError | null>(ActionType.AUTH_ERROR);
 export const clearAuthError = createAction<void>(ActionType.CLEAR_AUTH_ERROR);
 export const authSuccess = createAction<User & TokenModel>(ActionType.AUTH_SUCCESS);
 export const registerCompleted = createAction<void>(ActionType.REGISTER_COMPLETED);
 export const logoutUser = createAction<boolean>(ActionType.LOGOUT);
+export const getShops  = createAction<boolean>(ActionType.GET_SHOPS);
+export const getShopsSuccess = createAction<ShopInfo[]>(ActionType.GET_SHOPS_SUCCESS)
+export const getShopsFailed = createAction<string>(ActionType.GET_SHOPS_FAILED);
 
 export const signInWithEmailAndPassword = createAsyncThunk<void, { email: string; password: string }>(
     ActionType.SIGN_IN_WITH_EMAIL_AND_PASSWORD,
@@ -44,6 +48,8 @@ export const signInWithEmailAndPassword = createAsyncThunk<void, { email: string
              'login',
              data
           );
+
+          console.log("Login Response: ", response)
           const content = response.data;
           const decodedToken = decodeJwtToken(content.data?.accessToken!);
           
@@ -199,4 +205,17 @@ export const initialLoad = createAsyncThunk<void, void>(
     }
  );
  
- 
+ export const GetShopsFromApi = createAsyncThunk(ActionType.GET_SHOPS,
+   async(shop: boolean, thunkAPI) =>{
+     try{
+
+        thunkAPI.dispatch(getShops(true));
+        let result = await GetShopService(shop);
+
+        thunkAPI.dispatch(getShopsSuccess(result));
+
+      }catch(e){
+          var erroMessage = (e as string);
+          thunkAPI.dispatch(getShopsFailed(erroMessage));
+     }
+});

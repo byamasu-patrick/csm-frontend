@@ -2,7 +2,7 @@ import React from "react";
 const Footer = () => {
     return (
         <>
-            <div className=" bg-linear-pink-invert py-12 bg-gray-100">
+            <div className=" bg-linear-pink-invert py-12 bg-gray-100 mt-6 ">
                 <div className="mx-auto container pt-10 lg:pt-54 flex flex-col items-center justify-center">
                     <div>                               
                         <img src="../../cloud-stores.png" width="93" height="93"/>

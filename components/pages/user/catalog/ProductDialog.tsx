@@ -35,7 +35,7 @@ const ProductDialog: React.FC<ProductProps>  = (props) => {
                 <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
                 </Transition.Child>
 
-                <div className="fixed inset-0 overflow-y-auto">
+                <div className="fixed inset-0 overflow-y-auto pt-[65px]">
                     <div className="flex items-end sm:items-center justify-center min-h-full p-4 text-center sm:p-0">
                         <Transition.Child
                             as={Fragment}

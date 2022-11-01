@@ -52,20 +52,6 @@ const TabLayout = () => {
                         </div>
                         {activeStatus == 2 && <div className="w-full h-1 bg-orange-600 rounded-t-md" />}
                     </li>
-                    <li onClick={() => setActiveStatus(3)} className={activeStatus == 3 ? "text-sm border-orange-500 pt-3 rounded-t text-orange-600 mr-12" : "text-sm text-gray-600 py-3 flex items-center mr-12 hover:text-orange-600 cursor-pointer"}>
-                        <div className="flex items-center mb-3">
-                            <span>
-                                <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-eye" width={16} height={16} viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                                    <path stroke="none" d="M0 0h24v24H0z" />
-                                    <circle cx={12} cy={12} r={2} />
-                                    <path d="M2 12l1.5 2a11 11 0 0 0 17 0l1.5 -2" />
-                                    <path d="M2 12l1.5 -2a11 11 0 0 1 17 0l1.5 2" />
-                                </svg>
-                            </span>
-                            <span className="ml-1 font-normal">Payment Methods Settings</span>
-                        </div>
-                        {activeStatus == 3 && <div className="w-full h-1 bg-orange-600 rounded-t-md" />}
-                    </li>
                     <li onClick={() => setActiveStatus(4)} className={activeStatus == 4 ? "text-sm border-orange-500 pt-3 rounded-t text-orange-600 mr-12" : "text-sm text-gray-600 py-3 flex items-center mr-12 hover:text-orange-600 cursor-pointer"}>
                         <div className="flex items-center mb-3">
                             <span>

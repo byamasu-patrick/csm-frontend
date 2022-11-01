@@ -13,6 +13,7 @@ import ProductDetails from "./ProductDetails";
 import ProductDialog from "./ProductDialog";
 import { ProductModel } from "../../../../libs/models/shops/catalogs/ProductModels";
 import Link from "next/link";
+import { DiscountSelector } from "../../../../libs/store/Discount";
 
 interface ProductProps{
     isHome: boolean;
@@ -26,6 +27,7 @@ const Products: React.FC<ProductProps> = (props) => {
     const dispatch = useAppDispatch();
     const { products, isGetting, productsOwner } = useAppSelector(ProductSelector);
     const { user, isAuthenticated } = useAppSelector(AuthSelector);
+    const { discounts } = useAppSelector(DiscountSelector);
     const { isAdding, cart, basketSearch, isUpdating, successMessage } = useAppSelector(BasketSelector);
     const router = useRouter();
 
@@ -114,15 +116,19 @@ const Products: React.FC<ProductProps> = (props) => {
                 </div>  
                 {
                     isGetting ? (<></>) : (
-                        <div className="w-full  sm:w-full md:w-8/12 lg:w-9/12 bg-gray-100 ">
+                        <div id="product" className="w-full  sm:w-full md:w-8/12 lg:w-9/12 bg-gray-100 ">
                             <div className="mx-auto container pb-8">
                                 <div className="flex flex-wrap items-center lg:justify-between justify-center">
                                     {
                                         products?.results.map((product, key) => {
                                             productLimit++;
+                                            const productDiscount = discounts.filter((prodDiscont) => prodDiscont.productId === product.id)[0];
+                                            
+                                            // console.log("Discount: ", productDiscount)
+
                                             if(productLimit < 7){
                                                 return (
-                                                    <div key={key} className="mx-2 w-64 lg:mb-4 mb-8 hover:bg-gray-100 hover:cursor-pointer hover:shadow">
+                                                    <div key={key} className="mx-2 w-72 lg:mb-4 mb-8  hover:bg-gray-100 hover:cursor-pointer hover:shadow-lg">
                                                         <div>
                                                             <img src={product.imageFile} onClick={() => handleOnProductClicked(product)} className="w-full h-44" />
                                                         </div>
@@ -159,7 +165,9 @@ const Products: React.FC<ProductProps> = (props) => {
                                                                 <p className="text-xs text-gray-600 mt-2">{ product.summary.substring(0, 100) }</p>
                                                                 <div className="flex mt-4">
                                                                     <div>
-                                                                        <p className="text-xs text-gray-600 px-2 bg-gray-200 py-1">12 months warranty</p>
+                                                                        <p className="text-xs text-gray-600 px-2 bg-gray-200 py-1">{
+                                                                            productDiscount !== undefined ? `On promotion ${(productDiscount.amount * 100) / product.price} % Off` : '12 months warrant'
+                                                                        }</p>
                                                                     </div>
                                                                     <div className="pl-2">
                                                                         <Link href={`/user/chats/${product.name}?shopId=${product.userId}`}>
@@ -169,7 +177,7 @@ const Products: React.FC<ProductProps> = (props) => {
                                                                 </div>
                                                                 <div className="flex items-center justify-between py-4">
                                                                     <h2 className="text-gray-800 text-xs font-semibold">Malawi</h2>
-                                                                    <h3 className="text-gray-800 text-xl font-semibold">MK {product.price}</h3>
+                                                                    <h3 className="text-gray-800 text-xl font-semibold">{productDiscount !== undefined ? <span className="line-through mr-2">MK {product.price}</span> : ''}{productDiscount !== undefined ? (`K ${product.price - productDiscount.amount}`) : `MK ${product.price} `}</h3>
                                                                 </div>                                    
                                                                 <div className="flex justify-center xl:justify-end w-full">
                                                                     <div className="flex items-center">

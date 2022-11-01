@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import { useAppDispatch, useAppSelector } from "../libs/store";
 import { AuthSelector } from "../libs/store/Auth/selectors";
 import { ErrorEnum } from "../libs/models/error-enums";
-import { clearAuthError, signInWithEmailAndPassword } from "../libs/store/Auth/actions";
+import { authError, clearAuthError, signInWithEmailAndPassword } from "../libs/store/Auth/actions";
 import Loader from "../components/widgets/loader";
 import { FormatAlignCenterOutlined } from "@mui/icons-material";
 import Swal from "sweetalert2";
@@ -29,7 +29,25 @@ const Signin: React.FC = () => {
 
       isAuthenticated && !returnUrl && (user?.userType == UserType.ShopOwner) && router.push('/shop');
       isAuthenticated && !returnUrl && (user?.userType == UserType.FreeUser) && router.push('/');
+      
    }, [isAuthenticated]);
+
+   useEffect(() => {
+    if(error !== null){  
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: error.message,
+        confirmButtonText: 'OK',
+        confirmButtonColor: 'rgb(249 115 22)',
+      });
+      dispatch(clearAuthError());
+    
+      router.reload();
+
+    }
+
+   }, [error])
 
    useEffect(() => {
     if (error?.code === ErrorEnum.EmailNotConfirmed) {

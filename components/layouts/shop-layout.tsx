@@ -53,15 +53,15 @@ const ShopLayout: NextPageWithLayout<ShopProps> = ({children}: ShopProps) => {
     return (
         <>
         {
-          true ? (<div className="min-h-full bg-slate-100 " style={{ height: 'auto' }} >
+          true ? (<div className="min-h-full mb-6 " style={{ height: 'auto' }} >
           {/* When the mobile menu is open, add `overflow-hidden` to the `body` element to prevent double scrollbars */}
           <Popover
             as="header"           
           >
             {({ open }) => (
               <>
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-1 border-b-1 pb-3 shadow-sm">
-                  <div className="relative flex justify-between xl:grid xl:grid-cols-12 lg:gap-8">
+                <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 pt-1 border-b-1 pb-3 shadow-sm">
+                  <div className="sticky top-0 z-50 relative flex justify-between xl:grid xl:grid-cols-12 lg:gap-8">
                     <div className="flex md:absolute md:left-0 md:inset-y-0 lg:static xl:col-span-2">
                       <div className="flex-shrink-0 flex items-center">
                         <Link href="/">

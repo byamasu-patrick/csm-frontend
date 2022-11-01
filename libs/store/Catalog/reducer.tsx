@@ -1,4 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit';   
+import { DiscountModel } from '../../models/discount/DiscountModel';
+import { addDiscountByName, addDiscountByNameFailed, addDiscountByNameSuccess, discountSearching, discountSearchingFailed, discountSearchingSuccess } from '../Discount';
+
 import { ProductModel, ProductResponse, ProductSearchModel } from '../../models/shops/catalogs/ProductModels';
 import { adddProductFailed, addingProduct, addProductSuccess, editFailed, editingProduct, editSuccess, getAllProductsByCategoryFailed, getAllProductsByCategorySuccess, getAllProductsByShopOwnerFailed, getAllProductsByShopOwnerSuccess, getAllProductsFailed, getAllProductsSuccess, gettingAllProducts, gettingAllProductsByCategory, gettingAllProductsByShopOwner, productSearching, productSearchingFailed, productSearchingSuccess } from './actions';
 

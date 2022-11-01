@@ -19,6 +19,13 @@ export enum AuthProviderEnum {
     code: ErrorEnum,
     message: string
  }
+
+ export interface ShopInfo{
+   id: number,
+   firstName: string,
+   lastName: string,
+   email: string
+ }
  
  export interface User {
     // tokenModel: TokenModel;

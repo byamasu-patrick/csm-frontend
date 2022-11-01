@@ -35,8 +35,8 @@ const Navigation = () => {
     // }, [isAuthenticated]);
 
     return (
-        <div className="dark:bg-gray-900 bg-white">
-            <div className="flex md:flex-col bg-gray-50">
+        <div className="bg-white sticky top-0 z-50 bg-white shadow-sm">
+            <div className="flex md:flex-col">
                 <div className="relative">
                     {/* For md screen size */}
                     <div id="md-searchbar" className={`${mdOptionsToggle ? "hidden" : "flex"} bg-white dark:bg-gray-900 lg:hidden py-5 px-6 items-center justify-between`}>
@@ -66,55 +66,60 @@ const Navigation = () => {
                     {/* For large screens */}
                     <div className="dark:bg-gray-90 px-6 py-5">
                         <div className="container mx-auto flex items-center justify-between">
-                            <h1 className="md:w-2/12 cursor-pointer text-orange-600 dark:text-white" aria-label="Cloud Stores MW">                               
-                                <img src="../../cloud-stores.png" width="60" height="60"/>
+                            <h1 className="md:w-3/12 cursor-pointer text-orange-600 dark:text-white" aria-label="Cloud Stores MW">                               
+                                <Link href="/">
+                                    <a>
+                                        <img src="../../cloud-stores.png" width="60" height="60"/>
+                                    </a>
+                                </Link>
                             </h1>
-                            <ul className="hidden w-6/12 md:flex items-center justify-center space-x-4">
-                                <li>
-                                    <Link href="/">
-                                        <a className="text-base text-gray-800 focus:outline-nonehover:underline">
-                                            Home
-                                        </a>
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link href="/shops">
-                                        <a className="text-base text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800 hover:underline">
-                                            Shops
-                                        </a>
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link href="/user/chats" >
-                                        <a className="text-base text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800 hover:underline">
-                                            Chat
-                                        </a>                                    
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link href="#">
-                                        <a  className="text-base text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800 hover:underline">
-                                            Support
-                                        </a>                                    
-                                    </Link>
-                                </li>
-                            </ul>
-                            <div className="md:w-6/12 justify-end flex items-center space-x-4 xl:space-x-8">
+                            <div className='flex w-4/12 items-center md:border-2 rounded-full py-2 md:shadow-sm'>
+                                <input 
+                                type="text"  
+                                className='flex-grow pl-5 outline-none bg-transparent text-gray-600 placeholder-gray'
+                                placeholder='Search for products...'
+                                />
+                                <svg 
+                                xmlns="http://www.w3.org/2000/svg" 
+                                viewBox="0 0 24 24" 
+                                fill="currentColor" 
+                                className="hidden md:inline-flex h-8  bg-orange-500 text-white rounded-full p-2 cursor-pointer md:mx-2">
+                                <path 
+                                    fillRule="evenodd" 
+                                    d="M10.5 3.75a6.75 6.75 0 100 13.5 6.75 6.75 0 000-13.5zM2.25 10.5a8.25 8.25 0 1114.59 5.28l4.69 4.69a.75.75 0 11-1.06 1.06l-4.69-4.69A8.25 8.25 0 012.25 10.5z" 
+                                    clipRule="evenodd" 
+                                />
+                                </svg>
+                            </div>
+                            <div className="md:w-4/12 justify-end flex items-center space-x-4 xl:space-x-8">
                                 
                                 <div className="hidden lg:flex items-center space-x-2 xl:space-x-8">                                    
                                     <Link href="/user/carts">
-                                        <a aria-label="go to cart" className="text-gray-800 hover:cursor-pointer hover:text-gray-900">
-                                            <AddShoppingCartIcon  sx={{ fontSize: 28 }}/>
+                                        <a aria-label="go to cart" className="text-gray-800 mx-6 hover:cursor-pointer hover:text-gray-900">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                                                <path 
+                                                strokeLinecap="round" 
+                                                strokeLinejoin="round" 
+                                                d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
+                                            </svg>
                                             {
                                                 (cart?.items.length >= 1) && (cart !== null) || (basketSearch.searchResult?.items.length >= 1) && (cart !== null)  ?
                                                 (
-                                                    <div className="inline-flex relative -top-4 right-2 justify-center items-center w-6 h-6 text-sm font-bold text-white bg-[rgb(11,115,164)] rounded-full border-2 border-white dark:border-gray-900">
+                                                    <div className="inline-flex relative -top-9 -right-4 right-2 justify-center items-center w-6 h-6 text-sm font-bold text-white bg-[rgb(11,115,164)] rounded-full border-2 border-white dark:border-gray-900">
                                                         { cart.items.length === 0 ?  basketSearch.searchResult.items.length : cart.items.length }
                                                     </div>
                                                 ) : (<></>)
                                             }
                                         </a>
                                     </Link>
+                                    {/* <div className='flex items-center space-x-4 justify-end text-gray-500'>
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                                            <path 
+                                            strokeLinecap="round" 
+                                            strokeLinejoin="round" 
+                                            d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+                                        </svg>                                        
+                                    </div> */}
                                     {
                                         isAuthenticated ? ( 
                                             <Popover
@@ -142,12 +147,9 @@ const Navigation = () => {
                                                             </span>
                                                             </div>
                                                             <div className="ml-3">
-                                                            <div className="text-base font-medium text-gray-800">
-                                                            {user?.profile?.firstName +" "+ user?.profile?.lastName}
-                                                            </div>
-                                                            <div className="text-sm font-medium text-gray-500">
-                                                                {user?.email}
-                                                            </div>
+                                                                <div className="text-base font-medium text-gray-800">
+                                                                {user?.profile?.firstName +" "+ user?.profile?.lastName}
+                                                                </div>
                                                             </div>
                                                         </div>
                                                         <div className="mt-3 max-w-3xl mx-auto px-2 space-y-1 sm:px-4">
@@ -177,7 +179,6 @@ const Navigation = () => {
                                                         "
                                                     >
                                                         <span className="sr-only">Open user menu</span>
-                                                        <span className="lowercase m-2"> {user?.email} </span>
                                                         <span
                                                         className="
                                                                 inline-flex
@@ -232,39 +233,7 @@ const Navigation = () => {
                                                 </Menu>
                                             </Popover>     
                                         ) : (
-                                            <>                                                            
-                                                <Link href="/signup">
-                                                <a 
-                                                    type="button" 
-                                                    className="
-                                                        text-white bg-orange-500
-                                                        focus:ring-offset-2 
-                                                        rounded-sm
-                                                        hover:bg-orange-600 focus:outline-none 
-                                                        focus:ring-2 focus:ring-orange-500 
-                                                        font-medium text-sm px-5 
-                                                        py-2.5 mr-2 mb-2 dark:bg-orange-600 
-                                                        dark:hover:bg-orange-700 
-                                                        dark:focus:ring-orange-700 
-                                                        dark:border-orange-700">Sign Up</a>
-                                                </Link>
-                                                <Link href="/signin">
-                                                <a 
-                                                    type="button" 
-                                                    className="
-                                                    
-                                                        text-white 
-                                                        bg-[#0b73a4] border 
-                                                        rounded-sm
-                                                        hover:text-white
-                                                        border-gray-300 focus:outline-none 
-                                                        hover:bg-[#0b73a4] focus:ringf-4 
-                                                        focus:ring-gray-200 font-medium 
-                                                        text-sm px-5 py-2.5 
-                                                        mr-2 mb-2
-                                                        ">Sign In</a>
-                                                </Link>
-                                            </>
+                                            <></>
                                         )
                                     }
                                 </div>

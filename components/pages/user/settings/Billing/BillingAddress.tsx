@@ -2,6 +2,9 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
+import { useAppDispatch, useAppSelector } from "../../../../../libs/store";
+import { AuthSelector } from "../../../../../libs/store/Auth";
+import { AddBillingAddressToDB, BillingSelector } from "../../../../../libs/store/Billing";
 import { MalawiDistricts, MalawiRegions } from "../../../../../libs/utils/common";
 import CurrentBillingAddress from "./CurrentBillingAddress";
 
@@ -10,21 +13,23 @@ const BillingAddress = () => {
     const [isRegion, setIsRegion] = useState<boolean>(false);
     const [isCountry, setIsCountry] = useState<boolean>(false);
 
+    const [zipCode, setZipCode] = useState<string>("");
+    const [email, setEmail]  = useState<string>("");
+    const [addressLine, setAddressLine] = useState<string>("");
     const [district, setDistrict] = useState<string>("City");
     const [region, setRegion] = useState<string>("Region");
     const [country, setCountry] = useState<string>("Contry");
     const [cardName, setCardName] = useState<string>("");
     const [cardNumber, setCardNumber] = useState<string>("");
-    const [expireDate, setExpireDate] = useState<string>("");
+    const [expiration, setExpiration] = useState<string>("");
     const [cvv, setCvv]  = useState<string>("");
-    const [zipCode, setZipCode] = useState<string>("");
-    const [email, setEmail]  = useState<string>("");
-    const [addressLine, setAddressLine] = useState<string>("");
+    const [defaultCard, setDefaultCard] = useState<boolean>(false);
     const router = useRouter();
-    
-    var tax = 2500;
-    var shippment = 12000;
+    const dispatch = useAppDispatch();
+    const { successMessage } = useAppSelector(BillingSelector);
 
+    const { user } = useAppSelector(AuthSelector);
+    
     const handleDistrict: Function = (dist: string) => {
         setDistrict(dist);
         setIsDistrict(false);
@@ -38,64 +43,64 @@ const BillingAddress = () => {
         setIsCountry(false);
     }
 
-    // const getProductId = (products: Array<BasketItem>): Array<string> => {
-    //     return products.map((product) => product.productId);
-    // }
 
     const handleSubmit = async () => {
-        // if(cardName && cardNumber && cvv && zipCode ){
-        //     var productIds = cart !== null ? getProductId(cart.items) : getProductId(basketSearch?.searchResult?.items);
+        if(cardName && cardNumber && cvv && cvv && expiration ){
+        
+           
+            await dispatch(AddBillingAddressToDB({
+                addressLine,
+                cardName,
+                cardNumber,
+                country,
+                cvv,
+                emailAddress: email,
+                expiration,
+                firstName: user?.profile?.firstName,
+                lastName: user?.profile?.lastName,
+                zipCode,
+                default: defaultCard,
+                state: district, 
+                userId: user?.email
+            }));        
+            setCardName("");
+            setCardNumber("");
+            setAddressLine("");
+            setCvv("");
+            setCountry("Country");
+            setDistrict("City");
+            setEmail("");
+            setZipCode("");
+            setAddressLine("");
+            setRegion("Region");
+            setAddressLine("");
+            setExpiration("");
+            Swal.fire({
+                icon: 'success',
+                title: 'Saved',
+                text: successMessage,
+                confirmButtonText: 'OK',
+                confirmButtonColor: 'rgb(249 115 22)',
+            });
 
-        //     var shopInfo: OrderDetails = {
-        //         userName: cart !== null ? String(cart?.userName) : String(basketSearch.searchResult?.userName),
-        //         products: productIds,
-        //         firstName: String( user?.profile?.firstName),
-        //         lastName: String( user?.profile?.lastName),
-        //         cardName: cardName,
-        //         cardNumber: cardNumber,
-        //         addressLine: addressLine,
-        //         cvv: cvv,
-        //         state: district,
-        //         country: country,
-        //         emailAddress: email,
-        //         expiration: expireDate,
-        //         paymentMethod: 1,
-        //         totalPrice: Number(cart?.totalPrice),
-        //         zipCode: zipCode
-        //     };
-        //     await dispatch(CheckoutBasket(shopInfo));        
-        //     setCardName("");
-        //     setCardNumber("");
-        //     setAddressLine("");
-        //     setCvv("");
-        //     setCountry("Country");
-        //     setDistrict("City");
-        //     setEmail("");
-        //     setExpireDate("");
-        //     setZipCode("");
-        //     setAddressLine("");
-        //     setRegion("Region");
-
-        //     router.push("/user/order-summary");
     
-        // }
-        // else{
-        //     Swal.fire({
-        //         icon: 'error',
-        //         title: 'Oops...',
-        //         text: "Please fill all the input",
-        //         confirmButtonText: 'OK',
-        //         confirmButtonColor: 'rgb(249 115 22)',
-        //     });
-        // }
+        }
+        else{
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: "Please fill all the input",
+                confirmButtonText: 'OK',
+                confirmButtonColor: 'rgb(249 115 22)',
+            });
+        }
     }
 
     return (
         <div className="overflow-y-hidden flex justify-between">            
             {/* <div className="flex justify-start items-start 2xl:container 2xl:mx-auto lg:py-8 md:py-12 py-9 px-4 md:px-6 lg:px-20 xl:px-44 "> */}
                 <div className="flex w-6/12 flex-col lg:flex-row justify-center items-center lg:space-x-10 2xl:space-x-36 space-y-12 lg:space-y-0">
-                    <div className="flex w-full flex-col justify-start items-start">
-                        
+                    <div className="flex w-full flex-col justify-start items-start">                        
                         <div className="mt-8 flex flex-col justify-start items-start w-full space-y-8 ">
                             <input 
                                 value={cardName}
@@ -108,8 +113,8 @@ const BillingAddress = () => {
                             <div className="flex justify-between flex-col sm:flex-row w-full items-start space-y-8 sm:space-y-0 sm:space-x-8">
                                 <div className="w-full">
                                     <input 
-                                        value={expireDate}
-                                        onChange={(evt) => setExpireDate(evt.target.value)}
+                                        value={expiration}
+                                        onChange={(evt) => setExpiration(evt.target.value)}
                                         className="px-2 py-3 appearance-none block w-full border border-gray-600 shadow-sm placeholder-gray-400 focus:outline-none sm:text-sm focus:ring-orange-500 focus:border-orange-500" type="text" placeholder="Expiration date (03/23)" />
                                 </div>
                                 <div className="w-full">
@@ -119,6 +124,7 @@ const BillingAddress = () => {
                                         className="px-2 py-3 appearance-none block w-full border border-gray-600 shadow-sm placeholder-gray-400 focus:outline-none sm:text-sm focus:ring-orange-500 focus:border-orange-500" type="text" placeholder="CVV" />
                                 </div>
                             </div>   
+                             
                             <input 
                                 value={email}
                                 onChange={(evt) => setEmail(evt.target.value)}
@@ -207,18 +213,12 @@ const BillingAddress = () => {
                                         onChange={(evt) => setZipCode(evt.target.value)}
                                         className="px-2 py-3 appearance-none block w-full border border-gray-600 shadow-sm placeholder-gray-400 focus:outline-none sm:text-sm focus:ring-orange-500 focus:border-orange-500" type="text" placeholder="Zip Code" />
                                 </div>
-                            </div>
+                            </div>                        
                         </div>
                         <button 
                             onClick={() => handleSubmit()}
                             className="focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 mt-8 text-base font-medium focus:ring-2 focus:ring-ocus:ring-orange-800 leading-4 hover:bg-orange py-4 w-full md:w-4/12 lg:w-full text-white bg-orange-600">Proceed to payment</button>
-                        <div className="mt-4 flex justify-start items-center w-full">
-                            <Link href={`/user/carts`}>
-                                <a href="#" className="text-base leading-4 underline focus:outline-none focus:text-gray-500  hover:text-gray-800 text-gray-600">
-                                    Back to my bag
-                                </a>
-                            </Link>
-                        </div>
+                        
                     </div>
                 </div>
                 <div className="flex w-5/12 flex-col lg:flex-row justify-center items-center lg:space-x-10 2xl:space-x-36 lg:space-y-0">
