@@ -7,7 +7,7 @@ import { ChatSelector, JoinChatRoomToWebSocket } from '../../../libs/store/Chat'
 import { AuthSelector } from '../../../libs/store/Auth';
 import { User } from '../../../libs/models/auth/AuthModels';
 
-interface Conversations{
+export interface Conversations{
   roomChat: string;
   userId: string;
 }
@@ -61,9 +61,10 @@ const ActiveConversation: React.FC<Conversations> = (props) => {
 
             {
               shops.length > 0 ? (
-                shops.map((data) => {
+                shops.map((data, index) => {
                   return (                    
                     <div 
+                      key={index}
                       className="
                           flex 
                           flex-col 

@@ -4,11 +4,11 @@ import ChatForm, { MessageInfo } from "./ChatForm";
 
 
 
-interface Conversations{
+export interface Conversations{
     setChat: any;
     latestChat: any;
     chat: Array<MessageInfo>;
-  }
+}
   
 
 
