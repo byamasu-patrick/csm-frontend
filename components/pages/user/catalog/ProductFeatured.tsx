@@ -2,6 +2,7 @@ import React from "react";
 import { useAppSelector } from "../../../../libs/store";
 import { ProductSelector } from "../../../../libs/store/Catalog";
 
+
 const  FeaturedProduct = () => {
     
     const { products } = useAppSelector(ProductSelector);
@@ -27,7 +28,7 @@ const  FeaturedProduct = () => {
     }
 
     return (
-        <div className="2xl:mx-auto 2xl:container bg-white">
+        <div className="2xl:mx-auto 2xl:container bg-gray-50 max-w-7xl mx-auto rounded-lg mt-5">
             <div className="lg:px-20 md:px-6 px-4 md:py-12 py-8">
                 <h1 className="lg:text-4xl text-3xl font-semibold text-gray-800 text-center">Featured Products</h1>
                 <div className="flex justify-center">

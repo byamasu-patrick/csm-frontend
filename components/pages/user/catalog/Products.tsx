@@ -1,226 +1,287 @@
 import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../../libs/store";
-import { GetAllProducts, ProductSelector } from "../../../../libs/store/Catalog";
+import {
+  GetAllProducts,
+  ProductSelector,
+} from "../../../../libs/store/Catalog";
 import Loader from "../../../widgets/loader";
 import Pagination from "../../../widgets/paggination";
 import ProductSort from "./ProductSort";
-import CircularProgress from '@mui/material/CircularProgress';
+import CircularProgress from "@mui/material/CircularProgress";
 import { AuthSelector } from "../../../../libs/store/Auth";
 import { UserType } from "../../../../libs/models/auth/AuthModels";
 import { useRouter } from "next/router";
-import { AddBasketToDB, BasketSelector, searchBasketsData, UpdateBasketDB } from "../../../../libs/store/Basket";
+import {
+  AddBasketToDB,
+  BasketSelector,
+  searchBasketsData,
+  UpdateBasketDB,
+} from "../../../../libs/store/Basket";
 import ProductDetails from "./ProductDetails";
 import ProductDialog from "./ProductDialog";
 import { ProductModel } from "../../../../libs/models/shops/catalogs/ProductModels";
 import Link from "next/link";
 import { DiscountSelector } from "../../../../libs/store/Discount";
 
-interface ProductProps{
-    isHome: boolean;
+interface ProductProps {
+  isHome: boolean;
 }
 
 const Products: React.FC<ProductProps> = (props) => {
-    const [addCart, setAddCart] = useState<number>(0);
-    const [isOpen, setIsOpen] = useState<boolean>(false);
-    const [product, setProduct] = useState<ProductModel | null>(null);
-    
-    const dispatch = useAppDispatch();
-    const { products, isGetting, productsOwner } = useAppSelector(ProductSelector);
-    const { user, isAuthenticated } = useAppSelector(AuthSelector);
-    const { discounts } = useAppSelector(DiscountSelector);
-    const { isAdding, cart, basketSearch, isUpdating, successMessage } = useAppSelector(BasketSelector);
-    const router = useRouter();
+  const [addCart, setAddCart] = useState<number>(0);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [product, setProduct] = useState<ProductModel | null>(null);
 
-    let productLimit = 0;
+  const dispatch = useAppDispatch();
+  const { products, isGetting, productsOwner } =
+    useAppSelector(ProductSelector);
+  const { user, isAuthenticated } = useAppSelector(AuthSelector);
+  const { discounts } = useAppSelector(DiscountSelector);
+  const { isAdding, cart, basketSearch, isUpdating, successMessage } =
+    useAppSelector(BasketSelector);
+  const router = useRouter();
 
-    useEffect(() => {
-       const fetchProducts = async () => {
-            await dispatch(GetAllProducts(1));
-       };
-       fetchProducts().catch((error) => console.log(error));       
-    }, []);
+  let productLimit = 0;
 
-    useEffect(() => {
-        if(isAuthenticated){            
-            const fetchShoppingCart = async () => {
-                await dispatch(searchBasketsData(user?.profile?.firstName +" "+ user?.profile?.lastName));
-            }
-            fetchShoppingCart().catch((error) => console.log(error));
-        }
-    }, [isAuthenticated])
+  useEffect(() => {
+    const fetchProducts = async () => {
+      await dispatch(GetAllProducts(1));
+    };
+    fetchProducts().catch((error) => console.log(error));
+  }, []);
 
-    useEffect(() => {
-        const fetchProducts = async () => {
-             await dispatch(GetAllProducts(1));
-        };
-        fetchProducts().catch((error) => console.log(error));
- 
-     }, [productsOwner]);
-
-     useEffect(() => {
-        const updatingBasketToDb = async () => {           
-            if(!isUpdating && successMessage === "Successfully updated to basket"){
-                await dispatch(AddBasketToDB({
-                    userName: cart.userName,
-                    items: cart.items                   
-                }));       
-            }
-        }
-        updatingBasketToDb().catch((error) => console.log(error));
-     }, [cart.items])
-
-    const addToBasket = async (productPrice: number, productId: string, name: string,  ) => {
-        if(user == null){
-            if(!isAuthenticated && user?.userType !== UserType.FreeUser){
-                router.push("/signin");
-            }
-        }
-        else{            
-            if(cart.items.length === 0){
-                await dispatch(AddBasketToDB({
-                    userName: user?.profile?.firstName +" "+ user?.profile?.lastName,
-                    items: [{
-                        quantity: 1,
-                        color: "blue",
-                        price: productPrice,
-                        productId: productId,
-                        productName: name
-                    }]                    
-                }));
-            }
-            else{
-                await dispatch(UpdateBasketDB({
-                    quantity: 1,
-                    color: "blue",
-                    price: productPrice,
-                    productId: productId,
-                    productName: name
-                }));
-            }
-            if(!isAdding){
-                setAddCart(0);
-            }
-        }
+  useEffect(() => {
+    if (isAuthenticated) {
+      const fetchShoppingCart = async () => {
+        await dispatch(
+          searchBasketsData(
+            user?.profile?.firstName + " " + user?.profile?.lastName
+          )
+        );
+      };
+      fetchShoppingCart().catch((error) => console.log(error));
     }
+  }, [isAuthenticated]);
 
-    const handleOnProductClicked = (product: ProductModel) => {
-      setProduct(product);
-      setIsOpen(!isOpen);
+  useEffect(() => {
+    const fetchProducts = async () => {
+      await dispatch(GetAllProducts(1));
+    };
+    fetchProducts().catch((error) => console.log(error));
+  }, [productsOwner]);
+
+  useEffect(() => {
+    const updatingBasketToDb = async () => {
+      if (!isUpdating && successMessage === "Successfully updated to basket") {
+        await dispatch(
+          AddBasketToDB({
+            userName: cart.userName,
+            items: cart.items,
+          })
+        );
+      }
+    };
+    updatingBasketToDb().catch((error) => console.log(error));
+  }, [cart.items]);
+
+  const addToBasket = async (
+    productPrice: number,
+    productId: string,
+    name: string
+  ) => {
+    if (user == null) {
+      if (!isAuthenticated && user?.userType !== UserType.FreeUser) {
+        router.push("/signin");
+      }
+    } else {
+      if (cart.items.length === 0) {
+        await dispatch(
+          AddBasketToDB({
+            userName: user?.profile?.firstName + " " + user?.profile?.lastName,
+            items: [
+              {
+                quantity: 1,
+                color: "blue",
+                price: productPrice,
+                productId: productId,
+                productName: name,
+              },
+            ],
+          })
+        );
+      } else {
+        await dispatch(
+          UpdateBasketDB({
+            quantity: 1,
+            color: "blue",
+            price: productPrice,
+            productId: productId,
+            productName: name,
+          })
+        );
+      }
+      if (!isAdding) {
+        setAddCart(0);
+      }
     }
+  };
 
-    return (
-        <>
-            <div className="w-full md:flex md:flex-cols bg-gray-100 py-8 px-4 overflow-hidden sm:px-6 lg:px-8 lg:py-12">  
-                <div className="w-full sm:w-full md:w-4/12 lg:w-3/12 bg-white mr-6 h-[530px] mb-6">
+  const handleOnProductClicked = (product: ProductModel) => {
+    setProduct(product);
+    setIsOpen(!isOpen);
+  };
+
+  return (
+    <>
+      <div className="bg-white max-w-7xl mx-auto rounded-lg">
+        {/*<div className="w-full sm:w-full md:w-4/12 lg:w-3/12 bg-white mr-6 h-[530px] mb-6">
                     <ProductSort isProductPage={false}/>
                 </div>  
-                {
-                    isGetting ? (<></>) : (
-                        <div id="product" className="w-full  sm:w-full md:w-8/12 lg:w-9/12 bg-gray-100 ">
-                            <div className="mx-auto container pb-8">
-                                <div className="flex flex-wrap items-center lg:justify-between justify-center">
-                                    {
-                                        products?.results.map((product, key) => {
-                                            productLimit++;
-                                            const productDiscount = discounts.filter((prodDiscont) => prodDiscont.productId === product.id)[0];
-                                            
-                                            // console.log("Discount: ", productDiscount)
 
-                                            if(productLimit < 7){
-                                                return (
-                                                    <div key={key} className="mx-2 w-72 lg:mb-4 mb-8  hover:bg-gray-100 hover:cursor-pointer hover:shadow-lg">
-                                                        <div>
-                                                            <img src={product.imageFile} onClick={() => handleOnProductClicked(product)} className="w-full h-44" />
-                                                        </div>
-                                                        <div className="bg-white">
-                                                            <div className="flex items-center justify-between px-4 pt-4">
-                                                                <div>
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-bookmark" width={20} height={20} viewBox="0 0 24 24" strokeWidth="1.5" stroke="#2c3e50" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                                        <path d="M9 4h6a2 2 0 0 1 2 2v14l-5-3l-5 3v-14a2 2 0 0 1 2 -2" />
-                                                                    </svg>
-                                                                </div>
-                                                                <div className={`${addCart == key + 1 ? "bg-[#3d9dc9]": "main-bg" } py-1.5 px-6 rounded  hover:bg-orange-500`}
-                                                                    onClick={() =>{
-                                                                        setAddCart(key + 1);
-                                                                        addToBasket(product.price, product.id, product.name)
-                                                                        .catch((error) => console.log(error));
-                                                                    }}>
-                                                                    <p className="text-xs text-white">                                                                    
-                                                                    {
-                                                                        addCart == key + 1 ? (
-                                                                            <CircularProgress 
-                                                                                key={key}
-                                                                                size="1rem" 
-                                                                                style={{color: "white", marginBottom: -4, marginRight: 6 }}/>
-                                                                        ) : (<></>)                                                                }
-                                                                    Add To Cart</p>
-                                                                </div>
-                                                            </div>
-                                                            <div className="p-4">
-                                                                <div className="flex items-center">
-                                                                    <h2 className="text-lg font-semibold">{product.name.substring(0, 15)}</h2>
-                                                                    <p className="text-xs text-gray-600 pl-5">4 days ago</p>
-                                                                </div>
-                                                                <p className="text-xs text-gray-600 mt-2">{ product.summary.substring(0, 100) }</p>
-                                                                <div className="flex mt-4">
-                                                                    <div>
-                                                                        <p className="text-xs text-gray-600 px-2 bg-gray-200 py-1">{
-                                                                            productDiscount !== undefined ? `On promotion ${(productDiscount.amount * 100) / product.price} % Off` : '12 months warrant'
-                                                                        }</p>
-                                                                    </div>
-                                                                    <div className="pl-2">
-                                                                        <Link href={`/user/chats/${product.name}?shopId=${product.userId}`}>
-                                                                            <a className="text-xs text-gray-600 px-2 py-1">Start Chat</a>
-                                                                        </Link>
-                                                                    </div>
-                                                                </div>
-                                                                <div className="flex items-center justify-between py-4">
-                                                                    <h2 className="text-gray-800 text-xs font-semibold">Malawi</h2>
-                                                                    <h3 className="text-gray-800 text-xl font-semibold">{productDiscount !== undefined ? <span className="line-through mr-2">MK {product.price}</span> : ''}{productDiscount !== undefined ? (`K ${product.price - productDiscount.amount}`) : `MK ${product.price} `}</h3>
-                                                                </div>                                    
-                                                                <div className="flex justify-center xl:justify-end w-full">
-                                                                    <div className="flex items-center">
-                                                                        <svg className="w-4 mr-1 text-yellow-400 icon icon-tabler icon-tabler-star" xmlns="http://www.w3.org/2000/svg" width={20} height={20} viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
-                                                                            <path stroke="none" fill="none" d="M0 0h24v24H0z" />
-                                                                            <path fill="currentColor" d="M12 17.75l-6.172 3.245 1.179-6.873-4.993-4.867 6.9-1.002L12 2l3.086 6.253 6.9 1.002-4.993 4.867 1.179 6.873z" />
-                                                                        </svg>
-                                                                        <svg className="w-4 mr-1 text-yellow-400 icon icon-tabler icon-tabler-star" xmlns="http://www.w3.org/2000/svg" width={20} height={20} viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
-                                                                            <path stroke="none" fill="none" d="M0 0h24v24H0z" />
-                                                                            <path fill="currentColor" d="M12 17.75l-6.172 3.245 1.179-6.873-4.993-4.867 6.9-1.002L12 2l3.086 6.253 6.9 1.002-4.993 4.867 1.179 6.873z" />
-                                                                        </svg>
-                                                                        <svg className="w-4 mr-1 text-yellow-400 icon icon-tabler icon-tabler-star" xmlns="http://www.w3.org/2000/svg" width={20} height={20} viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
-                                                                            <path stroke="none" fill="none" d="M0 0h24v24H0z" />
-                                                                            <path fill="currentColor" d="M12 17.75l-6.172 3.245 1.179-6.873-4.993-4.867 6.9-1.002L12 2l3.086 6.253 6.9 1.002-4.993 4.867 1.179 6.873z" />
-                                                                        </svg>
-                                                                        <svg className="w-4 mr-1 text-yellow-400 icon icon-tabler icon-tabler-star" xmlns="http://www.w3.org/2000/svg" width={20} height={20} viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
-                                                                            <path stroke="none" fill="none" d="M0 0h24v24H0z" />
-                                                                            <path fill="currentColor" d="M12 17.75l-6.172 3.245 1.179-6.873-4.993-4.867 6.9-1.002L12 2l3.086 6.253 6.9 1.002-4.993 4.867 1.179 6.873z" />
-                                                                        </svg>
-                                                                        <svg className="w-4 text-gray-200 icon icon-tabler icon-tabler-star" xmlns="http://www.w3.org/2000/svg" width={20} height={20} viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
-                                                                            <path stroke="none" fill="none" d="M0 0h24v24H0z" />
-                                                                            <path fill="currentColor" d="M12 17.75l-6.172 3.245 1.179-6.873-4.993-4.867 6.9-1.002L12 2l3.086 6.253 6.9 1.002-4.993 4.867 1.179 6.873z" />
-                                                                        </svg>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                );
-                                            }
-                                        })
-                                    }
-                                </div>
-                            </div>
-                        </div>
-                    )
-                }    
-                {
-                  isOpen ? <ProductDialog isOpen={isOpen} setIsOpen={setIsOpen} data={product as ProductModel}/> : (<></>)
-                }
+    */}
+        {isGetting ? (
+          <></>
+        ) : (
+          <div className="max-w-screen-2xl px-4 md:px-8 mx-auto pb-5">
+            <div className="inline-flex justify-center items-center w-full">
+              <hr className="my-8 w-64 h-1 bg-gray-200 rounded border-0 dark:bg-gray-700" />
+              <div className="absolute left-1/2 px-4 bg-white -translate-x-1/2 ">
+                <h2 className="text-gray-800 text-xl lg:text-2xl font-bold text-left">
+                  New Arrivals
+                </h2>
+              </div>
             </div>
-        </>
-    );
-}
+
+            <div className="grid grid-cols-2  sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 ">
+              {products?.results.map((product, key) => {
+                productLimit++;
+                const productDiscount = discounts.filter(
+                  (prodDiscont) => prodDiscont.productId === product.id
+                )[0];
+
+                // console.log("Discount: ", productDiscount)
+
+                if (productLimit < 7) {
+                  return (
+                    <div>
+                      <a
+                        href="#"
+                        className="group h-40 block bg-gray-100 rounded-t-lg overflow-hidden relative"
+                      >
+                        <img
+                          src={product.imageFile}
+                          onClick={() => handleOnProductClicked(product)}
+                          loading="lazy"
+                          alt=""
+                          className="w-full h-full object-cover object-center group-hover:scale-110 transition duration-200"
+                        />
+
+                        <span className="bg-orange-500 text-gray-100 text-sm font-semibold tracking-wider rounded-r-lg absolute left-0 top-3 px-3 py-1.5 hover:scale-105 transition-200">
+                          Sale
+                        </span>
+                      </a>
+
+                      <div className="">
+                        <div className="bg-gray-100 gap-2 px-4 py-2">
+                          <a
+                            href="#"
+                            className="text-xs leading-6 font-medium uppercase text-slate-500"
+                          >
+                            {product.name.substring(0, 15)}
+                          </a>
+                        </div>
+                        <div className="flex justify-between items-center bg-gray-100 gap-2 px-4">
+                          <div className="flex-auto text-lg font-medium text-slate-500">
+                            {productDiscount !== undefined ? (
+                              <span className="line-through ">
+                                MK {product.price}
+                              </span>
+                            ) : (
+                              ""
+                            )}
+                            {productDiscount !== undefined
+                              ? `K ${product.price - productDiscount.amount}`
+                              : `MK ${product.price} `}
+                          </div>
+                          <div className="flex flex-col items-end space-y-2">
+                            <div className="text-xs leading-6 font-medium uppercase text-slate-500">
+                              In stock
+                            </div>
+                          </div>
+                        </div>
+                        <div>
+                          <hr className="" />
+                        </div>
+                        <div className="flex space-x-4 mb-6 text-sm font-medium bg-gray-100 rounded-b-lg gap-2 p-4">
+                          <div className="flex-auto flex space-x-4">
+                            <span className="h-10 px-6 font-semibold rounded-md bg-[#3d9dc9] text-white cursor-pointer hover:bg-orange-500">
+                              <p className="p-2">Buy now</p>
+                            </span>
+                          </div>
+                          <span
+                            className={`${
+                              addCart == key + 1 ? "" : ""
+                            } flex-none flex items-center justify-center hover:bg-orange-500 hover:text-white w-9 h-9 rounded-md text-orange-500
+                              border border-gray-400`}
+                            aria-label="Like"
+                            onClick={() => {
+                              setAddCart(key + 1);
+                              addToBasket(
+                                product.price,
+                                product.id,
+                                product.name
+                              ).catch((error) => console.log(error));
+                            }}
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth={1.5}
+                              stroke="currentColor"
+                              className="w-6 h-6 cursor-pointer"
+                            >
+                              {addCart == key + 1 ? (
+                                <CircularProgress
+                                  key={key}
+                                  size="1rem"
+                                  style={{
+                                    color: "white",
+                                    marginBottom: -4,
+                                    marginRight: 6,
+                                  }}
+                                />
+                              ) : (
+                                <></>
+                              )}
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
+                              />
+                            </svg>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                }
+              })}
+            </div>
+          </div>
+        )}
+        {isOpen ? (
+          <ProductDialog
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            data={product as ProductModel}
+          />
+        ) : (
+          <></>
+        )}
+      </div>
+    </>
+  );
+};
 
 export default Products;

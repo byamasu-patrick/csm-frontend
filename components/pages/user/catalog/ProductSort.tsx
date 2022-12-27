@@ -41,9 +41,9 @@ const ProductSort: React.FC<ProductProps> = (props) => {
           </button>
         </div>
       </div>
-      <div id="Main" className={`${show ? "-translate-x-full" : "translate-x-0"} bg-white transform  xl:translate-x-0 ease-in-out transition duration-500 flex justify-start items-start w-full  flex-col h-full`}>
-        <button className="hidden xl:flex text-gray-800 hover:text-black focus:outline-none focus:text-black justify-start px-6 pt-6 items-center space-x-3 w-full">
-          <p className="text-2xl leading-6 ">Categories</p>
+      <div id="Main" className={`${show ? "-translate-x-full" : "translate-x-0"} bg-white rounded-lg transform  xl:translate-x-0 ease-in-out transition duration-500 z-0 flex justify-start items-start w-full  flex-col h-full`}>
+        <button className="hidden xl:flex text-gray-800 hover:text-black focus:outline-none focus:text-black justify-start px-6 pt-6 items-center space-x-3  w-full">
+          <p className="text-xl leading-6 font-semibold">Categories</p>
         </button>        
         <div className="xl:mt-6 flex flex-col justify-start items-startpx-4 w-full space-y-1 pb-4">
           {/* <div className=" relative focus:outline-none flex jusitfy-start w-10/12 mx-6 mb-4 text-gray-800 rounded  items-center border-gray-300 focus:border-gray-400 border  ">
