@@ -43,7 +43,6 @@ const Home: NextPage<PageProps> = ({ discountData }) => {
       {/* <LoginNav /> */}
       {/* <Header /> */}
       <Navigation />
-      {/*<Carousel />*/}
       <ProductCarousel />
       {/*<MarketingBanner />*/}
       <TrendingProducts />
