@@ -1,6 +1,6 @@
 export default function MarketingCTA() {
   return (
-    <div className="relative isolate overflow-hidden bg-[rgb(11,115,164)] px-6 text-center shadow-2xl mx-4 lg:mx-auto max-w-7xl py-24 sm:px-6 sm:py-32 lg:px-8">
+    <div className="relative isolate overflow-hidden bg-[rgb(11,115,164)] px-6 text-center shadow-2xl mx-4 lg:mx-auto max-w-7xl py-24 sm:px-6 sm:py-32 lg:px-8 mb-8">
       <h2 className="mx-auto max-w-2xl text-4xl font-bold tracking-tight text-white">
         Boost your productivity today.
       </h2>

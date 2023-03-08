@@ -40,6 +40,7 @@
     "next": "12.2.4",
     "pure-react-carousel": "^1.29.0",
     "react": "18.2.0",
+    "react-autosuggest": "^10.1.0",
     "react-chartjs-2": "^4.3.1",
     "react-dom": "18.2.0",
     "react-easy-panzoom": "^0.4.4",
