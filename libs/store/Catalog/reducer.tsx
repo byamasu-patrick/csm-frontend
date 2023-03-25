@@ -2,8 +2,8 @@ import { createReducer } from '@reduxjs/toolkit';
 import { DiscountModel } from '../../models/discount/DiscountModel';
 import { addDiscountByName, addDiscountByNameFailed, addDiscountByNameSuccess, discountSearching, discountSearchingFailed, discountSearchingSuccess } from '../Discount';
 
-import { ProductModel, ProductResponse, ProductSearchModel } from '../../models/shops/catalogs/ProductModels';
-import { adddProductFailed, addingProduct, addProductSuccess, editFailed, editingProduct, editSuccess, getAllProductsByCategoryFailed, getAllProductsByCategorySuccess, getAllProductsByShopOwnerFailed, getAllProductsByShopOwnerSuccess, getAllProductsFailed, getAllProductsSuccess, gettingAllProducts, gettingAllProductsByCategory, gettingAllProductsByShopOwner, productSearching, productSearchingFailed, productSearchingSuccess } from './actions';
+import { ProductModel, ProductResponse, ProductSearchModel, ProductSearchResponse, ProductUserSearchModel } from '../../models/shops/catalogs/ProductModels';
+import { adddProductFailed, addingProduct, addProductSuccess, editFailed, editingProduct, editSuccess, getAllProductsByCategoryFailed, getAllProductsByCategorySuccess, getAllProductsByShopOwnerFailed, getAllProductsByShopOwnerSuccess, getAllProductsFailed, getAllProductsSuccess, gettingAllProducts, gettingAllProductsByCategory, gettingAllProductsByShopOwner, productSearching, productSearchingFailed, productSearchingSuccess, productUserSearch, productUserSearchingSuccess, productUserSearchingFailed } from './actions';
 
 export type ProductState = {
    product : ProductModel | null,
@@ -19,6 +19,7 @@ export type ProductState = {
    productsByCategory : ProductResponse,  
    productsOwner: ProductModel[],
    productSearch : ProductSearchModel
+   productUserSearch: ProductUserSearchModel
 };
 
 const initialState: ProductState = {
@@ -44,6 +45,11 @@ const initialState: ProductState = {
    },  
    productSearch : {
       isSearching: false,
+      error: "",
+      searchResult: null
+   },
+   productUserSearch: {
+      isSearching : false,
       error: "",
       searchResult: null
    }
@@ -78,6 +84,36 @@ export const ProductReducer = createReducer(initialState, (builder) => {
             dishSearch:{...state.productSearch, error: payload} 
          }
    });
+   // searching products on the user end
+   
+   builder.addCase(productUserSearch , (state, {payload}) =>{
+
+      return {
+         ...state, 
+         warningMessage : '',
+         productUserSearch :{...state.productUserSearch , error : null, isSearching : payload}
+      }
+   });
+
+   builder.addCase(productUserSearchingSuccess, (state, {payload}) =>{
+
+         return {
+            ...state,
+            productUserSearch : {
+               searchResult : payload,
+               isSearching : false,
+               error : null
+            }
+         }
+   });
+
+   builder.addCase(productUserSearchingFailed , (state, {payload}) =>{
+         return {
+            ...state, 
+            dishSearch:{...state.productUserSearch, error: payload} 
+         }
+   });
+   //end 
   
    builder.addCase(addingProduct , (state, {payload}) =>{
       return {...state, isAdding : payload , warningMessage : ''}

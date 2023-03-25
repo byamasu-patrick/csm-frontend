@@ -16,6 +16,11 @@ export interface ProductResponse {
     results: ProductModel[];
     totalPages: number;
 }
+export interface ProductSearchResponse {
+    currentPage: number;
+    results: ProductModel[] ;
+    totalPages: number;
+}
 
 export interface AddProductModel {
     name: string;
@@ -33,9 +38,18 @@ export interface ProductSearchModel {
     isSearching : boolean;
     error : string | null;
 }
+// the model for user search
+export interface ProductUserSearchModel {
+    searchResult : ProductSearchResponse | null;
+    isSearching : boolean;
+    error : string | null;
+}
 
 export interface GetProductByCategoryModel {
     catName : string;
     page : number;
 }
-
+export interface SearchUserProductsModel {
+    keyword : string;
+    page : number;
+}

@@ -14,6 +14,12 @@ export const RemoveCart = async(keyword : string) =>{
     var result = await axios.delete(`${basketClient}/Basket/${keyword}`);
     return result.data;
 }
+// the api call to remove only one item in the basket
+export const RemoveCartItem = async(username : string, productId: string) =>{
+    var result = await axios.delete(`${basketClient}/Basket/DeleteBasketItem/${username}/${productId}`);
+    return result.data;
+}
+
 
 export const GetBasketByUserName= async(keyword : string) =>{
     var searchResult = await axios.get(`${basketClient}/Basket/${keyword}`)

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../../libs/store";
 import {
-  GetAllProducts,
+  GetAllProducts, 
+  SearchUserProducts,
   ProductSelector,
 } from "../../../../libs/store/Catalog";
 import Loader from "../../../widgets/loader";
@@ -44,14 +45,16 @@ const Products: React.FC<ProductProps> = (props) => {
   const [addCart, setAddCart] = useState<number>(0);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [product, setProduct] = useState<ProductModel | null>(null);
+  
 
   const dispatch = useAppDispatch();
-  const { products, isGetting, productsOwner } =
+  const { products, productUserSearch, isGetting, productsOwner } =
     useAppSelector(ProductSelector);
   const { user, isAuthenticated } = useAppSelector(AuthSelector);
   const { discounts } = useAppSelector(DiscountSelector);
   const { isAdding, cart, basketSearch, isUpdating, successMessage } =
     useAppSelector(BasketSelector);
+   // const [displayedProducts, setDisplayedProdcts] = useState(products)
   const router = useRouter();
 
   const [open, setOpen] = useState(false);
@@ -75,6 +78,18 @@ const Products: React.FC<ProductProps> = (props) => {
     };
     fetchProducts().catch((error) => console.log(error));
   }, []);
+  /* ignore for now
+  useEffect(() => {
+    const checkIfSearchIsEnabled = () => {
+      if (productUserSearch.searchResult !== null) {
+        if(productUserSearch.searchResult.results !== null) {
+        var givenresults = productUserSearch.searchResult
+        setDisplayedProdcts(givenresults)
+        }
+      }
+    };
+  }, [productUserSearch]);
+  // end */
 
   useEffect(() => {
     if (isAuthenticated) {

@@ -17,6 +17,12 @@ export const getProductsByCategory = async (category: string, page: number) =>{
     var result  = await axios.get(`${catalogClient}/Catalog/GetProductByCategory/${category}/${page}`);
     return result.data;
 }
+// api call for searching products
+export const searchUserProducts = async (keyword: string, page: number) =>{
+    var result  = await axios.get(`${catalogClient}/Catalog/SearchProducts/${keyword}/${page}`);
+    return result.data;
+}
+// end
 
 export const AddProduct = async(addProductModel : AddProductModel) =>{
 

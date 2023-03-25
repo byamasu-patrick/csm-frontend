@@ -1,3 +1,4 @@
+import { StreamInvocationMessage } from "@microsoft/signalr";
 
 export interface BasketModel {
     userName: string;
@@ -41,7 +42,10 @@ export interface OrderDetails{
     cvv: string,
     paymentMethod: number
 }
-
+export interface DeleteBasketItemModel {
+    username : string;
+    productId : string;
+}
 export interface CheckoutResult{
     type: string,
     title: string,

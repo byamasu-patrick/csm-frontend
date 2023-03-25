@@ -1,7 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit';   
 import { BasketInfoModel, BasketSearchModel, OrderDetails, CheckoutResult, BasketItem } from '../../models/user/basket/BasketModels';
 import { GetAllOrders } from '../../services/OrderingService/OrderService';
-import { addBasketFailed, addBasketSuccess, addingBasket, basketSearching, basketSearchingFailed, basketSearchingSuccess, checkoutBasket, checkoutBasketFailed, checkoutBasketSuccess, getAllOrders, getAllOrdersByUsername, getAllOrdersByUsernameFailed, getAllOrdersByUsernameSuccess, getAllOrdersFailed, getAllOrdersSuccess, removeBasket, removeBasketFailed, removeBasketSuccess, updateBasket, updateBasketFailed, updateBasketSuccess } from './actions';
+import { addBasketFailed, addBasketSuccess, addingBasket, basketSearching, basketSearchingFailed, basketSearchingSuccess, checkoutBasket, checkoutBasketFailed, checkoutBasketSuccess, getAllOrders, getAllOrdersByUsername, getAllOrdersByUsernameFailed, getAllOrdersByUsernameSuccess, getAllOrdersFailed, getAllOrdersSuccess, removeBasket, removeBasketFailed, removeBasketItem, removeBasketSuccess, removeBasketItemSuccess, removeBasketItemFailed, updateBasket, updateBasketFailed, updateBasketSuccess } from './actions';
 
 export type BasketState = {
    cart : BasketInfoModel,
@@ -166,7 +166,35 @@ export const BasketReducer = createReducer(initialState, (builder) => {
          isRemoving : false
       }
    });   
-
+// removing an item from the basket
+builder.addCase(removeBasketItem, (state, { payload }) => {
+   return { ...state, isRemoving: payload, warningMessage: '' };
+ });
+ 
+ builder.addCase(removeBasketItemSuccess, (state, { payload }) => {
+   const { username, productId } = payload;
+   const itemToRemove = state.cart.items.find(item => item.productId === productId);
+   const updatedItems = state.cart.items.filter(item => item.productId !== productId);
+   const updatedTotalPrice = itemToRemove ? state.cart.totalPrice - itemToRemove.price : state.cart.totalPrice;
+ 
+   return {
+     ...state,
+     cart: {
+       ...state.cart,
+       items: updatedItems,
+       totalPrice: updatedTotalPrice,
+       username: username
+     },
+     isRemoving: false,
+     successMessage: "item successfully removed"
+   };
+ });
+ 
+ builder.addCase(removeBasketItemFailed, (state, { payload }) => {
+   return { ...state, error: payload, isRemoving: false };
+ });
+ 
+//end
    
    builder.addCase(checkoutBasket , (state, {payload}) =>{
       return {...state, isCheckingOut : payload , warningMessage : ''}

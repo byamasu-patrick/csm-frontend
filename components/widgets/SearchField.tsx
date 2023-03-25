@@ -1,9 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "../..//libs/store";
+
+import { SearchUserProducts, GetAllProducts, ProductSelector } from "../../libs/store/Catalog";
+const { products, productUserSearch, isGetting, productsOwner } =
+ useAppSelector(ProductSelector);
+ const dispatch = useAppDispatch();
 
 const SearchField = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [category, setCategory] = useState("");
 
+  /* use effect to change call api of search action when search filed changes
+  useEffect(() => {
+    const fetchProducts = async () => {
+     var page = 1
+      const searchData = {keyword: searchTerm, page};
+      await dispatch(SearchUserProducts(searchData));
+    };
+    fetchProducts().catch((error) => console.log(error));
+  }, [searchTerm]);
+// end  */
   return (
     <div className="hidden lg:flex items-center w-full border-2  rounded-xl border-amber-500 ">
       <select

@@ -1,26 +1,38 @@
 import Link from "next/link";
-import React, { useState, ReactElement } from "react";
+import React, { useState, ReactElement, useEffect } from "react";
 import ClientLayout from "../../../components/layouts/clients-layout";
 import Loader from "../../../components/widgets/loader";
-import { RemoveCart } from "../../../libs/services/BasketService/BasketService";
+import { RemoveCart, RemoveCartItem } from "../../../libs/services/BasketService/BasketService";
 import { useAppDispatch, useAppSelector } from "../../../libs/store";
-import { BasketSelector, RemoveBasketById } from "../../../libs/store/Basket";
+import { BasketSelector, RemoveBasketById, RemoveBasketItemById} from "../../../libs/store/Basket";
 import { ProductSelector } from "../../../libs/store/Catalog";
 import { NextPageWithLayout } from "../../_app";
+import { AuthSelector } from "../../../libs/store/Auth";
 
 const ShoppingCart: NextPageWithLayout = () => {
   const [show, setShow] = useState<boolean>(false);
   const { cart, basketSearch } = useAppSelector(BasketSelector);
   const { products } = useAppSelector(ProductSelector);
-
+  const [ productId, setProductId] = useState("");
+  const [username, setUsername] = useState("")
   var tax = 2500;
   var shippment = 12000;
 
   const dispatch = useAppDispatch();
 
-  const removeCart = (name: string) => {
-    dispatch(RemoveBasketById(name));
+// a function to remove a product from the basket
+ function handleRemoveCartItem (username: string, productId: string)  {
+   setProductId(productId)
+   setUsername(username)
+  
   };
+  useEffect(() => {
+    if (productId !== "") {
+      const basket = {username, productId}
+      dispatch(RemoveBasketItemById(basket))
+    }
+  }, [productId]);
+  //end
 
   return (
     <>
@@ -122,13 +134,12 @@ const ShoppingCart: NextPageWithLayout = () => {
                             MK {productItem.price}
                           </td>
                           <td className="py-4 px-6">
-                            <a
-                              href=""
+                            <button type="button"
                               className="font-medium text-red-600 dark:text-red-500 hover:underline"
-                              onClick={() => removeCart(cart.userName)}
+                              onClick={({preventDefault}) => handleRemoveCartItem(cart.userName, productItem.productId)}
                             >
                               Remove
-                            </a>
+                            </button>
                           </td>
                         </tr>
                       );

@@ -51,7 +51,7 @@ const ProductDetails: React.FC<ProductProps> = (props) => {
             props.setIsOpen(!props.isOpen);
         }
         else{
-
+            
             await dispatch(UpdateBasketDB({
                 quantity: 1,
                 color: "blue",

@@ -321,7 +321,7 @@ const Navigation = () => {
                         Total
                       </div>
                       <div className="text-sm font-semibold text-gray-800">
-                        MK0.00
+                        MK {cart.totalPrice}
                       </div>
                     </div>
                   </div>

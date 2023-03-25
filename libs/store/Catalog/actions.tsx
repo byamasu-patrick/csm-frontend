@@ -1,6 +1,6 @@
 import { createAction, createAsyncThunk } from "@reduxjs/toolkit";
-import { AddProductModel, GetProductByCategoryModel, ProductModel, ProductResponse } from "../../models/shops/catalogs/ProductModels";
-import { AddProduct, GetProductsByName, RemoveProductById, UpdateProduct, getProducts, getProductsByShopOwner, getProductsByCategory } from "../../services/CatalogService/ProductService";
+import { AddProductModel, GetProductByCategoryModel, ProductModel, ProductResponse, ProductSearchResponse, ProductUserSearchModel, SearchUserProductsModel } from "../../models/shops/catalogs/ProductModels";
+import { AddProduct, GetProductsByName, RemoveProductById, UpdateProduct, getProducts, getProductsByShopOwner, getProductsByCategory, searchUserProducts } from "../../services/CatalogService/ProductService";
 import { ProductActionType } from "./actions-type";
 
 // search product
@@ -9,6 +9,13 @@ export const productSearchingSuccess = createAction<ProductModel>(ProductActionT
 export const productSearchingFailed = createAction<string>(ProductActionType.PRODUCT_SEARCHING_FAILED);
 export const setOnProductPopUp = createAction<boolean>(ProductActionType.SET_ON_PRODUCT_POPUP);
 // add product
+
+// searching products on the user part
+export const productUserSearch = createAction<boolean>(ProductActionType.SEARCH_USER_PRODUCTS);
+export const productUserSearchingSuccess = createAction<ProductSearchResponse>(ProductActionType.PRODUCT_USER_SEARCHING_SUCCESS);
+export const productUserSearchingFailed = createAction<string>(ProductActionType.PRODUCT_USER_SEARCHING_FAILED);
+// end
+// adding a product
 export const addingProduct  = createAction<boolean>(ProductActionType.ADDING_PRODUCT);
 export const addProductSuccess = createAction<string>(ProductActionType.ADD_PRODUCT_SUCCESS)
 export const adddProductFailed = createAction<string>(ProductActionType.ADD_PRODUCT_FAILED);
@@ -132,3 +139,22 @@ export const GetAllProductsByCategory = createAsyncThunk(ProductActionType.GET_A
          thunkAPI.dispatch(getAllProductsByCategoryFailed(errorMessage));
    }
 });
+// searching products at the user end
+export const SearchUserProducts = createAsyncThunk( ProductActionType.SEARCH_USER_PRODUCTS, 
+    async( search: SearchUserProductsModel, thunkAPI )=>{
+ 
+     thunkAPI.dispatch(productUserSearch(true));
+ 
+     try{
+        
+        const response = await searchUserProducts(search.keyword, search.page);
+        thunkAPI.dispatch(productUserSearchingSuccess(response));
+        
+ 
+     }catch(error){
+ 
+        var errorMessage = (error as string);
+        thunkAPI.dispatch(productUserSearchingFailed(errorMessage))
+     }
+ });
+//end

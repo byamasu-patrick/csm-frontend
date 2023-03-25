@@ -1,6 +1,6 @@
 import { createAction, createAsyncThunk } from "@reduxjs/toolkit";
-import { BasketInfoModel, BasketModel, OrderDetails, CheckoutResult, BasketItem } from "../../models/user/basket/BasketModels";
-import { AddToCart, BasketCheckoutAndOrder, GetBasketByUserName, RemoveCart } from "../../services/BasketService/BasketService";
+import { BasketInfoModel, BasketModel, OrderDetails, CheckoutResult, BasketItem, DeleteBasketItemModel } from "../../models/user/basket/BasketModels";
+import { AddToCart, BasketCheckoutAndOrder, GetBasketByUserName, RemoveCart, RemoveCartItem } from "../../services/BasketService/BasketService";
 import { GetAllOrders,GetOrdersByUsername } from "../../services/OrderingService/OrderService";
 import { BasketActionType } from "./actions-type";
 
@@ -24,11 +24,15 @@ export const checkoutBasketFailed = createAction<string>(BasketActionType.BASKET
 export const removeBasket  = createAction<boolean>(BasketActionType.REMOVE_BASKET_BY_USERNAME);
 export const removeBasketSuccess = createAction<string>(BasketActionType.REMOVE_BASKET_BY_USERNAME_SUCCESS)
 export const removeBasketFailed = createAction<string>(BasketActionType.REMOVE_BASKET_BY_USERNAME_FAILED);
-// Remove basket
+// Remove basket item 
+export const removeBasketItem  = createAction<boolean>(BasketActionType.REMOVE_BASKETPRODUCT_BY_PRODUCTID);
+export const removeBasketItemSuccess = createAction<DeleteBasketItemModel>(BasketActionType.REMOVE_BASKETPRODUCT_BY_PRODUCTID_SUCCESS)
+export const removeBasketItemFailed = createAction<string>(BasketActionType.REMOVE_BASKETPRODUCT_BY_PRODUCTID_FAILED);
+// get all orders
 export const getAllOrders  = createAction<boolean>(BasketActionType.GET_ALL_ORDERS);
 export const getAllOrdersSuccess = createAction<OrderDetails[]>(BasketActionType.GET_ALL_ORDERS_SUCCESS)
 export const getAllOrdersFailed = createAction<string>(BasketActionType.GET_ALL_ORDERS_FAILED);
-// Remove basket
+// get orders by username
 export const getAllOrdersByUsername  = createAction<boolean>(BasketActionType.GET_ALL_ORDERS_BY_USERNAME);
 export const getAllOrdersByUsernameSuccess = createAction<OrderDetails[]>(BasketActionType.GET_ALL_ORDERS_BY_USERNAME_SUCCESS)
 export const getAllOrdersByUsernameFailed = createAction<string>(BasketActionType.GET_ALL_ORDERS_BY_USERNAME_FAILED);
@@ -99,7 +103,24 @@ export const RemoveBasketById = createAsyncThunk(BasketActionType.REMOVE_BASKET_
    }
    
 });
+// an action to remove basket item
+ export const RemoveBasketItemById = createAsyncThunk(BasketActionType.REMOVE_BASKETPRODUCT_BY_PRODUCTID , async(basket: DeleteBasketItemModel, thunkAPI)  =>{
+   try{
+      
+      thunkAPI.dispatch(removeBasketItem(true));
+      let result = await RemoveCartItem(basket.username, basket.productId);
+      thunkAPI.dispatch(removeBasketItemSuccess(basket));
 
+      return result;
+
+    }
+    catch(e){
+        var erroMessage = (e as string);
+        thunkAPI.dispatch(removeBasketItemFailed(erroMessage));
+   }
+   
+});
+//
 export const CheckoutBasket = createAsyncThunk(BasketActionType.BASKET_CHECKOUT,
     async(checkoutBasketData : OrderDetails, thunkAPI) =>{
       try{
