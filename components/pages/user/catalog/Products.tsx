@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../../libs/store";
 import {
@@ -175,7 +176,7 @@ const Products: React.FC<ProductProps> = (props) => {
 
                 // console.log("Discount: ", productDiscount)
 
-                if (productLimit < 7) {
+                if (productLimit > 0) {
                   return (
                     <div
                       className={`relative overflow-hidden shadow-lg ${

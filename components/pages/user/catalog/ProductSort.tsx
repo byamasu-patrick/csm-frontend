@@ -51,7 +51,7 @@ const ProductSort: React.FC<ProductProps> = (props) => {
                 <button
                   key={index}
                   onClick={() => displayProductByCategory(categoryName.name)}
-                  className="focus:outline-none mx-2 flex jusitfy-start hover:text-gray-800 hover:cursor-pointer text-gray-600 rounded py-3 pl-4 items-center space-x-2 w-full "
+                  className="focus:outline-none mx-2 flex justify-start hover:text-gray-800 hover:cursor-pointer text-gray-600 rounded py-3 pl-4 items-center space-x-2 w-full "
                 >
                   <p className="text-base leading-4 ">{categoryName.name}</p>
                 </button>

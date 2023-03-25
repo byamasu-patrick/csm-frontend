@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { useAppSelector } from "../../../../libs/store";
 import { ProductSelector } from "../../../../libs/store/Catalog";
 import { useState } from "react";
