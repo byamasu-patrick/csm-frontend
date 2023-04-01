@@ -1,7 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit';   
 import { BasketInfoModel, BasketSearchModel, OrderDetails, CheckoutResult, BasketItem } from '../../models/user/basket/BasketModels';
 import { GetAllOrders } from '../../services/OrderingService/OrderService';
-import { addBasketFailed, addBasketSuccess, addingBasket, basketSearching, basketSearchingFailed, basketSearchingSuccess, checkoutBasket, checkoutBasketFailed, checkoutBasketSuccess, getAllOrders, getAllOrdersByUsername, getAllOrdersByUsernameFailed, getAllOrdersByUsernameSuccess, getAllOrdersFailed, getAllOrdersSuccess, removeBasket, removeBasketFailed, removeBasketItem, removeBasketSuccess, removeBasketItemSuccess, removeBasketItemFailed, updateBasket, updateBasketFailed, updateBasketSuccess } from './actions';
+import { addBasketFailed, addBasketSuccess, addingBasket, basketSearching, basketSearchingFailed, basketSearchingSuccess, checkoutBasket, checkoutBasketFailed, checkoutBasketSuccess, getAllOrders, getAllOrdersByUsername, getAllOrdersByUsernameFailed, getAllOrdersByUsernameSuccess, getAllOrdersFailed, getAllOrdersSuccess, removeBasket, removeBasketFailed, removeBasketItem, removeBasketSuccess, removeBasketItemSuccess, removeBasketItemFailed, updateBasket, updateBasketFailed, updateBasketSuccess, increaseBasketItem, increaseBasketItemSuccess, increaseBasketItemFailed, decreaseBasketItem, decreaseBasketItemSuccess, decreaseBasketItemFailed } from './actions';
 
 export type BasketState = {
    cart : BasketInfoModel,
@@ -192,6 +192,68 @@ builder.addCase(removeBasketItem, (state, { payload }) => {
  
  builder.addCase(removeBasketItemFailed, (state, { payload }) => {
    return { ...state, error: payload, isRemoving: false };
+ });
+ 
+//end
+// increamenting the quantity of an item in the basket 
+builder.addCase(increaseBasketItemSuccess, (state, { payload }) => {
+   const { usernamed, deletedProductId, value } = payload;
+   const itemToUpdateIndex = state.cart.items.findIndex(item => item.productId === deletedProductId);
+   const itemToUpdate = state.cart.items[itemToUpdateIndex];
+   const updatedItems = [...state.cart.items];
+   const updatedTotalPrice = state.cart.totalPrice + (value  * itemToUpdate.price);
+ 
+   if (itemToUpdateIndex >= 0) {
+     updatedItems[itemToUpdateIndex] = {
+       ...itemToUpdate,
+       quantity:  value + itemToUpdate.quantity
+     };
+   } 
+   return {
+     ...state,
+     cart: {
+       ...state.cart,
+       items: updatedItems,
+       totalPrice: updatedTotalPrice,
+       username: usernamed
+     },
+     isAdding: false,
+     successMessage: "item successfully successfully increamented"
+   };
+ });
+ builder.addCase(increaseBasketItemFailed, (state, { payload }) => {
+   return { ...state, error: payload, isAdding: false };
+ });
+ 
+//end
+// increamenting the quantity of an item in the basket 
+builder.addCase(decreaseBasketItemSuccess, (state, { payload }) => {
+   const { usernamed, deletedProductId, value } = payload;
+   const itemToUpdateIndex = state.cart.items.findIndex(item => item.productId === deletedProductId);
+   const itemToUpdate = state.cart.items[itemToUpdateIndex];
+   const updatedItems = [...state.cart.items];
+   const updatedTotalPrice = (itemToUpdate.quantity - value) <= 0 ? state.cart.totalPrice : state.cart.totalPrice - (value * itemToUpdate.price);
+ 
+   if (itemToUpdateIndex >= 0) {
+     updatedItems[itemToUpdateIndex] = {
+       ...itemToUpdate,
+       quantity: (itemToUpdate.quantity - value) <= 0 ? itemToUpdate.quantity : itemToUpdate.quantity - value
+     };
+   } 
+   return {
+     ...state,
+     cart: {
+       ...state.cart,
+       items: updatedItems,
+       totalPrice: updatedTotalPrice,
+       username: usernamed
+     },
+     isAdding: false,
+     successMessage: "item quantity successfully decreamented"
+   };
+ });
+ builder.addCase(decreaseBasketItemFailed, (state, { payload }) => {
+   return { ...state, error: payload, isAdding: false };
  });
  
 //end

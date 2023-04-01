@@ -19,7 +19,16 @@ export const RemoveCartItem = async(username : string, productId: string) =>{
     var result = await axios.delete(`${basketClient}/Basket/DeleteBasketItem/${username}/${productId}`);
     return result.data;
 }
-
+// an api call to increase the quantity of an item in the basket
+export const IncreaseItemQuantiy = async(username : string, productId: string, value: number) =>{
+    var result = await axios.post(`${basketClient}/Basket/increaseItemQuantity/${username}/${productId}/${value}`);
+    return result.data;
+}
+// an api to call to decrease the quantiy of an item in the basket
+export const DecreaseItemQuantiy = async(username : string, productId: string, value: number) =>{
+    var result = await axios.post(`${basketClient}/Basket/decreaseItemQuantity/${username}/${productId}/${value}`);
+    return result.data;
+}
 
 export const GetBasketByUserName= async(keyword : string) =>{
     var searchResult = await axios.get(`${basketClient}/Basket/${keyword}`)

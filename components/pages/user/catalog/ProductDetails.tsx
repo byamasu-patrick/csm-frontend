@@ -8,6 +8,7 @@ import { AddBasketToDB, BasketSelector, UpdateBasketDB } from "../../../../libs/
 import { ProductSelector } from "../../../../libs/store/Catalog";
 import CreateProductReviewForm from "../review/CreateProductReviewFrom";
 import DisplayReview from "../review/DisplayReview";
+import Swal from "sweetalert2";
 
 interface ProductProps{
     isOpen: boolean;
@@ -51,16 +52,28 @@ const ProductDetails: React.FC<ProductProps> = (props) => {
             props.setIsOpen(!props.isOpen);
         }
         else{
+            var product = cart.items.find(item => item.productId == productId);
+            if(product == null) {
+                await dispatch(UpdateBasketDB({
+                    quantity: 1,
+                    color: "blue",
+                    price: productPrice,
+                    productId: productId,
+                    productName: name
+                }));
+                props.setIsOpen(!props.isOpen);
+
+            }
+            else {
+                Swal.fire({
+                    icon: 'warning',
+                    text: "product already in the shopping cart",
+                    confirmButtonText: 'OK',
+                     confirmButtonColor: 'rgb(249 115 22)',
+                  });
+            }
             
-            await dispatch(UpdateBasketDB({
-                quantity: 1,
-                color: "blue",
-                price: productPrice,
-                productId: productId,
-                productName: name
-            }));
-            props.setIsOpen(!props.isOpen);
-            
+    
         }
         if(!isAdding){
             setAddCart(0);

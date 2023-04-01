@@ -1,3 +1,4 @@
+import { interactive } from "@material-tailwind/react/types/components/popover";
 import { StreamInvocationMessage } from "@microsoft/signalr";
 
 export interface BasketModel {
@@ -42,9 +43,22 @@ export interface OrderDetails{
     cvv: string,
     paymentMethod: number
 }
+// model for deleting a particular item in the basket
 export interface DeleteBasketItemModel {
     username : string;
     productId : string;
+}
+// model for increasing the quantity of an item in the basket
+export interface increaseQuantityModel {
+    usernamed : string;
+    deletedProductId : string;
+    value: number;
+}
+// model for decreasing the quantity of an item in the basket 
+export interface decreaseQuantityModel {
+    usernamed : string;
+    deletedProductId : string;
+    value: number;
 }
 export interface CheckoutResult{
     type: string,

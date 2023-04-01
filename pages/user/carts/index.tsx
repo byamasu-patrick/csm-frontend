@@ -4,7 +4,7 @@ import ClientLayout from "../../../components/layouts/clients-layout";
 import Loader from "../../../components/widgets/loader";
 import { RemoveCart, RemoveCartItem } from "../../../libs/services/BasketService/BasketService";
 import { useAppDispatch, useAppSelector } from "../../../libs/store";
-import { BasketSelector, RemoveBasketById, RemoveBasketItemById} from "../../../libs/store/Basket";
+import { BasketSelector, RemoveBasketById, RemoveBasketItemById, IncreaseBasketItemById, decreaseBasketItemById} from "../../../libs/store/Basket";
 import { ProductSelector } from "../../../libs/store/Catalog";
 import { NextPageWithLayout } from "../../_app";
 import { AuthSelector } from "../../../libs/store/Auth";
@@ -15,6 +15,9 @@ const ShoppingCart: NextPageWithLayout = () => {
   const { products } = useAppSelector(ProductSelector);
   const [ productId, setProductId] = useState("");
   const [username, setUsername] = useState("")
+  const [deletedProductId, setDeletedProductId] = useState("");
+  const [usernamed, setUsernamed] = useState(cart.userName)
+  const [ value, setValue] = useState(0)
   var tax = 2500;
   var shippment = 12000;
 
@@ -32,7 +35,29 @@ const ShoppingCart: NextPageWithLayout = () => {
       dispatch(RemoveBasketItemById(basket))
     }
   }, [productId]);
-  //end
+
+//    a function to increament a quantity of an item from the basket
+   function handleIncreaseCartItem (usernameD: string, productIdD: string, value: number)  {
+    setValue(value)
+    setDeletedProductId(productIdD)
+    setUsernamed(usernameD)
+    if (deletedProductId !== "") {
+      const basket = {usernamed, deletedProductId, value}
+      dispatch(IncreaseBasketItemById(basket))
+    }
+ 
+ }; 
+
+ // a function to decreament  a quantity of an item from the basket
+ function handleDecreaseCartItem (usernameD: string, productIdD: string, value: number)  {
+    setValue(value)
+  setDeletedProductId(productIdD)
+  setUsernamed(usernameD)
+  if (deletedProductId !== "") {
+    const basket = {usernamed, deletedProductId, value}
+    dispatch(decreaseBasketItemById(basket))
+  }
+}; 
 
   return (
     <>
@@ -52,6 +77,9 @@ const ShoppingCart: NextPageWithLayout = () => {
                 </th>
                 <th scope="col" className="py-3 px-6">
                   Qty
+                </th>
+                <th scope="col" className="py-3 px-6">
+                  dec/inc quantity
                 </th>
                 <th scope="col" className="py-3 px-6">
                   Subtotal
@@ -79,9 +107,14 @@ const ShoppingCart: NextPageWithLayout = () => {
                           <td className="py-4 px-6 font-semibold text-gray-900">
                             MK {productItem.price}
                           </td>
+                          <td className="py-4 px-6 font-semibold text-gray-900">
+                             {productItem.quantity}
+                          </td>
                           <td className="py-4 px-6">
                             <div className="flex items-center space-x-3">
+                    
                               <button
+                              onClick={(event) => { handleDecreaseCartItem(cart.userName, productItem.productId, value)}}
                                 className="inline-flex items-center p-1 text-sm font-medium text-gray-500 bg-white rounded-full border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 dark:text-gray-400  dark:hover:border-gray-600 dark:focus:ring-gray-700"
                                 type="button"
                               >
@@ -99,17 +132,22 @@ const ShoppingCart: NextPageWithLayout = () => {
                                     clipRule="evenodd"
                                   ></path>
                                 </svg>
-                              </button>
+                              </button> 
+                            
                               <div>
                                 <input
                                   type="number"
-                                  id="product"
+                                  min={1}
+                                  id={productItem.productId}
                                   className="bg-gray-50 w-14 border border-gray-300 text-gray-900 text-sm rounded-lg  block px-2.5 py-1"
-                                  placeholder="1"
+                                  placeholder= "1"
+                                  onChange={(event) => setValue(event.target.valueAsNumber)}
+                                  onFocus={(event) => setDeletedProductId(productItem.productId)}
                                   required
                                 />
                               </div>
                               <button
+                              onClick={(event) => { handleIncreaseCartItem(cart.userName, productItem.productId, value)}}
                                 className="inline-flex items-center p-1 text-sm font-medium text-gray-500 bg-white rounded-full border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 dark:text-gray-400  dark:hover:border-gray-600 dark:focus:ring-gray-700"
                                 type="button"
                               >
@@ -131,7 +169,7 @@ const ShoppingCart: NextPageWithLayout = () => {
                             </div>
                           </td>
                           <td className="py-4 px-6 font-semibold text-gray-900">
-                            MK {productItem.price}
+                            MK {productItem.price * productItem.quantity}
                           </td>
                           <td className="py-4 px-6">
                             <button type="button"
