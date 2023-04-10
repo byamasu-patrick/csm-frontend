@@ -21,6 +21,8 @@ import GetShops from "../shops/GetShops";
 import { Disclosure, Tab } from "@headlessui/react";
 import { ChevronUpIcon } from "@heroicons/react/20/solid";
 import { Tabs } from "flowbite-react";
+import DeliveryAddress from "../../../widgets/deliveryAddress";
+import PaymentOptions from "../../../widgets/paymentOptions";
 
 const OrderDetails = () => {
   const [isDistrict, setIsDistrict] = useState<boolean>(false);
@@ -172,11 +174,11 @@ const OrderDetails = () => {
 
   return (
     <div className="flex flex-col md:items-stretch relative md:flex-row justify-between max-w-7xl mx-auto">
-      <div className="flex-1 overflow-x-auto relative sm:rounded-lg mt-10 px-2">
+      <div className="flex-1 overflow-x-auto relative sm:rounded-lg  px-2">
         <div className="w-full">
           <div className="max-w-screen-2xl px-1 md:px-2 mx-auto">
             <div className="bg-white gap-4 p-4 md:p-8">
-              <h2 className="text-lg leading-6 font-bold">Shipping Address</h2>
+              <h2 className="text-lg leading-6 font-bold">Delivery Address</h2>
 
               <Disclosure>
                 {({ open }) => (
@@ -201,15 +203,7 @@ const OrderDetails = () => {
                       </span>
                     </Disclosure.Button>
                     <Disclosure.Panel className="px-4 pt-4 pb-2 text-sm text-gray-500">
-                      If you're unhappy with your purchase for any reason, email
-                      us within 90 days and we'll refund you in full, no
-                      questions asked.If you're unhappy with your purchase for
-                      any reason, email us within 90 days and we'll refund you
-                      in full, no questions asked.If you're unhappy with your
-                      purchase for any reason, email us within 90 days and we'll
-                      refund you in full, no questions asked.If you're unhappy
-                      with your purchase for any reason, email us within 90 days
-                      and we'll refund you in full, no questions asked.``
+                      <DeliveryAddress />
                     </Disclosure.Panel>
                   </>
                 )}
@@ -232,172 +226,16 @@ const OrderDetails = () => {
                       </span>
                     </Disclosure.Button>
                     <Disclosure.Panel className="px-4 pt-4 pb-2 text-sm text-gray-500">
-                      <div>
-                        <div className="sm:hidden relative w-11/12 mx-auto bg-white">
-                          <div className="absolute inset-0 m-auto mr-4 z-0 w-6 h-6">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="icon icon-tabler icon-tabler-selector"
-                              width={24}
-                              height={24}
-                              viewBox="0 0 24 24"
-                              strokeWidth="1.5"
-                              stroke="#A0AEC0"
-                              fill="none"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            >
-                              <path stroke="none" d="M0 0h24v24H0z" />
-                              <polyline points="8 9 12 5 16 9" />
-                              <polyline points="16 15 12 19 8 15" />
-                            </svg>
-                          </div>
-                          <select
-                            aria-label="Selected tab"
-                            className="form-select block w-full p-3 border border-gray-300 rounded text-gray-600 appearance-none bg-transparent relative z-10"
-                          >
-                            <option className="text-sm text-gray-600">
-                              Airtel Money{" "}
-                            </option>
-                            <option className="text-sm text-gray-600">
-                              TNM Mpamba{" "}
-                            </option>
-                          </select>
+                      <div className="relative sm:col-span-3">
+                        <label
+                          htmlFor="name"
+                          className="absolute -top-2.5 left-1/2 transform -translate-x-1/2 inline-block bg-white px-1 text-md font-medium text-gray-900"
+                        >
+                          Express Checkout
+                        </label>
+                        <div className="px-3 block w-full outline-none rounded-md border-0 py-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-amber-500 sm:text-sm sm:leading-6">
+                          <PaymentOptions />
                         </div>
-                        <div className="xl:w-full xl:mx-0 h-12 hidden  sm:block bg-white my-5">
-                          <ul className="flex px-5 bg-gray-50 items-center align-middle">
-                            <li
-                              onClick={() => setActiveStatus(1)}
-                              className={
-                                activeStatus == 1
-                                  ? "text-sm border-orange-500 pt-3 rounded-t text-orange-600 mr-12"
-                                  : "text-sm text-gray-600 py-3 flex items-center mr-12 hover:text-orange-600 cursor-pointer"
-                              }
-                            >
-                              <div className="flex items-center mb-3">
-                                <span>
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    strokeWidth={1.5}
-                                    stroke="currentColor"
-                                    className="w-6 h-6"
-                                  >
-                                    <path
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z"
-                                    />
-                                  </svg>
-                                </span>
-                                <span className="ml-1 font-normal">
-                                  Airtel Money
-                                </span>
-                              </div>
-                              {activeStatus == 1 && (
-                                <div className="w-full h-1 bg-orange-600 rounded-t-md" />
-                              )}
-                            </li>
-
-                            <li
-                              onClick={() => setActiveStatus(4)}
-                              className={
-                                activeStatus == 4
-                                  ? "text-sm border-orange-500 pt-3 rounded-t text-orange-600 mr-12"
-                                  : "text-sm text-gray-600 py-3 flex items-center mr-12 hover:text-orange-600 cursor-pointer"
-                              }
-                            >
-                              <div className="flex items-center mb-3">
-                                <span>
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    strokeWidth={1.5}
-                                    stroke="currentColor"
-                                    className="w-6 h-6"
-                                  >
-                                    <path
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z"
-                                    />
-                                  </svg>
-                                </span>
-                                <span className="ml-1 font-normal">
-                                  TNM Mpamba
-                                </span>
-                              </div>
-                              {activeStatus == 4 && (
-                                <div className="w-full h-1 bg-orange-600 rounded-t-md" />
-                              )}
-                            </li>
-                          </ul>
-                        </div>
-                        {activeStatus === 1 ? (
-                          <div className="md:px-32">
-                            <label
-                              htmlFor="website-admin"
-                              className="block mb-2 text-sm font-medium text-gray-900"
-                            >
-                              Phone Number
-                            </label>
-                            <div className="flex">
-                              <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-l-md">
-                                +265
-                              </span>
-                              <input
-                                type="int"
-                                id=""
-                                className="rounded-none rounded-r-lg bg-gray-50 border text-gray-900 focus:ring-[rgb(11,115,164)] focus:border-[rgb(11,115,164)] block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5 "
-                                placeholder="for example 997372121"
-                              />
-                            </div>
-                            <div>
-                              <button
-                                type="submit"
-                                className="inline-flex mt-2 items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-[rgb(11,115,164)] rounded-sm focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-orange-500"
-                              >
-                                Save & Confirm
-                              </button>
-                            </div>
-                          </div>
-                        ) : (
-                          <></>
-                        )}
-                        {activeStatus === 4 ? (
-                          <div className="md:px-32">
-                            <label
-                              htmlFor="website-admin"
-                              className="block mb-2 text-sm font-medium text-gray-900"
-                            >
-                              Phone Number
-                            </label>
-                            <div className="flex">
-                              <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-l-md">
-                                +265
-                              </span>
-                              <input
-                                type="int"
-                                id=""
-                                className="rounded-none rounded-r-lg bg-gray-50 border text-gray-900 focus:ring-[rgb(11,115,164)] focus:border-[rgb(11,115,164)] block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5 "
-                                placeholder="for example 887372121"
-                              />
-                            </div>
-                            <div>
-                              <button
-                                type="submit"
-                                className="inline-flex mt-2 items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-[rgb(11,115,164)] rounded-sm focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-orange-500"
-                              >
-                                Save & Confirm
-                              </button>
-                            </div>
-                          </div>
-                        ) : (
-                          <></>
-                        )}
-                        {activeStatus === 2 ? <div></div> : <></>}
                       </div>
                     </Disclosure.Panel>
                   </>
@@ -586,7 +424,7 @@ const OrderDetails = () => {
 
       {/*cart detail summary*/}
       <div className="px-3">
-        <div className="mt-2 p-5 w-full md:w-96 md:mt-10 bg-white mb-5 shadow-md">
+        <div className="mt-2 p-5 w-full md:w-96 md:-mt-0 bg-white mb-5 shadow-md">
           <div>
             <p className="font-bold text-gray-800">CART TOTALS</p>
             <div className="flex items-center justify-between pt-10">

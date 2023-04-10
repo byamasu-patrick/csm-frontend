@@ -63,11 +63,15 @@ const Navigation = () => {
             <div className="relative flex h-20 justify-between">
               <div className="relative z-10 flex px-2 lg:px-0">
                 <div className="flex flex-shrink-0 items-center">
-                  <img
-                    className="block h-14 lg:h-20 w-auto"
-                    src="../../cloud-stores.png"
-                    alt="Your Company"
-                  />
+                  <Link href={"/"}>
+                    <a>
+                      <img
+                        className="block h-14 lg:h-20 w-auto"
+                        src="../../cloud-stores.png"
+                        alt="Clou-Stores logo"
+                      />
+                    </a>
+                  </Link>
                 </div>
               </div>
               <div className="relative z-0 flex flex-1 items-center justify-center px-2 sm:absolute sm:inset-0">
@@ -210,7 +214,7 @@ const Navigation = () => {
                         <span className="sr-only">Open user menu</span>
                         <div className="flex items-center space-x-2">
                           <div>
-                            <HiOutlineUser className="text-gray-400 h-6 w-6 " />
+                            <HiOutlineUser className="text-gray-900 h-6 w-6 " />
                           </div>
                           <div className="text-left">
                             <div className="text-xs font-semibold text-gray-400">
@@ -287,7 +291,7 @@ const Navigation = () => {
                 {/* WishList */}
                 <button
                   type="button"
-                  className="flex-shrink-0 rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2"
+                  className="flex-shrink-0 rounded-full bg-white p-1 text-gray-900 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2"
                 >
                   <span className="sr-only">View WishList</span>
 
@@ -301,7 +305,7 @@ const Navigation = () => {
                       type="button"
                       className="relative inline-flex items-center p-1 text-sm font-medium text-center lg:relative lg:inline-flex lg:items-center "
                     >
-                      <BsCartDash className="text-gray-400 h-6 lg:h-6 w-6 lg:w-6 hover:text-gray-600" />
+                      <BsCartDash className="text-gray-900 h-6 lg:h-6 w-6 lg:w-6 hover:text-gray-600" />
                       {(cart?.items.length >= 1 && cart !== null) ||
                       (basketSearch.searchResult?.items.length >= 1 &&
                         cart !== null) ? (

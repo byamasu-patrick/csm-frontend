@@ -22,6 +22,7 @@ import { getDiscountsSuccess } from "../libs/store/Discount";
 import { DiscountModel } from "../libs/models/discount/DiscountModel";
 import MarketingCTA from "../components/pages/user/catalog/MarketingCTA";
 import ProductCarousell from "../components/widgets/ProductCarousel";
+import ProductList from "../components/widgets/productList";
 
 interface PageProps {
   discountData: DiscountModel[];
@@ -45,10 +46,11 @@ const Home: NextPage<PageProps> = ({ discountData }) => {
       <Navigation />
       <ProductCarousel />
       {/*<MarketingBanner />*/}
+
       <TrendingProducts />
       <Products isHome={true} />
       <MarketingCTA />
-      <DisplayShops />
+      {/* <DisplayShops /> */}
       {/*<FeaturedProduct />*/}
       {/* <Testimonials />*/}
       {/*<SubscribeBanner />*/}
