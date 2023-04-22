@@ -6,6 +6,7 @@ import { ProductReducer } from "./Catalog";
 import { ChatReducer } from "./Chat";
 import { DiscountReducer } from "./Discount";
 import { ProductReviewReducer } from './Review'
+import { ShippingReducer } from "./shipping";
 
 export const mainStore = configureStore({
     reducer :{
@@ -15,6 +16,7 @@ export const mainStore = configureStore({
         ProductReview: ProductReviewReducer,
         Chat: ChatReducer,
         Billing: BillingReducer,
+        shipping: ShippingReducer,
         Discount: DiscountReducer
     }
 });

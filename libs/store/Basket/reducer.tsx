@@ -25,6 +25,7 @@ const initialState: BasketState = {
    cart : {
       items: [],
       totalPrice: 0,
+      totalWeight: 0,
       userName: ""
    },
    error : null,
@@ -42,6 +43,7 @@ const initialState: BasketState = {
       searchResult: {
          items: [],
          totalPrice: 0,
+         totalWeight: 0,
          userName: ""
       }
    },
@@ -118,7 +120,8 @@ export const BasketReducer = createReducer(initialState, (builder) => {
          cart : {
             userName: state.cart.userName,
             items: tempItems,
-            totalPrice: 0
+            totalPrice: 0,
+            totalWeight: 0,
          }, 
          isUpdating : false, 
          successMessage : "Successfully updated to basket"
@@ -143,6 +146,7 @@ export const BasketReducer = createReducer(initialState, (builder) => {
          cart : {
             items: [],
             totalPrice: 0,
+            totalWeight: 0,
             userName: ""
          }, 
          basketSearch: {
@@ -151,6 +155,7 @@ export const BasketReducer = createReducer(initialState, (builder) => {
             searchResult: {
                items: [],
                totalPrice: 0,
+               totalWeight: 0,
                userName: ""
             }
          },
@@ -176,13 +181,15 @@ builder.addCase(removeBasketItem, (state, { payload }) => {
    const itemToRemove = state.cart.items.find(item => item.productId === productId);
    const updatedItems = state.cart.items.filter(item => item.productId !== productId);
    const updatedTotalPrice = itemToRemove ? state.cart.totalPrice - itemToRemove.price : state.cart.totalPrice;
- 
+   const updatedTotalWeight = itemToRemove ? state.cart.totalWeight - itemToRemove.weight : state.cart.totalWeight;
+
    return {
      ...state,
      cart: {
        ...state.cart,
        items: updatedItems,
        totalPrice: updatedTotalPrice,
+       totalWeight: updatedTotalWeight,
        username: username
      },
      isRemoving: false,
@@ -202,11 +209,13 @@ builder.addCase(increaseBasketItemSuccess, (state, { payload }) => {
    const itemToUpdate = state.cart.items[itemToUpdateIndex];
    const updatedItems = [...state.cart.items];
    const updatedTotalPrice = state.cart.totalPrice + (value  * itemToUpdate.price);
+   const updatedTotalWeight = state.cart.totalWeight + (value  * itemToUpdate.weight);
  
    if (itemToUpdateIndex >= 0) {
      updatedItems[itemToUpdateIndex] = {
        ...itemToUpdate,
-       quantity:  value + itemToUpdate.quantity
+       quantity:  value + itemToUpdate.quantity,
+       subTotal: itemToUpdate.price * (itemToUpdate.quantity + value)
      };
    } 
    return {
@@ -215,6 +224,7 @@ builder.addCase(increaseBasketItemSuccess, (state, { payload }) => {
        ...state.cart,
        items: updatedItems,
        totalPrice: updatedTotalPrice,
+       totalWeight: updatedTotalWeight,
        username: usernamed
      },
      isAdding: false,
@@ -233,11 +243,13 @@ builder.addCase(decreaseBasketItemSuccess, (state, { payload }) => {
    const itemToUpdate = state.cart.items[itemToUpdateIndex];
    const updatedItems = [...state.cart.items];
    const updatedTotalPrice = (itemToUpdate.quantity - value) <= 0 ? state.cart.totalPrice : state.cart.totalPrice - (value * itemToUpdate.price);
+   const updatedTotalWeight = (itemToUpdate.quantity - value) <= 0 ? state.cart.totalWeight : state.cart.totalWeight - (value * itemToUpdate.weight);
  
    if (itemToUpdateIndex >= 0) {
      updatedItems[itemToUpdateIndex] = {
        ...itemToUpdate,
-       quantity: (itemToUpdate.quantity - value) <= 0 ? itemToUpdate.quantity : itemToUpdate.quantity - value
+       quantity: (itemToUpdate.quantity - value) <= 0 ? itemToUpdate.quantity : itemToUpdate.quantity - value,
+       subTotal: (itemToUpdate.quantity - value) <= 0 ? itemToUpdate.subTotal : itemToUpdate.subTotal - (value * itemToUpdate.price)
      };
    } 
    return {
@@ -246,6 +258,7 @@ builder.addCase(decreaseBasketItemSuccess, (state, { payload }) => {
        ...state.cart,
        items: updatedItems,
        totalPrice: updatedTotalPrice,
+       totalWeight: updatedTotalWeight,
        username: usernamed
      },
      isAdding: false,
@@ -268,6 +281,7 @@ builder.addCase(decreaseBasketItemSuccess, (state, { payload }) => {
          cart: {
             items: [],
             totalPrice: 0,
+            totalWeight: 0,
             userName: ""
          },
          basketSearch: {
@@ -276,6 +290,7 @@ builder.addCase(decreaseBasketItemSuccess, (state, { payload }) => {
             searchResult: {
                items: [],
                totalPrice: 0,
+               totalWeight: 0,
                userName: ""
             }
          },

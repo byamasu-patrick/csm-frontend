@@ -10,6 +10,7 @@ import {
 import { useAppDispatch, useAppSelector } from "../../../../libs/store";
 import { AuthSelector } from "../../../../libs/store/Auth";
 import { BasketSelector, CheckoutBasket } from "../../../../libs/store/Basket";
+import { ShippingSelector, GetAllCouries } from "../../../../libs/store/shipping";
 import {
   BillingSelector,
   searchBillingAddressData,
@@ -24,84 +25,113 @@ import { Tabs } from "flowbite-react";
 import DeliveryAddress from "../../../widgets/deliveryAddress";
 import PaymentOptions from "../../../widgets/paymentOptions";
 
+
 const OrderDetails = () => {
-  const [isDistrict, setIsDistrict] = useState<boolean>(false);
-  const [isRegion, setIsRegion] = useState<boolean>(false);
-  const [isCountry, setIsCountry] = useState<boolean>(false);
-  const [zipCode, setZipCode] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
-  const [addressLine, setAddressLine] = useState<string>("");
-  const [district, setDistrict] = useState<string>("City");
-  const [region, setRegion] = useState<string>("Region");
-  const [country, setCountry] = useState<string>("Contry");
-  const [cardName, setCardName] = useState<string>("");
-  const [cardNumber, setCardNumber] = useState<string>("");
-  const [expireDate, setExpireDate] = useState<string>("");
-  const [cvv, setCvv] = useState<string>("");
-  const [checked, setChecked] = useState<string>("");
-  // Redux Stores
   const { cart, basketSearch, isCheckingOut } = useAppSelector(BasketSelector);
   const { user } = useAppSelector(AuthSelector);
+  const [userName, setUserName] = useState(cart.userName);
+  const [shippingPrice, setShippingPrice] = useState<number>(0.0);
+  const [totalPrice, setTotalPrice] = useState<number>(cart.totalPrice);
+  const [totalWeight, setTotalWeight] = useState<number>(cart.totalWeight);
+  const [email, setEmail] = useState<string>(user?.email);
+  const [firstName, setFirstName] = useState<string>("");
+  const [lastName, setLastName] = useState<string>("");
+  const [destination, setDestination] = useState<string>("");
+  const [couriername, setCouriername] = useState<string>("");
+  const [paymentMethod, setPaymentMethod] = useState<string>("Airtel Money");
+  const [phoneNumber, setPhoneNumber] = useState<string>("");
+  const [nationaId, setNationalId] = useState<string>("");
+  const [orderStatus, setOrderStatus] = useState<string>("pending");
+  const [checked, setChecked] = useState<string>("");
+  // Redux Stores
+
   const { products } = useAppSelector(ProductSelector);
-  const { billingAddresses } = useAppSelector(BillingSelector);
+  const { couriers, isGetting} = useAppSelector(ShippingSelector);
   const dispatch = useAppDispatch();
   const router = useRouter();
-  var tax = 2500;
-  var shippment = 12000;
-  let billingData: BillingAddressModel | null = null;
 
+  type RadioOption = {
+    id: string;
+    name: string;
+    imageUrl: string;
+    imageSize: string;
+  };
+  
+  const radioOptions: RadioOption[] = [
+    {
+      id: "1",
+      name: "AirtelMoney",
+      imageUrl: "../../airtel.jpg",
+      imageSize: "w-32 h-24",
+    },
+    {
+      id: "2",
+      name: "TNM Mpamba",
+      imageUrl: "../../tnm.jpg",
+      imageSize: "w-32 h-24",
+    },
+    {
+      id: "3",
+      name: "Standard Bank",
+      imageUrl: "../../sbl.jpg",
+      imageSize: "w-32 h-24",
+    },
+  ];
+  const handleCourierChange = (courierName: string) => {
+    setCouriername(courierName);
+  };
+  
+  const handleLocationChange = (locationName: string) => {
+    setDestination(locationName);
+    const deliveryPrice = couriers.results
+    .find((courier) => courier.name === couriername)
+    ?.locationAddresses.find((address) => address.destination === destination)
+    ?.prices.find((price) => cart.totalWeight >= price.fromKg && cart.totalWeight <= price.toKg)?.price;
+    setShippingPrice(deliveryPrice || 0);
+  };
+  const handlePhoneNumberChange = (phoneNumber: string) => {
+    setPhoneNumber(phoneNumber);
+  };
+  const handleNationalIdChange = (nationalId: string) => {
+    setNationalId(nationalId);
+  };
+  const handleFirstNameChange = (firstname: string) => {
+    setFirstName(firstname);
+  };
+  const handleLastNameChange = (lastName: string) => {
+    setLastName(lastName);
+    console.log(lastName)
+  };
+  const handlePaymentMethodChange = (paymentMethod: string) => {
+    setPaymentMethod(paymentMethod);
+  };
+  
   useEffect(() => {
-    const getAllBillingAddresses = async () => {
-      await dispatch(searchBillingAddressData(user?.email));
+    const fetchCouriers = async () => {
+      await dispatch(GetAllCouries(1));
     };
-    getAllBillingAddresses().catch((error) =>
-      console.log("Error during searching billing informations")
-    );
+    fetchCouriers().catch((error) => console.log(error));
+    console.log(fetchCouriers);
   }, []);
-
-  useEffect(() => {
-    if (billingAddresses.length > 0 && billingData === null) {
-      billingData = billingAddresses[0];
-      setZipCode(billingData.zipCode);
-      setEmail(billingData.emailAddress);
-      setAddressLine(billingData.addressLine);
-      setDistrict(billingData.state);
-      setCountry(billingData.country);
-      setCardName(billingData.cardName);
-      setCardNumber(billingData.cardNumber);
-      setExpireDate(billingData.expiration);
-      setCvv(billingData.cvv);
-    }
-  }, [billingAddresses]);
+  var tax = 0;
 
   const handleChecked = (checkedString: string) => {
     setChecked(checkedString);
-    billingData = billingAddresses.filter(
-      (billing) => billing.cardNumber === checkedString
-    )[0];
-    setZipCode(billingData.zipCode);
-    setEmail(billingData.emailAddress);
-    setAddressLine(billingData.addressLine);
-    setDistrict(billingData.state);
-    setCountry(billingData.country);
-    setCardName(billingData.cardName);
-    setCardNumber(billingData.cardNumber);
-    setExpireDate(billingData.expiration);
-    setCvv(billingData.cvv);
+    setUserName(cart.userName)
+    setTotalPrice(cart.totalPrice)
+    setTotalWeight(cart.totalWeight)
+    setFirstName(firstName)
+    setLastName(lastName)
+    setEmail(cart.userName)
+    setNationalId(nationaId)
+    setCouriername(couriername)
+    setDestination(destination)
+    setPhoneNumber(phoneNumber)
+    setShippingPrice(shippingPrice)
+    setPaymentMethod(paymentMethod)
+    setOrderStatus(orderStatus)
   };
 
-  const handleDistrict: Function = (dist: string) => {
-    setDistrict(dist);
-    setIsDistrict(false);
-  };
-  const handleRegion: Function = (regionVal: string) => {
-    setRegion(regionVal);
-    setIsRegion(false);
-  };
-  const handleCoutry: Function = (ctry: string) => {
-    setCountry(ctry);
-    setIsCountry(false);
-  };
 
   useEffect(() => {
     if (cart === null && basketSearch.searchResult === null) {
@@ -120,44 +150,40 @@ const OrderDetails = () => {
   };
 
   const handleSubmit = async () => {
-    if (cardName && cardNumber && cvv && zipCode) {
-      var productIds =
-        cart !== null
-          ? getProductId(cart.items)
-          : getProductId(basketSearch?.searchResult?.items);
+    if (userName && shippingPrice && paymentMethod && couriername) {
 
       var shopInfo: OrderDetails = {
-        userName:
-          cart !== null
-            ? String(cart?.userName)
-            : String(basketSearch.searchResult?.userName),
-        products: productIds,
-        firstName: String(user?.profile?.firstName),
-        lastName: String(user?.profile?.lastName),
-        cardName: cardName,
-        cardNumber: cardNumber,
-        addressLine: addressLine,
-        cvv: cvv,
-        state: district,
-        country: country,
+        userName: userName,
+        totalPrice: totalPrice,
+        totalWeight: totalWeight,
+        products: cart.items,
+        firstName: firstName,
+        lastName: lastName,
         emailAddress: email,
-        expiration: expireDate,
-        paymentMethod: 1,
-        totalPrice: Number(cart?.totalPrice),
-        zipCode: zipCode,
+        phoneNumber: phoneNumber,
+        nationalId: nationaId,
+        courierName: couriername,
+        physicalAddress: destination,
+        shippingPrice: shippingPrice,
+        paymentMethod: paymentMethod,
+        orderStatus: orderStatus,
       };
+       console.log(shopInfo)
       await dispatch(CheckoutBasket(shopInfo));
-      setCardName("");
-      setCardNumber("");
-      setAddressLine("");
-      setCvv("");
-      setCountry("Country");
-      setDistrict("City");
-      setEmail("");
-      setExpireDate("");
-      setZipCode("");
-      setAddressLine("");
-      setRegion("Region");
+     
+      setChecked("");
+      setUserName("")
+      setTotalPrice(0.0)
+      setFirstName("")
+      setLastName("")
+      setEmail("")
+      setNationalId("")
+      setCouriername("")
+      setDestination("")
+      setPhoneNumber("")
+      setShippingPrice(0.0)
+      setPaymentMethod("")
+      setOrderStatus("")
 
       router.push("/user/order-summary");
     } else {
@@ -203,7 +229,181 @@ const OrderDetails = () => {
                       </span>
                     </Disclosure.Button>
                     <Disclosure.Panel className="px-4 pt-4 pb-2 text-sm text-gray-500">
-                      <DeliveryAddress />
+                    <form>
+                        <div className="space-y-12">
+                          <div className="border-b border-gray-900/10 pb-12">
+                            <h2 className="text-base font-semibold leading-7 text-gray-900">
+                              Personal Information
+                            </h2>
+                            <p className="mt-1 text-sm leading-6 text-gray-600">
+                              Use a permanent address where you can receive mail.
+                            </p>
+
+                            <div className="mt-5 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                              <div className="relative sm:col-span-3">
+                                <label
+                                  htmlFor="name"
+                                  className="absolute -top-2 left-2 inline-block bg-white px-1 text-xs font-medium text-gray-900"
+                                >
+                                  firstName
+                                </label>
+                                <input
+                                  type="text"
+                                  name="name"
+                                  id="name"
+                                  value={firstName}
+                                  onChange={(e) =>
+                                    handleFirstNameChange(e.target.value)
+                                  }
+                                  className="px-3 block w-full outline-none rounded-md border-0 py-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-amber-500 sm:text-sm sm:leading-6"
+                                  placeholder="Lloyd"
+                                />
+                              </div>
+                              <div className="relative sm:col-span-3">
+                                <label
+                                  htmlFor="name"
+                                  className="absolute -top-2 left-2 inline-block bg-white px-1 text-xs font-medium text-gray-900"
+                                >
+                                  Surname
+                                </label>
+                                <input
+                                  type="text"
+                                  name="name"
+                                  id="name"
+                                  value={lastName}
+                                  onChange={(e) =>
+                                    handleLastNameChange(e.target.value)
+                                  }
+                                  className="px-3 block w-full outline-none rounded-md border-0 py-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-amber-500 sm:text-sm sm:leading-6"
+                                  placeholder="Chunga"
+                                />
+                              </div>
+
+                              <div className="sm:col-span-4">
+                                <div className="relative mt-2 rounded-md shadow-sm">
+                                  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                                    <span className="text-gray-500 sm:text-sm">+265</span>
+                                  </div>
+                                  <label
+                                    htmlFor="name"
+                                    className="absolute -top-2 left-2 inline-block bg-white px-1 text-xs font-medium text-gray-900"
+                                  >
+                                    Phone number
+                                  </label>
+                                  <input
+                                    type="text"
+                                    name="phoneNumber"
+                                    id="phoneNumber"
+                                    value={phoneNumber}
+                                    onChange={(e) =>
+                                      handlePhoneNumberChange(e.target.value)
+                                    }
+                                    className="block w-full rounded-md border-0 py-3 pl-12 pr-12 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-amber-500 outline-none sm:text-sm sm:leading-6"
+                                    placeholder=""
+                                    aria-describedby="price-currency"
+                                  />
+                                </div>
+                              </div>
+                              <div className="sm:col-span-full">
+                                <div className="relative mt-2 rounded-md shadow-sm">
+                                  <label
+                                    htmlFor="name"
+                                    className="absolute -top-2 left-2 inline-block bg-white px-1 text-xs font-medium text-gray-900"
+                                  >
+                                    Nation ID Number
+                                  </label>
+                                  <input
+                                    type="text"
+                                    name="price"
+                                    value={nationaId}
+                                    onChange={(e) =>
+                                      handleNationalIdChange(e.target.value)
+                                    }
+                                    id="price"
+                                    className="block w-full rounded-md border-0 py-3 pl-12 pr-12 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-amber-500 outline-none sm:text-sm sm:leading-6"
+                                    placeholder=""
+                                    aria-describedby="price-currency"
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="sm:col-span-3 sm:col-start-1 rounded-md px-3 pb-1.5 pt-2.5 shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-amber-500">
+                                <label
+                                  htmlFor="Location"
+                                  className="block text-xs font-medium text-gray-900"
+                                >
+                                  Select Courier
+                                </label>
+                                <select
+                                  id="courier"
+                                  name="courier"
+                                  value={couriername}
+                                  onChange={(e) =>
+                                    handleCourierChange(e.target.value)
+                                  }
+                                  autoComplete="courier-name"
+                                  className="relative block w-full outline-none bg-transparent py-1.5 text-gray-900 r ring-gray-300 focus:z-10 sm:text-sm sm:leading-6"
+                                >
+                                    {couriers?.results.map((courier, index) => (
+                                      <option key={index} value={courier.name}>
+                                        {courier.name} 
+                                      </option>
+                                    ))}
+                              
+                                </select>
+                              </div>
+
+                              <div className="sm:col-span-3 rounded-md px-3 pb-1.5 pt-2.5 shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-amber-500">
+                                <label
+                                  htmlFor="Location"
+                                  className="block text-xs font-medium text-gray-900"
+                                >
+                                  Location
+                                </label>
+                                <select
+                                  id="location"
+                                  name="location"
+                                  value={destination}
+                                  onChange={(e) =>
+                                    handleLocationChange(e.target.value)
+                                  }
+                                  autoComplete="location-name"
+                                  className="relative block w-full outline-none bg-transparent py-1.5 text-gray-900 r ring-gray-300 focus:z-10 sm:text-sm sm:leading-6"
+                                >
+                                    {/* Render options based on the selectedCourier */}
+                                  {couriername &&
+                                    couriers?.results
+                                      .find((courier) => courier.name === couriername)
+                                      ?.locationAddresses?.map((location, index) => (
+                                        <option key={index} value={location.destination}>
+                                          {location.destination}
+                                        </option>
+                                        ))}
+                                </select>
+                              </div>
+
+                              <div className="sm:col-span-2 rounded-md px-3 pb-1.5 pt-2.5 shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-amber-500 ">
+                                <label
+                                  htmlFor="Location"
+                                  className="block text-xs font-medium text-gray-900"
+                                >
+                                  delivery amount(k)
+                                </label>
+                                <input
+                                  id="weightRange"
+                                  name="weightRange"
+                                  type="text"
+                                  value={shippingPrice}
+                                  autoComplete="weightRange"
+                                  readOnly
+                                  className="relative block w-full outline-none bg-transparent py-2 text-gray-900 ring-gray-300 focus:z-10 sm:text-sm sm:leading-6"
+                                />
+                                  
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </form>
                     </Disclosure.Panel>
                   </>
                 )}
@@ -231,10 +431,39 @@ const OrderDetails = () => {
                           htmlFor="name"
                           className="absolute -top-2.5 left-1/2 transform -translate-x-1/2 inline-block bg-white px-1 text-md font-medium text-gray-900"
                         >
-                          Express Checkout
+                          Available payment methods
                         </label>
                         <div className="px-3 block w-full outline-none rounded-md border-0 py-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-amber-500 sm:text-sm sm:leading-6">
-                          <PaymentOptions />
+                        <div className="flex justify-center items-center space-x-4">
+                          {radioOptions.map((option) => (
+                            <label
+                              key={option.id}
+                              className="inline-flex flex-col items-center cursor-pointer py-10"
+                            >
+                              <img
+                                src={option.imageUrl}
+                                alt={option.name}
+                                className={` ${option.imageSize} border-2 ${
+                                  paymentMethod === option.name
+                                    ? "border-indigo-600"
+                                    : "border-gray-300"
+                                }`}
+                              />
+                              <input
+                                type="radio"
+                                id={option.id}
+                                name="options"
+                                value={option.id}
+                                checked={paymentMethod === option.name}
+                                onChange={() => handlePaymentMethodChange(option.name)}
+                                className="sr-only"
+                              />
+                              <span className="text-sm font-medium text-gray-900">
+                                {option.name}
+                              </span>
+                            </label>
+                          ))}
+                        </div>
                         </div>
                       </div>
                     </Disclosure.Panel>
@@ -275,7 +504,7 @@ const OrderDetails = () => {
                                 </svg>
                               </span>
                               <span className="leading-6 font-semibold text-base">
-                                Bule Official Store
+                                Cloud Stores
                               </span>
                             </div>
                             <div>
@@ -386,10 +615,10 @@ const OrderDetails = () => {
                             <div className=" flex flex-1 items-center space-x-2">
                               <span>
                                 <p className="leading-6 text-sm font-semibold">
-                                  Shipping: MK 1,000
+                                  Shipping: MK {shippingPrice}
                                 </p>
                                 <p className="leading-3 text-xs text-semibold">
-                                  Estimated Delivery Time: 4hrs
+                                  Estimated Delivery Time: 48hrs
                                 </p>
                               </span>
                             </div>
@@ -442,10 +671,7 @@ const OrderDetails = () => {
             <div className="flex items-center justify-between pt-5">
               <p className="font-semibold text-gray-800">Shipping</p>
               <p className="text-gray-800">
-                MK{" "}
-                {cart !== null || basketSearch.searchResult !== null
-                  ? shippment
-                  : 0}
+                MK{" "} {shippingPrice}
               </p>
             </div>
             <hr className="mt-5" />
@@ -465,7 +691,7 @@ const OrderDetails = () => {
                 MK{" "}
                 {cart !== null || basketSearch.searchResult !== null
                   ? tax +
-                    shippment +
+                    shippingPrice +
                     (cart !== null
                       ? cart?.totalPrice
                       : basketSearch.searchResult?.totalPrice)
@@ -475,7 +701,7 @@ const OrderDetails = () => {
 
             {cart !== null || basketSearch.searchResult !== null ? (
               <Link href={`/user/order`}>
-                <button className=" rounded-sm text-base leading-none w-full py-4 px-6 bg-orange-500 border-orange-500 border focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 text-white">
+                <button onClick={handleSubmit} className=" rounded-sm text-base leading-none w-full py-4 px-6 bg-orange-500 border-orange-500 border focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 text-white">
                   Pay now
                 </button>
               </Link>
@@ -528,5 +754,4 @@ const OrderDetails = () => {
     </div>
   );
 };
-
 export default OrderDetails;

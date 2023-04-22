@@ -1,6 +1,37 @@
 import { PhotoIcon, UserCircleIcon } from "@heroicons/react/24/solid";
+import { CourierModel, CourierResponse } from "../../libs/models/shipping/ShippingModels";
+import { useAppDispatch, useAppSelector } from "../../libs/store";
+import React, { useEffect, useState } from "react";
+import { ShippingSelector, GetAllCouries } from "../../libs/store/shipping";
+import { BasketSelector } from "../../libs/store/Basket";
 
-export default function DeliveryAddress() {
+const DeliveryAddress = () => {
+const { couriers, prices, receivers, locations, isGetting} = useAppSelector(ShippingSelector);
+const { cart } = useAppSelector(BasketSelector);
+const dispatch = useAppDispatch()
+
+const [selectedCourier, setSelectedCourier] = useState('');
+const [selectedLocation, setSelectedLocation] = useState('');
+const [selectedPrice, setSelectedPrice] = useState(0.0);
+
+const handleCourierChange = (courierName: string) => {
+  setSelectedCourier(courierName);
+};
+
+const handleLocationChange = (locationName: string) => {
+  setSelectedLocation(locationName);
+};
+const handlePriceChange = (price: number) => {
+  setSelectedPrice(price);
+};
+
+useEffect(() => {
+  const fetchCouriers = async () => {
+    await dispatch(GetAllCouries(1));
+  };
+  fetchCouriers().catch((error) => console.log(error));
+  console.log(fetchCouriers);
+}, []);
   return (
     <form>
       <div className="space-y-12">
@@ -109,15 +140,21 @@ export default function DeliveryAddress() {
                 Select Courier
               </label>
               <select
-                id="country"
-                name="country"
-                autoComplete="country-name"
+                id="courier"
+                name="courier"
+                value={selectedCourier}
+                onChange={(e) =>
+                  handleCourierChange(e.target.value)
+                }
+                autoComplete="courier-name"
                 className="relative block w-full outline-none bg-transparent py-1.5 text-gray-900 r ring-gray-300 focus:z-10 sm:text-sm sm:leading-6"
               >
-                <option>CTS</option>
-                <option>Speed Courier</option>
-                <option>Amkolo</option>
-                <option>VIP Courier</option>
+                  {couriers?.results.map((courier, index) => (
+                    <option key={index} value={courier.name}>
+                      {courier.name} 
+                    </option>
+                  ))}
+            
               </select>
             </div>
 
@@ -129,35 +166,52 @@ export default function DeliveryAddress() {
                 Location
               </label>
               <select
-                id="country"
-                name="country"
-                autoComplete="country-name"
+                id="location"
+                name="location"
+                value={selectedLocation}
+                onChange={(e) =>
+                  handleLocationChange(e.target.value)
+                }
+                autoComplete="location-name"
                 className="relative block w-full outline-none bg-transparent py-1.5 text-gray-900 r ring-gray-300 focus:z-10 sm:text-sm sm:leading-6"
               >
-                <option>Mzuzu</option>
-                <option>Lilongwe</option>
-                <option>Blantyre</option>
+                  {/* Render options based on the selectedCourier */}
+                {selectedCourier &&
+                  couriers?.results
+                    .find((courier) => courier.name === selectedCourier)
+                    ?.locationAddresses?.map((location, index) => (
+                      <option key={index} value={location.destination}>
+                        {location.destination}
+                      </option>
+                      ))}
               </select>
             </div>
 
-            <div className="sm:col-span-2 rounded-md px-3 pb-1.5 pt-2.5 shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-amber-500 sr-only">
+            <div className="sm:col-span-2 rounded-md px-3 pb-1.5 pt-2.5 shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-amber-500 ">
               <label
                 htmlFor="Location"
                 className="block text-xs font-medium text-gray-900"
               >
-                Weight (KGs)
+                delivery amount(k)
               </label>
-              <select
-                id="country"
-                name="country"
-                autoComplete="country-name"
-                className="relative block w-full outline-none bg-transparent py-1.5 text-gray-900 r ring-gray-300 focus:z-10 sm:text-sm sm:leading-6"
-              >
-                <option>1-5 kG</option>
-                <option>6-10</option>
-                <option>11-20</option>
-                <option>21-50</option>
-              </select>
+              <input
+                id="weightRange"
+                name="weightRange"
+                onChange={(e) =>
+                  handlePriceChange(parseInt(e.target.value))
+                }
+                type="text"
+                value={
+                  selectedLocation &&
+                  couriers.results
+                    .find((courier) => courier.name === selectedCourier)
+                    ?.locationAddresses.find((address) => address.destination === selectedLocation)
+                    ?.prices.find((price) => cart.totalWeight >= price.fromKg && cart.totalWeight <= price.toKg)?.price
+                }
+                autoComplete="weightRange"
+                readOnly
+                className="relative block w-full outline-none bg-transparent py-2 text-gray-900 ring-gray-300 focus:z-10 sm:text-sm sm:leading-6"
+              />
             </div>
           </div>
         </div>
@@ -165,3 +219,4 @@ export default function DeliveryAddress() {
     </form>
   );
 }
+export default DeliveryAddress;

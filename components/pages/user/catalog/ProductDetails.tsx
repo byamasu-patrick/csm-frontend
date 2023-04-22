@@ -30,7 +30,7 @@ const ProductDetails: React.FC<ProductProps> = (props) => {
 
     const slideToggle = () => setSlide(!slide);
     
-  const addToBasket = async (productPrice: number, productId: string, name: string,  ) => {
+  const addToBasket = async (productPrice: number, productWeight: number, productId: string, name: string,  ) => {
     if(user == null){
         if(!isAuthenticated && user?.userType !== UserType.FreeUser){
             router.push("/signin");
@@ -45,6 +45,8 @@ const ProductDetails: React.FC<ProductProps> = (props) => {
                     quantity: 1,
                     color: "blue",
                     price: productPrice,
+                    subTotal: productPrice,
+                    weight: productWeight,
                     productId: productId,
                     productName: name
                 }]                    
@@ -58,6 +60,8 @@ const ProductDetails: React.FC<ProductProps> = (props) => {
                     quantity: 1,
                     color: "blue",
                     price: productPrice,
+                    subTotal: productPrice,
+                    weight: productWeight,
                     productId: productId,
                     productName: name
                 }));
@@ -129,6 +133,7 @@ const ProductDetails: React.FC<ProductProps> = (props) => {
                     <h2 className=" lg:text-2xl text-xl lg:leading-6 leading-5 text-gray-800 font-semibold">{props.data.name} | {props.data.category}</h2>
                     <div className=" flex justify-start items-center mt-4">
                         <p className="font-normal text-lg leading-6 text-gray-600 mr-4">MK {props.data.price}.00</p>
+                        <p className="font-normal text-lg leading-6 text-gray-600 mr-4">KG {props.data.weight}.00</p>
                         <div className="cursor-pointer flex space-x-2 mr-3">
                             <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <g>
@@ -223,7 +228,7 @@ const ProductDetails: React.FC<ProductProps> = (props) => {
                     <div className="flex flex-col w-full space-y-4 mt-10">
                             
                         <button 
-                            onClick={() => addToBasket(props.data.price, props.data.id, props.data.name)}
+                            onClick={() => addToBasket(props.data.price, props.data.weight,  props.data.id, props.data.name)}
                             className="
                                 border border-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-600 md:w-96 w-full hover:bg-orange-600 text-base font-medium leading-4 bg-orange-500 py-4 text-white">Add to Bag</button>
                         <button className="border border-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-600 md:w-96 w-full hover:bg-gray-50 text-base font-medium leading-4 text-orange-500 py-4 bg-white">Add to Wishlist</button>

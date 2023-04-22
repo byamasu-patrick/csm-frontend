@@ -144,6 +144,14 @@ const ViewProductDetails: React.FC<ProductProps> = (props) => {
                     </div>
                     <div className=" mt-10 w-full">
                         <div className=" flex justify-between">
+                            <p className="font-semibold text-base leading-4 text-gray-800">Weight</p>
+                            <p className="cursor-pointer hover:text-gray-800 font-medium text-base leading-4 text-gray-500">
+                               Stock: {props.data.weight}
+                            </p>
+                        </div>                                
+                    </div>
+                    <div className=" mt-10 w-full">
+                        <div className=" flex justify-between">
                             <p className="font-semibold text-base leading-4 text-gray-800">Description</p>
                             <p className="cursor-pointer hover:text-gray-800 font-medium text-base leading-4 text-gray-500">
                                Stock: {props.data.itemsInStock}

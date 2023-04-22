@@ -10,16 +10,18 @@ export interface BasketInfoModel {
     userName: string;
     items: BasketItem[];
     totalPrice: number;
+    totalWeight: number;
 };
 
 export interface BasketItem{
-    quantity: number;
-    color: string;
-    price: number;
     productId: string;
     productName: string;
+    quantity: number;
+    price: number;
+    subTotal: number
+    weight: number;
+    color: string;
 }
-
 export interface BasketSearchModel {
     searchResult : BasketInfoModel,
     isSearching : boolean,
@@ -29,19 +31,18 @@ export interface BasketSearchModel {
 export interface OrderDetails{
     userName: string,
     totalPrice: number,
-    products: Array<string>,
+    shippingPrice: number,
+    totalWeight: number,
+    products: BasketItem[],
     firstName: string,
     lastName: string,
     emailAddress: string,
-    addressLine: string,
-    country: string,
-    state: string,
-    zipCode: string,
-    cardName: string,
-    cardNumber: string,
-    expiration: string,
-    cvv: string,
-    paymentMethod: number
+    phoneNumber: string,
+    nationalId: string,
+    courierName: string,
+    physicalAddress: string,
+    paymentMethod: string,
+    orderStatus: string,
 }
 // model for deleting a particular item in the basket
 export interface DeleteBasketItemModel {

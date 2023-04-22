@@ -220,7 +220,7 @@ const ShoppingCart: NextPageWithLayout = () => {
                               </div>
                             </td>
                             <td className="py-4 px-6 font-semibold text-gray-900">
-                              MK MK {productItem.price * quantity}
+                              MK {productItem.price * quantity}
                             </td>
                             <td className="py-4 px-6">
                               <button
@@ -268,7 +268,7 @@ const ShoppingCart: NextPageWithLayout = () => {
                   <p className="text-gray-800">
                     MK{" "}
                     {cart !== null || basketSearch.searchResult !== null
-                      ? shippment
+                      ? 0
                       : 0}
                   </p>
                 </div>

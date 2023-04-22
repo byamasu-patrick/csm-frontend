@@ -25,6 +25,7 @@ const CreateProduct: React.FC<CreateProps> = (props) => {
   const [description, setDescrition] = useState<string>("");
   const [imageFile, setImageFile] = useState<string>("");
   const [price, setPrice] = useState<number>(0.0);
+  const [weight, setWeight] = useState<number>(0.0);
   const [itemsInStock, setItemsInStock] = useState<number>(0);
 
   const dispatch = useAppDispatch();
@@ -41,6 +42,7 @@ const CreateProduct: React.FC<CreateProps> = (props) => {
           imageFile: imageFile,
           description: description,
           price: price,
+          weight: weight,
           itemsInStock: itemsInStock,
           userId: String(user?.email),
         })
@@ -259,6 +261,33 @@ const CreateProduct: React.FC<CreateProps> = (props) => {
                                     event: React.FormEvent<HTMLInputElement>
                                   ) => {
                                     setPrice(
+                                      Number(event?.currentTarget?.value)
+                                    );
+                                  }}
+                                />
+                              </div>
+                            </div>
+                            <div className="w-full">
+                              <label
+                                htmlFor="weight"
+                                className="block text-sm font-medium text-gray-700"
+                              >
+                                Weight
+                              </label>
+                              <div className="mt-1">
+                                <input
+                                  id="weight"
+                                  name="weight"
+                                  type="number"
+                                  autoComplete="weight"
+                                  required
+                                  className={`appearance-none w-full block px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none  sm:text-sm
+                                                                             focus:ring-orange-500 focus:border-orange-500
+                                                                            `}
+                                  onChange={(
+                                    event: React.FormEvent<HTMLInputElement>
+                                  ) => {
+                                    setWeight(
                                       Number(event?.currentTarget?.value)
                                     );
                                   }}

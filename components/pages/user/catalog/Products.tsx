@@ -127,6 +127,7 @@ const Products: React.FC<ProductProps> = (props) => {
 
   const addToBasket = async (
     productPrice: number,
+    productWeight: number,
     productId: string,
     name: string
   ) => {
@@ -144,6 +145,7 @@ const Products: React.FC<ProductProps> = (props) => {
                 quantity: 1,
                 color: "blue",
                 price: productPrice,
+                weight: productWeight,
                 productId: productId,
                 productName: name,
               },
@@ -156,6 +158,7 @@ const Products: React.FC<ProductProps> = (props) => {
             quantity: 1,
             color: "blue",
             price: productPrice,
+            weight: productWeight,
             productId: productId,
             productName: name,
           })
@@ -250,6 +253,7 @@ const Products: React.FC<ProductProps> = (props) => {
                               setAddCart(index + 1);
                               await addToBasket(
                                 product.price,
+                                product.weight,
                                 product.id,
                                 product.name
                               ).catch((error) => console.log(error));

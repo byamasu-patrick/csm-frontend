@@ -7,6 +7,7 @@ export interface ProductModel {
     description: string
     imageFile: string;
     price: number;
+    weight: number;
     itemsInStock: number;
     userId: string;
 };
@@ -29,6 +30,7 @@ export interface AddProductModel {
     description: string;
     imageFile: string;
     price: number;
+    weight: number;
     itemsInStock: number;
     userId: string;
 };

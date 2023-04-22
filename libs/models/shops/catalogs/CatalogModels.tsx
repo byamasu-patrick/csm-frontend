@@ -22,6 +22,7 @@ export interface CatalogData {
     summary: string;
     imageFile: string;
     price: number;
+    weight: number;
     itemsInStock: number;
 };
 
@@ -73,6 +74,15 @@ export const catalogColumns: Array<CatalogColumn> = [
     {
         name: "itemsInStock",
         label: "Items in Stock",
+        options: {
+            filter: true,
+            sort: true,
+            customBodyRender: null
+        }
+    },
+    {
+        name: "weight",
+        label: "Weight in Kg",
         options: {
             filter: true,
             sort: true,

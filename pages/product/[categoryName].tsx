@@ -71,6 +71,7 @@ const Product: NextPageWithLayout = () => {
 
   const addToBasket = async (
     productPrice: number,
+    productWeight: number,
     productId: string,
     name: string
   ) => {
@@ -88,6 +89,7 @@ const Product: NextPageWithLayout = () => {
                 quantity: 1,
                 color: "blue",
                 price: productPrice,
+                weight: productWeight,
                 productId: productId,
                 productName: name,
               },
@@ -100,6 +102,7 @@ const Product: NextPageWithLayout = () => {
             quantity: 1,
             color: "blue",
             price: productPrice,
+            weight: productWeight,
             productId: productId,
             productName: name,
           })
@@ -157,7 +160,10 @@ const Product: NextPageWithLayout = () => {
 
                           <div className="flex flex-col items-end">
                             <span className="font-bold text-gray-600 lg:text-md">
-                              $ {product.price}
+                              K {product.price}
+                            </span>
+                            <span className="font-bold text-gray-600 lg:text-md">
+                              KG {product.weight}
                             </span>
                             <span className="text-sm left-2 text-green-700 pt-2">
                               In Stock
@@ -178,6 +184,7 @@ const Product: NextPageWithLayout = () => {
                                 setAddCart(key + 1);
                                 addToBasket(
                                   product.price,
+                                  product.weight,
                                   product.id,
                                   product.name
                                 ).catch((error) => console.log(error));
