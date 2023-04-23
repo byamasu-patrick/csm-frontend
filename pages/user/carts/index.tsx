@@ -28,9 +28,11 @@ const ShoppingCart: NextPageWithLayout = () => {
   const [username, setUsername] = useState("");
   const [deletedProductId, setDeletedProductId] = useState("");
   const [usernamed, setUsernamed] = useState(cart.userName);
-  const [value, setValue] = useState(0);
-  var tax = 2500;
-  var shippment = 12000;
+  const [value, setValue] = useState(1);
+  const [ increaseClicked, setIncreaseClicked] = useState(false)
+  const [ decreaseClicked, setDecreaseClicked] = useState(false)
+  var tax = 0;
+  var shippment = 0;
 
   const dispatch = useAppDispatch();
   const [quantity, setQuantity] = useState(1);
@@ -48,44 +50,38 @@ const ShoppingCart: NextPageWithLayout = () => {
   }, [productId]);
 
   function handleIncreaseCartItem(usernameD: string, productIdD: string) {
-    setQuantity(quantity + 1);
     setDeletedProductId(productIdD);
     setUsernamed(usernameD);
-    if (deletedProductId !== "") {
-      const basket = {
-        usernamed,
-        deletedProductId,
-        quantity,
-        value: quantity, // add the value property
-      };
-      dispatch(IncreaseBasketItemById(basket));
-    }
+    setIncreaseClicked(true)
+
   }
+  useEffect(() => {
+    if (deletedProductId !== "" && increaseClicked == true) {
+      const basket = { usernamed, deletedProductId, value };
+      dispatch(IncreaseBasketItemById(basket));
+      console.log(cart)
+      setIncreaseClicked(false)
+    }
+  }, [increaseClicked, deletedProductId]);
 
   function handleDecreaseCartItem(
     usernameD: string,
-    productIdD: string,
-    productItem: any
+    productIdD: string
   ) {
-    if (quantity > 1) {
-      setQuantity(quantity - 1);
-      setValue(productItem.price * (quantity - 1)); // update value state
-    } else {
-      setQuantity(1);
-      setValue(productItem.price); // set value to the product price when quantity is 1
-    }
     setDeletedProductId(productIdD);
     setUsernamed(usernameD);
-    if (deletedProductId !== "") {
-      const basket = {
-        usernamed,
-        deletedProductId,
-        quantity,
-        value: productItem.price * quantity,
-      };
-      dispatch(IncreaseBasketItemById(basket));
-    }
+    setDecreaseClicked(true)
+
   }
+    useEffect(() => {
+      if (deletedProductId !== "" && decreaseClicked === true)  {
+        const basket = { usernamed, deletedProductId, value };
+        dispatch(decreaseBasketItemById(basket));
+        console.log(cart)
+        setDecreaseClicked(false)
+      }
+    }, [decreaseClicked, deletedProductId]);
+   
 
   return (
     <>
@@ -142,8 +138,7 @@ const ShoppingCart: NextPageWithLayout = () => {
                                     onClick={() =>
                                       handleDecreaseCartItem(
                                         cart.userName,
-                                        productItem.productId,
-                                        productItem.price
+                                        productItem.productId
                                       )
                                     }
                                     type="button"
@@ -170,23 +165,9 @@ const ShoppingCart: NextPageWithLayout = () => {
                                     <input
                                       type="number"
                                       min={1}
-                                      id={productItem.productId}
-                                      value={quantity}
+                                      value={productItem.quantity}
                                       className="w-8 text-gray-900 text-sm outline-none"
-                                      onChange={(event) => {
-                                        const value =
-                                          event.target.valueAsNumber;
-                                        if (value >= 1) {
-                                          setQuantity(value);
-                                        } else {
-                                          setQuantity(1);
-                                        }
-                                      }}
-                                      onFocus={(event) =>
-                                        setDeletedProductId(
-                                          productItem.productId
-                                        )
-                                      }
+
                                       required
                                     />
 
@@ -220,7 +201,7 @@ const ShoppingCart: NextPageWithLayout = () => {
                               </div>
                             </td>
                             <td className="py-4 px-6 font-semibold text-gray-900">
-                              MK {productItem.price * quantity}
+                              MK {productItem.subTotal}
                             </td>
                             <td className="py-4 px-6">
                               <button
