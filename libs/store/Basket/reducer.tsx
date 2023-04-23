@@ -215,6 +215,7 @@ builder.addCase(increaseBasketItemSuccess, (state, { payload }) => {
      updatedItems[itemToUpdateIndex] = {
        ...itemToUpdate,
        quantity:  value + itemToUpdate.quantity,
+       weight: itemToUpdate.weight + 1,
        subTotal: itemToUpdate.price * (itemToUpdate.quantity + value)
      };
    } 
@@ -249,6 +250,7 @@ builder.addCase(decreaseBasketItemSuccess, (state, { payload }) => {
      updatedItems[itemToUpdateIndex] = {
        ...itemToUpdate,
        quantity: (itemToUpdate.quantity - value) <= 0 ? itemToUpdate.quantity : itemToUpdate.quantity - value,
+       weight: (itemToUpdate.quantity - value) <= 0 ? itemToUpdate.weight : itemToUpdate.weight - value,
        subTotal: (itemToUpdate.quantity - value) <= 0 ? itemToUpdate.subTotal : itemToUpdate.subTotal - (value * itemToUpdate.price)
      };
    } 
