@@ -21,12 +21,24 @@ const OrderSummary: NextPageWithLayout = () => {
   const { user } = useAppSelector(AuthSelector);
   const { products } = useAppSelector(ProductSelector);
   const { ordersByUser, isOrderedFecthing } = useAppSelector(BasketSelector);
-  const { billingAddresses } = useAppSelector(BillingSelector);
   const [isOrdersFetched, setIsOrdersFetched] = useState<boolean>(false);
   const dispatch = useAppDispatch();
   const router = useRouter();
 
   var orderedProducts: OrderDetails[] = [];
+
+  var orderedProducts: OrderDetails[] = [];
+  const ordersByUserCopy = [...ordersByUser];
+  const recentOrder = ordersByUserCopy
+  .sort((a, b) => new Date(b.createdDate).getTime() - new Date(a.createdDate).getTime())[0];
+  const formattedDate = new Date(recentOrder?.createdDate).toLocaleString('en-US', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true
+  });
 
   useEffect(() => {
     if (user === null) {
@@ -39,17 +51,10 @@ const OrderSummary: NextPageWithLayout = () => {
         )
       );
 
-      // console.log("Ordered Product Info: ", ordersByUser);
-    };
+      console.log("Ordered Product Info: ", ordersByUser);
+    []};
     fetchData().catch((error) => console.log("Error occured"));
     setIsOrdersFetched(true);
-
-    const getAllBillingAddresses = async () => {
-      await dispatch(searchBillingAddressData(user?.email));
-    };
-    getAllBillingAddresses().catch((error) =>
-      console.log("Error during searching billing informations")
-    );
   }, []);
 
   return (
@@ -84,19 +89,20 @@ const OrderSummary: NextPageWithLayout = () => {
             <div className="px-4 py-6 sm:px-6 lg:grid lg:grid-cols-12 lg:gap-x-8 lg:p-8">
               <div className="mt-6 lg:col-span-4 lg:mt-0">
                 <dl className="grid grid-cols-2 gap-x-6 text-sm">
-                  <div>
-                    <dt className="font-medium text-gray-600">Order ID:</dt>
-                    <dd className="mt-3 space-y-3 text-gray-500">
-                      <button type="button" className="font-bold text-gray-900">
-                        5674728
-                      </button>
-                    </dd>
-                  </div>
+                <div>
+                  <dt className="font-medium text-gray-600">Order ID:</dt>
+                  <dd className="mt-3 space-y-3 text-gray-500" style={{ whiteSpace: 'nowrap' }}>
+                    <button type="button" className="font-bold text-gray-800 pr-10">
+                      {recentOrder?.id.slice(0,22)}
+                    </button>
+                  </dd>
+                </div>
+
                   <div>
                     <dt className="font-medium text-gray-600">Date:</dt>
                     <dd className="mt-3 space-y-3 text-gray-500">
                       <button type="button" className="font-bold text-gray-900">
-                        April 22, 2023
+                          {formattedDate}
                       </button>
                     </dd>
                   </div>
@@ -109,7 +115,7 @@ const OrderSummary: NextPageWithLayout = () => {
                     <dt className="font-medium text-gray-600">Email:</dt>
                     <dd className="mt-3 space-y-3 text-gray-500">
                       <button type="button" className="font-bold text-gray-900">
-                        lloykings@gmail.com
+                        {recentOrder?.emailAddress}
                       </button>
                     </dd>
                   </div>
@@ -117,7 +123,7 @@ const OrderSummary: NextPageWithLayout = () => {
                     <dt className="font-medium text-gray-600">Total:</dt>
                     <dd className="mt-3 space-y-3 text-gray-500">
                       <button type="button" className="font-bold text-gray-900">
-                        MWK 20000
+                        MWK {recentOrder?.totalPrice + recentOrder?.shippingPrice}
                       </button>
                     </dd>
                   </div>
@@ -127,7 +133,7 @@ const OrderSummary: NextPageWithLayout = () => {
                     </dt>
                     <dd className="mt-3 space-y-3 text-gray-500">
                       <button type="button" className="font-bold text-gray-900">
-                        Airtel Money
+                        {recentOrder?.paymentMethod}
                       </button>
                     </dd>
                   </div>
@@ -160,66 +166,41 @@ const OrderSummary: NextPageWithLayout = () => {
                       <th scope="col" className="px-6 py-3 bg-gray-50 ">
                         Product
                       </th>
-
+                      <th scope="col" className="px-6 py-3 bg-gray-50 ">
+                        price
+                      </th>
+                      <th scope="col" className="px-6 py-3 bg-gray-50 ">
+                        quantity
+                      </th>
                       <th scope="col" className="px-6 py-3">
-                        Total
+                        subTotal
                       </th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr className="border border-gray-200">
+                  {recentOrder?.products.map((product) => (
+                    <tr key={product?.productId} className="border border-gray-200">
                       <th
                         scope="row"
                         className="px-6 py-4 font-light text-gray-800 whitespace-nowrap bg-gray-50"
                       >
-                        Apple MacBook Pro 17{" "}
-                        <span className="font-medium">* {2}</span>
+                        {product?.productName}
+                        <span className="font-medium"></span>
                       </th>
 
-                      <td className="px-6 py-4">MWK20000</td>
-                    </tr>
-                    <tr className="border-b border-l border-gray-200 dark">
-                      <th
-                        scope="row"
-                        className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 "
-                      >
-                        Subtotal
-                      </th>
-
-                      <td className="px-6 py-4">MWK 40000</td>
-                    </tr>
-                    <tr className="border-b border-gray-200 dark">
-                      <th
-                        scope="row"
-                        className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50"
-                      >
-                        Shipping:
-                      </th>
-
-                      <td className="px-6 py-4">MWK 2000</td>
-                    </tr>
-                    <tr className="border-b border-gray-200">
-                      <th
-                        scope="row"
-                        className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50"
-                      >
-                        Payment method:
-                      </th>
-
-                      <td className="px-6 py-4">Airtel Money</td>
-                    </tr>
-                    <tr>
-                      <th
-                        scope="row"
-                        className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 "
-                      >
-                        Total:
-                      </th>
-
-                      <td className="px-6 py-4">MWK42000</td>
-                    </tr>
+                      <td className="px-6 py-4"> K{product?.price}</td>
+                      
+                      <td className="px-6 py-4"> {product?.quantity}</td>
+                      
+                      <td className="px-6 py-4"> K{product?.subTotal}</td>
+                    </tr>                    
+                       ))}
                   </tbody>
                 </table>
+                <span className="font-bold text-gray-900 pl-5">
+                      Total Price: 
+                </span> K{recentOrder?.totalPrice}
+                
               </div>
             </div>
           </div>
@@ -242,16 +223,16 @@ const OrderSummary: NextPageWithLayout = () => {
                       Shipping Address Address
                     </dt>
                     <dd className="mt-3 space-y-3 font-light text-gray-800">
-                      Austin Thope
+                      {recentOrder?.firstName} {recentOrder?.lastName}
                     </dd>
                     <dd className="mt-3 space-y-3 font-light text-gray-800">
-                      Liwonde
+                      {recentOrder?.physicalAddress}
                     </dd>
                     <dd className="mt-3 space-y-3 font-light text-gray-800">
-                      +265 999 999 999
+                      {recentOrder?.phoneNumber}
                     </dd>
                     <dd className="mt-3 space-y-3 font-light text-gray-800">
-                      Speed Courier
+                      {recentOrder?.courierName}
                     </dd>
                   </div>
                 </dl>

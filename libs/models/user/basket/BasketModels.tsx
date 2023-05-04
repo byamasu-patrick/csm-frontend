@@ -29,6 +29,7 @@ export interface BasketSearchModel {
 }
 
 export interface OrderDetails{
+    id: string,
     userName: string,
     totalPrice: number,
     shippingPrice: number,
@@ -43,6 +44,8 @@ export interface OrderDetails{
     physicalAddress: string,
     paymentMethod: string,
     orderStatus: string,
+    createdDate: string,
+    lastModifiedDate: string
 }
 // model for deleting a particular item in the basket
 export interface DeleteBasketItemModel {
