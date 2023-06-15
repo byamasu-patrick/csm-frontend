@@ -17,8 +17,6 @@ const OrderDetails = () => {
         console.log("Product Owned by User: ", productsOwner);
     }, []);
 
-
-
     return (
         <div className="pt-4 pb-20">
             <div className="mx-auto container bg-white dark:bg-gray-800 shadow rounded">

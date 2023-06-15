@@ -17,6 +17,7 @@ const Signin: React.FC = () => {
    const [email, setEmail] = useState<string>('');
    const [isLogingIn, setIsLogingIn] = useState<boolean>(false);
    const [errors, setErrors] = useState<string>('');
+   const [activeStatus, setActiveStatus] = useState(1);
    const router = useRouter();   
    const [activeStatus, setActiveStatus] = useState(1);
 
