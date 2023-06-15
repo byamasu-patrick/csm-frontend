@@ -1,226 +1,308 @@
+/* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../../libs/store";
-import { GetAllProducts, ProductSelector } from "../../../../libs/store/Catalog";
+import {
+  GetAllProducts,
+  ProductSelector,
+} from "../../../../libs/store/Catalog";
 import Loader from "../../../widgets/loader";
 import Pagination from "../../../widgets/paggination";
 import ProductSort from "./ProductSort";
-import CircularProgress from '@mui/material/CircularProgress';
+import CircularProgress from "@mui/material/CircularProgress";
 import { AuthSelector } from "../../../../libs/store/Auth";
 import { UserType } from "../../../../libs/models/auth/AuthModels";
 import { useRouter } from "next/router";
-import { AddBasketToDB, BasketSelector, searchBasketsData, UpdateBasketDB } from "../../../../libs/store/Basket";
+import {
+  AddBasketToDB,
+  BasketSelector,
+  searchBasketsData,
+  UpdateBasketDB,
+} from "../../../../libs/store/Basket";
 import ProductDetails from "./ProductDetails";
 import ProductDialog from "./ProductDialog";
 import { ProductModel } from "../../../../libs/models/shops/catalogs/ProductModels";
 import Link from "next/link";
 import { DiscountSelector } from "../../../../libs/store/Discount";
+import { FiEye } from "react-icons/fi";
+import { FaCartArrowDown } from "react-icons/fa";
+import { MdAddShoppingCart } from "react-icons/md";
+import { AiOutlineHeart } from "react-icons/ai";
+import { ProductionQuantityLimits, Shop } from "@mui/icons-material";
 
-interface ProductProps{
-    isHome: boolean;
+import GetShops from "../shops/GetShops";
+import { GetShopsFromApi } from "../../../../libs/store/Auth";
+import DisplayShops from "../shops/DisplayShops";
+import Image from "next/image";
+import MyModal from "../../../../pages/user/settings/MyModal";
+import SectionDivider from "./SectionDivider";
+
+interface ProductProps {
+  isHome: boolean;
+  // data: ProductModel;
 }
 
 const Products: React.FC<ProductProps> = (props) => {
-    const [addCart, setAddCart] = useState<number>(0);
-    const [isOpen, setIsOpen] = useState<boolean>(false);
-    const [product, setProduct] = useState<ProductModel | null>(null);
-    
-    const dispatch = useAppDispatch();
-    const { products, isGetting, productsOwner } = useAppSelector(ProductSelector);
-    const { user, isAuthenticated } = useAppSelector(AuthSelector);
-    const { discounts } = useAppSelector(DiscountSelector);
-    const { isAdding, cart, basketSearch, isUpdating, successMessage } = useAppSelector(BasketSelector);
-    const router = useRouter();
+  const [addCart, setAddCart] = useState<number>(0);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [product, setProduct] = useState<ProductModel | null>(null);
 
-    let productLimit = 0;
+  const dispatch = useAppDispatch();
+  const { products, isGetting, productsOwner } =
+    useAppSelector(ProductSelector);
+  const { user, isAuthenticated } = useAppSelector(AuthSelector);
+  const { discounts } = useAppSelector(DiscountSelector);
+  const { isAdding, cart, basketSearch, isUpdating, successMessage } =
+    useAppSelector(BasketSelector);
+  const router = useRouter();
 
-    useEffect(() => {
-       const fetchProducts = async () => {
-            await dispatch(GetAllProducts(1));
-       };
-       fetchProducts().catch((error) => console.log(error));       
-    }, []);
+  const [open, setOpen] = useState(false);
 
-    useEffect(() => {
-        if(isAuthenticated){            
-            const fetchShoppingCart = async () => {
-                await dispatch(searchBasketsData(user?.profile?.firstName +" "+ user?.profile?.lastName));
-            }
-            fetchShoppingCart().catch((error) => console.log(error));
-        }
-    }, [isAuthenticated])
+  const handleOpen = () => {
+    setOpen(true);
+    setProduct(product);
+  };
+  const handleClose = () => setOpen(false);
+  let productLimit = 0;
 
-    useEffect(() => {
-        const fetchProducts = async () => {
-             await dispatch(GetAllProducts(1));
-        };
-        fetchProducts().catch((error) => console.log(error));
- 
-     }, [productsOwner]);
+  const [loading, setLoading] = useState(false);
+  const [hoverIndex, setHoverIndex] = useState(-1);
+  const handleCardHover = (index: number) => {
+    setHoverIndex(index);
+  };
 
-     useEffect(() => {
-        const updatingBasketToDb = async () => {           
-            if(!isUpdating && successMessage === "Successfully updated to basket"){
-                await dispatch(AddBasketToDB({
-                    userName: cart.userName,
-                    items: cart.items                   
-                }));       
-            }
-        }
-        updatingBasketToDb().catch((error) => console.log(error));
-     }, [cart.items])
+  useEffect(() => {
+    const fetchProducts = async () => {
+      await dispatch(GetAllProducts(1));
+    };
+    fetchProducts().catch((error) => console.log(error));
+  }, []);
 
-    const addToBasket = async (productPrice: number, productId: string, name: string,  ) => {
-        if(user == null){
-            if(!isAuthenticated && user?.userType !== UserType.FreeUser){
-                router.push("/signin");
-            }
-        }
-        else{            
-            if(cart.items.length === 0){
-                await dispatch(AddBasketToDB({
-                    userName: user?.profile?.firstName +" "+ user?.profile?.lastName,
-                    items: [{
-                        quantity: 1,
-                        color: "blue",
-                        price: productPrice,
-                        productId: productId,
-                        productName: name
-                    }]                    
-                }));
-            }
-            else{
-                await dispatch(UpdateBasketDB({
-                    quantity: 1,
-                    color: "blue",
-                    price: productPrice,
-                    productId: productId,
-                    productName: name
-                }));
-            }
-            if(!isAdding){
-                setAddCart(0);
-            }
-        }
+  useEffect(() => {
+    if (isAuthenticated) {
+      const fetchShoppingCart = async () => {
+        await dispatch(
+          searchBasketsData(
+            user?.profile?.firstName + " " + user?.profile?.lastName
+          )
+        );
+      };
+      fetchShoppingCart().catch((error) => console.log(error));
     }
+  }, [isAuthenticated]);
 
-    const handleOnProductClicked = (product: ProductModel) => {
-      setProduct(product);
-      setIsOpen(!isOpen);
+  useEffect(() => {
+    const fetchProducts = async () => {
+      await dispatch(GetAllProducts(1));
+    };
+    fetchProducts().catch((error) => console.log(error));
+  }, [productsOwner]);
+
+  useEffect(() => {
+    const updatingBasketToDb = async () => {
+      if (!isUpdating && successMessage === "Successfully updated to basket") {
+        await dispatch(
+          AddBasketToDB({
+            userName: cart.userName,
+            items: cart.items,
+          })
+        );
+      }
+    };
+    updatingBasketToDb().catch((error) => console.log(error));
+  }, [cart.items]);
+
+  const addToBasket = async (
+    productPrice: number,
+    productId: string,
+    name: string
+  ) => {
+    if (user == null) {
+      if (!isAuthenticated && user?.userType !== UserType.FreeUser) {
+        router.push("/signin");
+      }
+    } else {
+      if (cart.items.length === 0) {
+        await dispatch(
+          AddBasketToDB({
+            userName: user?.profile?.firstName + " " + user?.profile?.lastName,
+            items: [
+              {
+                quantity: 1,
+                color: "blue",
+                price: productPrice,
+                productId: productId,
+                productName: name,
+              },
+            ],
+          })
+        );
+      } else {
+        await dispatch(
+          UpdateBasketDB({
+            quantity: 1,
+            color: "blue",
+            price: productPrice,
+            productId: productId,
+            productName: name,
+          })
+        );
+      }
+      if (!isAdding) {
+        setAddCart(0);
+      }
     }
+  };
 
-    return (
-        <>
-            <div className="w-full md:flex md:flex-cols bg-gray-100 py-8 px-4 overflow-hidden sm:px-6 lg:px-8 lg:py-12">  
-                <div className="w-full sm:w-full md:w-4/12 lg:w-3/12 bg-white mr-6 h-[530px] mb-6">
-                    <ProductSort isProductPage={false}/>
-                </div>  
-                {
-                    isGetting ? (<></>) : (
-                        <div id="product" className="w-full  sm:w-full md:w-8/12 lg:w-9/12 bg-gray-100 ">
-                            <div className="mx-auto container pb-8">
-                                <div className="flex flex-wrap items-center lg:justify-between justify-center">
-                                    {
-                                        products?.results.map((product, key) => {
-                                            productLimit++;
-                                            const productDiscount = discounts.filter((prodDiscont) => prodDiscont.productId === product.id)[0];
-                                            
-                                            // console.log("Discount: ", productDiscount)
+  const handleOnProductClicked = (product: ProductModel) => {
+    setProduct(product);
+    setIsOpen(!isOpen);
+  };
 
-                                            if(productLimit < 7){
-                                                return (
-                                                    <div key={key} className="mx-2 w-72 lg:mb-4 mb-8  hover:bg-gray-100 hover:cursor-pointer hover:shadow-lg">
-                                                        <div>
-                                                            <img src={product.imageFile} onClick={() => handleOnProductClicked(product)} className="w-full h-44" />
-                                                        </div>
-                                                        <div className="bg-white">
-                                                            <div className="flex items-center justify-between px-4 pt-4">
-                                                                <div>
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-bookmark" width={20} height={20} viewBox="0 0 24 24" strokeWidth="1.5" stroke="#2c3e50" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                                        <path d="M9 4h6a2 2 0 0 1 2 2v14l-5-3l-5 3v-14a2 2 0 0 1 2 -2" />
-                                                                    </svg>
-                                                                </div>
-                                                                <div className={`${addCart == key + 1 ? "bg-[#3d9dc9]": "main-bg" } py-1.5 px-6 rounded  hover:bg-orange-500`}
-                                                                    onClick={() =>{
-                                                                        setAddCart(key + 1);
-                                                                        addToBasket(product.price, product.id, product.name)
-                                                                        .catch((error) => console.log(error));
-                                                                    }}>
-                                                                    <p className="text-xs text-white">                                                                    
-                                                                    {
-                                                                        addCart == key + 1 ? (
-                                                                            <CircularProgress 
-                                                                                key={key}
-                                                                                size="1rem" 
-                                                                                style={{color: "white", marginBottom: -4, marginRight: 6 }}/>
-                                                                        ) : (<></>)                                                                }
-                                                                    Add To Cart</p>
-                                                                </div>
-                                                            </div>
-                                                            <div className="p-4">
-                                                                <div className="flex items-center">
-                                                                    <h2 className="text-lg font-semibold">{product.name.substring(0, 15)}</h2>
-                                                                    <p className="text-xs text-gray-600 pl-5">4 days ago</p>
-                                                                </div>
-                                                                <p className="text-xs text-gray-600 mt-2">{ product.summary.substring(0, 100) }</p>
-                                                                <div className="flex mt-4">
-                                                                    <div>
-                                                                        <p className="text-xs text-gray-600 px-2 bg-gray-200 py-1">{
-                                                                            productDiscount !== undefined ? `On promotion ${(productDiscount.amount * 100) / product.price} % Off` : '12 months warrant'
-                                                                        }</p>
-                                                                    </div>
-                                                                    <div className="pl-2">
-                                                                        <Link href={`/user/chats/${product.name}?shopId=${product.userId}`}>
-                                                                            <a className="text-xs text-gray-600 px-2 py-1">Start Chat</a>
-                                                                        </Link>
-                                                                    </div>
-                                                                </div>
-                                                                <div className="flex items-center justify-between py-4">
-                                                                    <h2 className="text-gray-800 text-xs font-semibold">Malawi</h2>
-                                                                    <h3 className="text-gray-800 text-xl font-semibold">{productDiscount !== undefined ? <span className="line-through mr-2">MK {product.price}</span> : ''}{productDiscount !== undefined ? (`K ${product.price - productDiscount.amount}`) : `MK ${product.price} `}</h3>
-                                                                </div>                                    
-                                                                <div className="flex justify-center xl:justify-end w-full">
-                                                                    <div className="flex items-center">
-                                                                        <svg className="w-4 mr-1 text-yellow-400 icon icon-tabler icon-tabler-star" xmlns="http://www.w3.org/2000/svg" width={20} height={20} viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
-                                                                            <path stroke="none" fill="none" d="M0 0h24v24H0z" />
-                                                                            <path fill="currentColor" d="M12 17.75l-6.172 3.245 1.179-6.873-4.993-4.867 6.9-1.002L12 2l3.086 6.253 6.9 1.002-4.993 4.867 1.179 6.873z" />
-                                                                        </svg>
-                                                                        <svg className="w-4 mr-1 text-yellow-400 icon icon-tabler icon-tabler-star" xmlns="http://www.w3.org/2000/svg" width={20} height={20} viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
-                                                                            <path stroke="none" fill="none" d="M0 0h24v24H0z" />
-                                                                            <path fill="currentColor" d="M12 17.75l-6.172 3.245 1.179-6.873-4.993-4.867 6.9-1.002L12 2l3.086 6.253 6.9 1.002-4.993 4.867 1.179 6.873z" />
-                                                                        </svg>
-                                                                        <svg className="w-4 mr-1 text-yellow-400 icon icon-tabler icon-tabler-star" xmlns="http://www.w3.org/2000/svg" width={20} height={20} viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
-                                                                            <path stroke="none" fill="none" d="M0 0h24v24H0z" />
-                                                                            <path fill="currentColor" d="M12 17.75l-6.172 3.245 1.179-6.873-4.993-4.867 6.9-1.002L12 2l3.086 6.253 6.9 1.002-4.993 4.867 1.179 6.873z" />
-                                                                        </svg>
-                                                                        <svg className="w-4 mr-1 text-yellow-400 icon icon-tabler icon-tabler-star" xmlns="http://www.w3.org/2000/svg" width={20} height={20} viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
-                                                                            <path stroke="none" fill="none" d="M0 0h24v24H0z" />
-                                                                            <path fill="currentColor" d="M12 17.75l-6.172 3.245 1.179-6.873-4.993-4.867 6.9-1.002L12 2l3.086 6.253 6.9 1.002-4.993 4.867 1.179 6.873z" />
-                                                                        </svg>
-                                                                        <svg className="w-4 text-gray-200 icon icon-tabler icon-tabler-star" xmlns="http://www.w3.org/2000/svg" width={20} height={20} viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
-                                                                            <path stroke="none" fill="none" d="M0 0h24v24H0z" />
-                                                                            <path fill="currentColor" d="M12 17.75l-6.172 3.245 1.179-6.873-4.993-4.867 6.9-1.002L12 2l3.086 6.253 6.9 1.002-4.993 4.867 1.179 6.873z" />
-                                                                        </svg>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                );
-                                            }
-                                        })
-                                    }
-                                </div>
-                            </div>
+  return (
+    <>
+      <div className=" max-w-7xl mx-auto rounded-lg">
+        {isGetting ? (
+          <></>
+        ) : (
+          <div className="mx-4 max-w-screen-2xl lg:mx-auto pb-5">
+            <SectionDivider title="New Arrivals" />
+
+            <div className=" grid grid-cols-2  sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 ">
+              {products?.results.map((product, index) => {
+                productLimit++;
+                const productDiscount = discounts.filter(
+                  (prodDiscont) => prodDiscont.productId === product.id
+                )[0];
+
+                // console.log("Discount: ", productDiscount)
+
+                if (productLimit > 0) {
+                  return (
+                    <div
+                      className={`relative overflow-hidden shadow-lg ${
+                        hoverIndex === index
+                          ? "bg-white transition-all duration-300 ease-in-out rounded-lg h-80"
+                          : "bg-white h-72"
+                      }`}
+                      onMouseEnter={() => handleCardHover(index)}
+                      onMouseLeave={() => handleCardHover(-1)}
+                    >
+                      <div className=" px-4 pt-2">
+                        <div className="inline-block text-xs mb-2 leading-none text-a text-gray-600 hover:text-amber-500">
+                          <Link href={"/"}>Mash Store</Link>
                         </div>
-                    )
-                }    
-                {
-                  isOpen ? <ProductDialog isOpen={isOpen} setIsOpen={setIsOpen} data={product as ProductModel}/> : (<></>)
+                        <div className="text-sm font-semibold leading-none text-[rgb(11,115,164)]">
+                          <Link href={"/"}>
+                            {product.name.substring(0, 15)}
+                          </Link>
+                        </div>
+                      </div>
+                      <div
+                        className={`w-full h-40 p-5 ${
+                          hoverIndex === index ? "bg-white-500 opacity-75" : ""
+                        } transition duration-200 ease-linear`}
+                      >
+                        <img
+                          className="w-full h-full object-fit:cover hover:scale-110 transition duration-200"
+                          src={product.imageFile}
+                          onClick={() => handleOnProductClicked(product)}
+                          alt=""
+                        />
+                      </div>
+
+                      <div className="px-4 py-2">
+                        <div className="flex justify-between items-center">
+                          {productDiscount !== undefined ? (
+                            <span className="line-through ">
+                              MK {product.price}
+                            </span>
+                          ) : (
+                            ""
+                          )}
+                          {productDiscount !== undefined
+                            ? `K ${product.price - productDiscount.amount}`
+                            : `MK ${product.price} `}
+                          <span
+                            className={`${
+                              addCart == index + 1 ? "" : ""
+                            } flex-none bg-gray-100 text-gray-400 text-sm font-semibold uppercase rounded-full p-2 ${
+                              hoverIndex === index
+                                ? "bg-amber-500 cursor-pointer transition-all duration-300 ease-in-out text-white"
+                                : ""
+                            }`}
+                            aria-label="Like"
+                            onClick={async () => {
+                              setLoading(true);
+                              setAddCart(index + 1);
+                              await addToBasket(
+                                product.price,
+                                product.id,
+                                product.name
+                              ).catch((error) => console.log(error));
+                              setTimeout(() => setLoading(false), 3000);
+                            }}
+                          >
+                            {loading && hoverIndex === index ? (
+                              <CircularProgress
+                                size={15}
+                                style={{ borderRadius: "50%" }}
+                              />
+                            ) : (
+                              <MdAddShoppingCart className="h-5 w-5" />
+                            )}
+                          </span>
+                        </div>
+                      </div>
+                      <div
+                        className={` border-gray-400 px-4 ${
+                          hoverIndex === index ? "block" : "hidden"
+                        }`}
+                      >
+                        <hr className="w-full border-1 bg-gray-300 rounded mx-auto" />
+
+                        <div className="mx-auto max-w-sm">
+                          <div className="flex py-4 justify-between">
+                            <div onClick={handleOpen}>
+                              <a className="flex items-center text-sm text-gray-500 leading-none transition-all duration-200 hover:text-amber-500 cursor-pointer">
+                                <FiEye className="h-4 w-4 mr-2" />
+                                View
+                              </a>
+                            </div>
+
+                            <Link href={"/"}>
+                              <a className="flex items-center text-sm text-gray-500 leading-none transition-all duration-200 hover:text-amber-500 mr-1">
+                                <AiOutlineHeart className="h-4 w-4 mr-2" />
+                                Wishlist
+                              </a>
+                            </Link>
+                          </div>
+                        </div>
+                      </div>
+
+                      <MyModal
+                        open={open}
+                        onClose={handleClose}
+                        data={product as ProductModel}
+                      />
+                    </div>
+                  );
                 }
+              })}
             </div>
-        </>
-    );
-}
+          </div>
+        )}
+        {isOpen ? (
+          <ProductDialog
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            data={product as ProductModel}
+          />
+        ) : (
+          <></>
+        )}
+      </div>
+    </>
+  );
+};
 
 export default Products;

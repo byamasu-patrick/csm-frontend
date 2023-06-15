@@ -7,7 +7,7 @@ type Props = {}
 
 function LoginNav({}: Props) {
   return (
-    <header className='sticky top-0 z-100 bg-gray-500 '>      
+    <header className='bg-gray-500 '>      
         <div className='flex items-center space-x-4 justify-end pr-6'>      
             <Link href="/">
                 <a

@@ -1,362 +1,483 @@
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
-import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import { useRouter } from "next/router";
 import { Fragment } from "react";
 import { useAppDispatch, useAppSelector } from "../../libs/store";
 import { AuthSelector, logOut } from "../../libs/store/Auth";
-import { Menu, Popover, Transition } from "@headlessui/react";
+import { Disclosure, Menu, Popover, Transition } from "@headlessui/react";
 import { clientNavigation } from "../../libs/models/shops/ShopModels";
 import { BasketSelector, searchBasketsData } from "../../libs/store/Basket";
+import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
+import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import Image from "next/image";
+import { BsCartDash, BsHeart } from "react-icons/bs";
+import { HiOutlineUser } from "react-icons/hi";
+import { BiHeart } from "react-icons/bi";
+import { AiOutlineHeart } from "react-icons/ai";
 
 const Navigation = () => {
-    const [searchInput, setSearchInput] = useState(true);
-    const [mdOptionsToggle, setMdOptionsToggle] = useState(true);
-    const [showMenu, setShowMenu] = useState(false);
+  const users = {
+    name: "Tom Cook",
+    email: "tom@example.com",
+    imageUrl:
+      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+  };
+  const navigation = [
+    { name: "Dashboard", href: "#", current: true },
+    { name: "Team", href: "#", current: false },
+    { name: "Projects", href: "#", current: false },
+    { name: "Calendar", href: "#", current: false },
+  ];
+  const userNavigation = [
+    { name: "Your Profile", href: "#" },
+    { name: "Settings", href: "#" },
+    { name: "Sign out", href: "#" },
+  ];
 
-    
-    const { isAuthenticated, error, isLoading, tokenModel, user } = useAppSelector(AuthSelector);
-    const { cart, basketSearch } = useAppSelector(BasketSelector);
-    const dispatch: any = useAppDispatch();
-    const router = useRouter();
+  function classNames(...classes: string[]) {
+    return classes.filter(Boolean).join(" ");
+  }
 
-    const logout = () => {
-        dispatch(logOut());
-        router.push('/signin');
-    }
-    // useEffect(() => {        
-    //    if(isAuthenticated && basketSearch.searchResult  ===  null){            
-    //         const fetchShoppingCart = async () => {
-    //             await dispatch(searchBasketsData(user?.profile?.firstName +" "+ user?.profile?.lastName));
-    //             console.log("Cart Search: ", basketSearch.searchResult);
-    //         }
-    //         fetchShoppingCart().catch((error) => console.log(error));
-    //     }
-    // }, [isAuthenticated]);
+  const [searchInput, setSearchInput] = useState(true);
+  const [mdOptionsToggle, setMdOptionsToggle] = useState(true);
+  const [showMenu, setShowMenu] = useState(false);
 
-    return (
-        <div className="bg-white sticky top-0 z-50 bg-white shadow-sm">
-            <div className="flex md:flex-col">
-                <div className="relative">
-                    {/* For md screen size */}
-                    <div id="md-searchbar" className={`${mdOptionsToggle ? "hidden" : "flex"} bg-white dark:bg-gray-900 lg:hidden py-5 px-6 items-center justify-between`}>
-                       
-                        <div className="space-x-6">
-                            <button aria-label="view favourites" className="text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-gray-800">
-                                <svg className="fill-stroke" width={16} height={16} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        d="M13.8921 3.07357C13.5516 2.73291 13.1473 2.46267 12.7023 2.2783C12.2574 2.09392 11.7804 1.99902 11.2988 1.99902C10.8171 1.99902 10.3402 2.09392 9.89521 2.2783C9.45023 2.46267 9.04595 2.73291 8.70544 3.07357L7.99878 3.78024L7.29211 3.07357C6.60432 2.38578 5.67147 1.99938 4.69878 1.99938C3.72609 1.99938 2.79324 2.38578 2.10544 3.07357C1.41765 3.76137 1.03125 4.69422 1.03125 5.66691C1.03125 6.6396 1.41765 7.57245 2.10544 8.26024L2.81211 8.96691L7.99878 14.1536L13.1854 8.96691L13.8921 8.26024C14.2328 7.91974 14.503 7.51545 14.6874 7.07048C14.8718 6.6255 14.9667 6.14857 14.9667 5.66691C14.9667 5.18525 14.8718 4.70831 14.6874 4.26334C14.503 3.81836 14.2328 3.41408 13.8921 3.07357V3.07357Z"
-                                        stroke="currentColor"
-                                        strokeWidth="1.5"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                    />
-                                </svg>
-                            </button>
-                            <button aria-label="go to cart" className="text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-gray-800">
-                                <svg className="fill-stroke" width={18} height={18} viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M3.66667 1L1 4.2V15.4C1 15.8243 1.1873 16.2313 1.5207 16.5314C1.8541 16.8314 2.30628 17 2.77778 17H15.2222C15.6937 17 16.1459 16.8314 16.4793 16.5314C16.8127 16.2313 17 15.8243 17 15.4V4.2L14.3333 1H3.66667Z" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
-                                    <path d="M1 4.2002H17" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
-                                    <path d="M12.5564 7.3999C12.5564 8.2486 12.1818 9.06253 11.515 9.66264C10.8482 10.2628 9.94386 10.5999 9.00087 10.5999C8.05788 10.5999 7.15351 10.2628 6.48671 9.66264C5.81991 9.06253 5.44531 8.2486 5.44531 7.3999" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                    {/* For md screen size */}
-                    {/* For large screens */}
-                    <div className="dark:bg-gray-90 px-6 py-5">
-                        <div className="container mx-auto flex items-center justify-between">
-                            <h1 className="md:w-3/12 cursor-pointer text-orange-600 dark:text-white" aria-label="Cloud Stores MW">                               
-                                <Link href="/">
-                                    <a>
-                                        <img src="../../cloud-stores.png" width="60" height="60"/>
-                                    </a>
-                                </Link>
-                            </h1>
-                            <div className='flex w-4/12 items-center md:border-2 rounded-full py-2 md:shadow-sm'>
-                                <input 
-                                type="text"  
-                                className='flex-grow pl-5 outline-none bg-transparent text-gray-600 placeholder-gray'
-                                placeholder='Search for products...'
-                                />
-                                <svg 
-                                xmlns="http://www.w3.org/2000/svg" 
-                                viewBox="0 0 24 24" 
-                                fill="currentColor" 
-                                className="hidden md:inline-flex h-8  bg-orange-500 text-white rounded-full p-2 cursor-pointer md:mx-2">
-                                <path 
-                                    fillRule="evenodd" 
-                                    d="M10.5 3.75a6.75 6.75 0 100 13.5 6.75 6.75 0 000-13.5zM2.25 10.5a8.25 8.25 0 1114.59 5.28l4.69 4.69a.75.75 0 11-1.06 1.06l-4.69-4.69A8.25 8.25 0 012.25 10.5z" 
-                                    clipRule="evenodd" 
-                                />
-                                </svg>
-                            </div>
-                            <div className="md:w-4/12 justify-end flex items-center space-x-4 xl:space-x-8">
-                                
-                                <div className="hidden lg:flex items-center space-x-2 xl:space-x-8">                                    
-                                    <Link href="/user/carts">
-                                        <a aria-label="go to cart" className="text-gray-800 mx-6 hover:cursor-pointer hover:text-gray-900">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                                                <path 
-                                                strokeLinecap="round" 
-                                                strokeLinejoin="round" 
-                                                d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
-                                            </svg>
-                                            {
-                                                (cart?.items.length >= 1) && (cart !== null) || (basketSearch.searchResult?.items.length >= 1) && (cart !== null)  ?
-                                                (
-                                                    <div className="inline-flex relative -top-9 -right-4 right-2 justify-center items-center w-6 h-6 text-sm font-bold text-white bg-[rgb(11,115,164)] rounded-full border-2 border-white dark:border-gray-900">
-                                                        { cart.items.length === 0 ?  basketSearch.searchResult.items.length : cart.items.length }
-                                                    </div>
-                                                ) : (<></>)
-                                            }
-                                        </a>
-                                    </Link>
-                                    {/* <div className='flex items-center space-x-4 justify-end text-gray-500'>
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                                            <path 
-                                            strokeLinecap="round" 
-                                            strokeLinejoin="round" 
-                                            d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
-                                        </svg>                                        
-                                    </div> */}
-                                    {
-                                        isAuthenticated ? ( 
-                                            <Popover
-                                                as="header"           
-                                                >                                      
-                                                <Popover.Panel as="nav" className="lg:hidden" aria-label="Global">
-                                                    <div className="border-t border-gray-200 pt-4">
-                                                        <div className="max-w-3xl mx-auto px-4 flex items-center sm:px-6">
-                                                            <div className="flex-shrink-0">
-                                                            <span
-                                                                className="
-                                                                    inline-flex
-                                                                    items-center
-                                                                    px-3
-                                                                    p-2
-                                                                    rounded-full
-                                                                    text-sm
-                                                                    font-medium
-                                                                    bg-orange-600
-                                                                    text-white
-                                                                    uppercase
-                                                                    "
-                                                            >
-                                                                {user?.profile?.firstName +" "+ user?.profile?.lastName}
-                                                            </span>
-                                                            </div>
-                                                            <div className="ml-3">
-                                                                <div className="text-base font-medium text-gray-800">
-                                                                {user?.profile?.firstName +" "+ user?.profile?.lastName}
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div className="mt-3 max-w-3xl mx-auto px-2 space-y-1 sm:px-4">
-                                                            {clientNavigation.map((item: any) => (
-                                                            <Link key={item.name} href={item.href}>
-                                                                <a className="block rounded-md py-2 px-3 text-base font-medium text-gray-500 hover:bg-gray-50 hover:text-gray-900">
-                                                                    {item.name}
-                                                                </a>
-                                                            </Link>
-                                                            ))}
-                                                        </div>
-                                                    </div>
+  const { isAuthenticated, error, isLoading, tokenModel, user } =
+    useAppSelector(AuthSelector);
+  const { cart, basketSearch } = useAppSelector(BasketSelector);
+  const dispatch: any = useAppDispatch();
+  const router = useRouter();
 
-                                                    <div className="mt-6 max-w-3xl mx-auto px-4 sm:px-6"></div>
-                                                </Popover.Panel>
-                                                
-                                                <Menu as="div" className="flex-shrink-0 relative ml-5">
-                                                    <div>
-                                                    <Menu.Button
-                                                        className="
-                                                            rounded-full
-                                                            flex
-                                                            focus:outline-none
-                                                            focus:ring-2
-                                                            focus:ring-offset-2
-                                                            focus:ring-orange-500
-                                                        "
-                                                    >
-                                                        <span className="sr-only">Open user menu</span>
-                                                        <span
-                                                        className="
-                                                                inline-flex
-                                                                items-center
-                                                                px-3
-                                                                rounded-full
-                                                                text-sm
-                                                                font-medium
-                                                                bg-orange-600
-                                                                text-white
-                                                                uppercase
-                                                            "
-                                                        >
-                                                        {user?.profile?.firstName +" "+ user?.profile?.lastName}
-                                                        </span>
-                                                    </Menu.Button>
-                                                    </div>
-                                                    <Transition
-                                                    as={Fragment}
-                                                    enter="transition ease-out duration-100"
-                                                    enterFrom="transform opacity-0 scale-95"
-                                                    enterTo="transform opacity-100 scale-100"
-                                                    leave="transition ease-in duration-75"
-                                                    leaveFrom="transform opacity-100 scale-100"
-                                                    leaveTo="transform opacity-0 scale-95"
-                                                    >
-                                                    <Menu.Items className="origin-top-right absolute z-10 right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 py-1 focus:outline-none">
-                                                        {clientNavigation.map((item: any) => (
-                                                        <Menu.Item key={item.name}>
-                                                            {({ active }) => (
-                                                            <Link href={item.href}>
-                                                                <a
-                                                                className = "block py-2 px-4 text-sm text-gray-700"
-                                                                
-                                                                >
-                                                                {item.name}
-                                                                </a>
-                                                            </Link>
-                                                            )}
-                                                        </Menu.Item>
-                                                        ))}
-                                                        <Menu.Item key="signout">
-                                                            <a
-                                                            className="bg-gray-100 block py-2 px-4 text-sm text-gray-700"
-                                                            onClick={() => logout()}
-                                                            >
-                                                            Sign out
-                                                            </a>
-                                                        </Menu.Item>
-                                                    </Menu.Items>
-                                                    </Transition>
-                                                </Menu>
-                                            </Popover>     
-                                        ) : (
-                                            <></>
-                                        )
-                                    }
-                                </div>
-                                <div className="flex lg:hidden">
-                                    <button aria-label="show options" onClick={() => setMdOptionsToggle(!mdOptionsToggle)} className="text-black dark:text-white dark:hover:text-gray-300 hidden md:flex focus:outline-none focus:ring-2 rounded focus:ring-gray-600">
-                                        <svg className="fill-stroke" width={24} height={24} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M4 6H20" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                            <path d="M10 12H20" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                            <path d="M6 18H20" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                        </svg>
-                                    </button>
-                                    <button aria-label="open menu" onClick={() => setShowMenu(true)} className="text-black dark:text-white dark:hover:text-gray-300 md:hidden focus:outline-none focus:ring-2 rounded focus:ring-gray-600">
-                                        <svg className="fill-stroke" width={24} height={24} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M4 6H20" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                            <path d="M10 12H20" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                            <path d="M6 18H20" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                        </svg>
-                                    </button>
-                                    
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {/* For small screen */}
-                    <div id="mobile-menu" className={`${showMenu ? "flex" : "hidden"} absolute dark:bg-gray-900 z-10 inset-0 md:hidden bg-white flex-col h-screen w-full`}>
-                        <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 pb-4 p-4">
-                            <div className="flex items-center">
-                                <div>
-                                    <svg className="fill-stroke text-gray-800 dark:text-white" width={20} height={20} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M9 17C13.4183 17 17 13.4183 17 9C17 4.58172 13.4183 1 9 1C4.58172 1 1 4.58172 1 9C1 13.4183 4.58172 17 9 17Z" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
-                                        <path d="M18.9984 18.9999L14.6484 14.6499" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
-                                    </svg>
-                                </div>
-                                <input type="text" placeholder="Search for products" className="text-sm dark:bg-gray-900 text-gray-600 placeholder-gray-600 dark:placeholder-gray-300 focus:outline-none" />
-                            </div>
-                            <button onClick={() => setShowMenu(false)} aria-label="close menu" className="focus:outline-none focus:ring-2 rounded focus:ring-gray-600">
-                                <svg className="fill-stroke text-gray-800 dark:text-white" width={16} height={16} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M12 4L4 12" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
-                                    <path d="M4 4L12 12" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
-                                </svg>
-                            </button>
-                        </div>
-                        <div className="mt-6 p-4">
-                            <ul className="flex flex-col space-y-6">
-                                <li>
-                                    <a href="#" className="dark:text-white flex items-center justify-between hover:underline text-base text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800">
-                                        Home
-                                        <div>
-                                            <svg className="fill-stroke text-black dark:text-white" width={12} height={12} viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M4.5 3L7.5 6L4.5 9" stroke="currentColor" strokeWidth="0.75" strokeLinecap="round" strokeLinejoin="round" />
-                                            </svg>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#" className="dark:text-white flex items-center justify-between hover:underline text-base text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800">
-                                        Furniture
-                                        <div>
-                                            <svg className="fill-stroke text-black dark:text-white" width={12} height={12} viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M4.5 3L7.5 6L4.5 9" stroke="currentColor" strokeWidth="0.75" strokeLinecap="round" strokeLinejoin="round" />
-                                            </svg>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#" className="dark:text-white flex items-center justify-between hover:underline text-base text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800">
-                                        Lookbook
-                                        <div>
-                                            <svg className="fill-stroke text-black dark:text-white" width={12} height={12} viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M4.5 3L7.5 6L4.5 9" stroke="currentColor" strokeWidth="0.75" strokeLinecap="round" strokeLinejoin="round" />
-                                            </svg>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#" className="dark:text-white flex items-center justify-between hover:underline text-base text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800">
-                                        Support
-                                        <div>
-                                            <svg className="fill-stroke text-black dark:text-white" width={12} height={12} viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M4.5 3L7.5 6L4.5 9" stroke="currentColor" strokeWidth="0.75" strokeLinecap="round" strokeLinejoin="round" />
-                                            </svg>
-                                        </div>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div className="h-full flex items-end">
-                            <ul className="flex flex-col space-y-8 bg-gray-50 w-full py-10 p-4 dark:bg-gray-800">
-                                <li>
-                                    <a href="#" className="dark:text-white text-gray-800 flex items-center space-x-2 focus:outline-none focus:ring-2 focus:ring-gray-800 hover:underline">
-                                        <div>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" className="bi bi-cart" viewBox="0 0 22 22"> 
-                                            <path 
-                                            d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"
-                                            /> 
-                                        </svg>
-                                        </div>
-                                        <p className="text-base">Cart</p>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#" className="dark:text-white text-gray-800 flex items-center space-x-2 focus:outline-none focus:ring-2 focus:ring-gray-800 hover:underline">
-                                        <div>
-                                            <svg className="fill-stroke" width={20} height={20} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M17.3651 3.84172C16.9395 3.41589 16.4342 3.0781 15.8779 2.84763C15.3217 2.61716 14.7255 2.49854 14.1235 2.49854C13.5214 2.49854 12.9252 2.61716 12.369 2.84763C11.8128 3.0781 11.3074 3.41589 10.8818 3.84172L9.99847 4.72506L9.11514 3.84172C8.25539 2.98198 7.08933 2.49898 5.87347 2.49898C4.65761 2.49898 3.49155 2.98198 2.6318 3.84172C1.77206 4.70147 1.28906 5.86753 1.28906 7.08339C1.28906 8.29925 1.77206 9.46531 2.6318 10.3251L3.51514 11.2084L9.99847 17.6917L16.4818 11.2084L17.3651 10.3251C17.791 9.89943 18.1288 9.39407 18.3592 8.83785C18.5897 8.28164 18.7083 7.68546 18.7083 7.08339C18.7083 6.48132 18.5897 5.88514 18.3592 5.32893C18.1288 4.77271 17.791 4.26735 17.3651 3.84172V3.84172Z"
-                                                    stroke="currentColor"
-                                                    strokeWidth="1.5"
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                />
-                                            </svg>
-                                        </div>
-                                        <p className="text-base">Wishlist</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+  const logout = () => {
+    dispatch(logOut());
+    router.push("/signin");
+  };
+  // useEffect(() => {
+
+  return (
+    <Disclosure as="header" className="bg-white shadow">
+      {({ open }) => (
+        <>
+          <div className="mx-auto max-w-screen-2xl px-2 sm:px-4 lg:divide-y lg:divide-gray-200 lg:px-8">
+            <div className="relative flex h-20 justify-between">
+              <div className="relative z-10 flex px-2 lg:px-0">
+                <div className="flex flex-shrink-0 items-center">
+                  <img
+                    className="block h-14 lg:h-20 w-auto"
+                    src="../../cloud-stores.png"
+                    alt="Your Company"
+                  />
                 </div>
+              </div>
+              <div className="relative z-0 flex flex-1 items-center justify-center px-2 sm:absolute sm:inset-0">
+                <div className="w-full sm:max-w-lg">
+                  <label htmlFor="search" className="sr-only">
+                    Search
+                  </label>
+                  <div className="relative">
+                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                      <MagnifyingGlassIcon
+                        className="h-5 w-5 text-gray-400"
+                        aria-hidden="true"
+                      />
+                    </div>
+                    <input
+                      id="search"
+                      name="search"
+                      className="block w-full rounded-md border border-gray-300 bg-white py-2 pl-10 pr-3 text-sm placeholder-gray-500 focus:border-amber-500 focus:text-gray-900 focus:placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-amber-500 sm:text-sm"
+                      placeholder="Search"
+                      type="search"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="relative z-10 flex items-center lg:hidden">
+                {/* Mobile menu button */}
+                <div className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-amber-500">
+                  <Link href={"/user/carts"}>
+                    <button
+                      type="button"
+                      className="relative inline-flex items-center p-1 text-sm font-medium text-center lg:relative lg:inline-flex lg:items-center "
+                    >
+                      <BsCartDash className="text-gray-400 h-6 lg:h-6 w-6 lg:w-6 hover:text-gray-600" />
+                      {(cart?.items.length >= 1 && cart !== null) ||
+                      (basketSearch.searchResult?.items.length >= 1 &&
+                        cart !== null) ? (
+                        <div className="absolute inline-flex  -top-1 -right-1 justify-center items-center w-5 h-5 text-xs font-semibold text-white bg-amber-500 rounded-full border-2 border-white ">
+                          {cart.items.length === 0
+                            ? basketSearch.searchResult.items.length
+                            : cart.items.length}
+                        </div>
+                      ) : (
+                        <></>
+                      )}
+
+                      <span className="sr-only">Notifications</span>
+                    </button>
+                  </Link>
+                </div>
+
+                <Disclosure.Button className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-amber-500">
+                  <span className="sr-only">Open menu</span>
+                  {open ? (
+                    <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
+                  ) : (
+                    <Bars3Icon className="block h-6 w-6" aria-hidden="true" />
+                  )}
+                </Disclosure.Button>
+              </div>
+              <div className="hidden lg:relative lg:z-10 lg:ml-4 lg:flex lg:items-center space-x-5">
+                {/* Profile dropdown */}
+                {isAuthenticated ? (
+                  <Menu as="div" className="relative ml-4 flex-shrink-0 ">
+                    <div>
+                      <Menu.Button className="flex bg-white focus:outline-none hover:scale-110 transition-all duration-200 ease-linear">
+                        <span className="sr-only">Open user menu</span>
+                        <div className="flex items-center space-x-2">
+                          <div>
+                            <HiOutlineUser className="text-gray-400 h-6 w-6 " />
+                          </div>
+                          <div className="text-left">
+                            <div className="text-xs font-semibold text-gray-400">
+                              <span>Welcome</span>
+                            </div>
+                            <div className="text-sm font-semibold text-gray-800">
+                              {user?.profile?.firstName}
+                            </div>
+                          </div>
+                        </div>
+                      </Menu.Button>
+                    </div>
+                    <Transition
+                      as={Fragment}
+                      enter="transition ease-out duration-100"
+                      enterFrom="transform opacity-0 scale-95"
+                      enterTo="transform opacity-100 scale-100"
+                      leave="transition ease-in duration-75"
+                      leaveFrom="transform opacity-100 scale-100"
+                      leaveTo="transform opacity-0 scale-95"
+                    >
+                      <Menu.Items className="absolute right-0 z-10 mt-2 w-52 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                        <a
+                          href=""
+                          className="block py-2 px-4 text-sm text-gray-700"
+                        >
+                          Welcome back,{" "}
+                          {user?.profile?.firstName +
+                            " " +
+                            user?.profile?.lastName}
+                        </a>
+                        <div className="flex items-center space-x-2 py-2 px-4 justify-items-center">
+                          <button
+                            type="button"
+                            className="inline-flex w-1/2 justify-center items-center rounded-md border border-transparent bg-amber-500 px-2 py-2 text-sm font-medium text-white shadow-sm hover:bg-amber-600  focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2"
+                            onClick={() => logout()}
+                          >
+                            Sign Out
+                          </button>
+                        </div>
+                        <a
+                          href=""
+                          className="block py-2 px-4 text-sm text-gray-700"
+                        >
+                          <div className="w-full border-t border-gray-300" />
+                        </a>
+
+                        {userNavigation.map((item) => (
+                          <Menu.Item key={item.name}>
+                            {({ active }) => (
+                              <a
+                                href={item.href}
+                                className={classNames(
+                                  active ? "bg-gray-100" : "",
+                                  "block py-2 px-4 text-sm text-gray-700"
+                                )}
+                              >
+                                {item.name}
+                              </a>
+                            )}
+                          </Menu.Item>
+                        ))}
+                      </Menu.Items>
+                    </Transition>
+                  </Menu>
+                ) : (
+                  <Menu as="div" className="relative ml-4 flex-shrink-0">
+                    <div>
+                      <Menu.Button className="flex  bg-white focus:outline-none hover:scale-110 transition-all duration-200 ease-linear">
+                        <span className="sr-only">Open user menu</span>
+                        <div className="flex items-center space-x-2">
+                          <div>
+                            <HiOutlineUser className="text-gray-400 h-6 w-6 " />
+                          </div>
+                          <div className="text-left">
+                            <div className="text-xs font-semibold text-gray-400">
+                              <span> Sign In</span>
+                            </div>
+                            <div className="text-sm font-semibold text-gray-800">
+                              Account
+                            </div>
+                          </div>
+                        </div>
+                      </Menu.Button>
+                    </div>
+                    <Transition
+                      as={Fragment}
+                      enter="transition ease-out duration-100"
+                      enterFrom="transform opacity-0 scale-95"
+                      enterTo="transform opacity-100 scale-100"
+                      leave="transition ease-in duration-75"
+                      leaveFrom="transform opacity-100 scale-100"
+                      leaveTo="transform opacity-0 scale-95"
+                    >
+                      <Menu.Items className="absolute right-0 z-10 mt-2 w-52 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                        <a
+                          href=""
+                          className="block py-2 px-4 text-sm text-gray-700"
+                        >
+                          Welcome to Cloud Stores!
+                        </a>
+                        <div className="flex items-center space-x-2 py-2 px-4 justify-items-center">
+                          <Link href={"/signup"}>
+                            <button
+                              type="button"
+                              className="inline-flex w-1/2 justify-center items-center rounded-md border border-transparent bg-amber-500 px-2 py-2 text-sm font-medium text-white shadow-sm hover:bg-amber-600  focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2"
+                            >
+                              Register
+                            </button>
+                          </Link>
+                          <Link href={"/signin"}>
+                            <button
+                              type="button"
+                              className="inline-flex items-center w-1/2 border-gray-300 justify-center rounded-md border border-transparent px-2 py-2 text-sm font-medium text-gray-700 hover:text-white shadow-sm hover:bg-amber-500 hover:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2"
+                            >
+                              Sign In
+                            </button>
+                          </Link>
+                        </div>
+                        <a
+                          href=""
+                          className="block py-2 px-4 text-sm text-gray-700"
+                        >
+                          <div className="w-full border-t border-gray-300" />
+                        </a>
+
+                        {clientNavigation.map((item) => (
+                          <Menu.Item key={item.name}>
+                            {({ active }) => (
+                              <a
+                                href={item.href}
+                                className={classNames(
+                                  active ? "bg-gray-100" : "",
+                                  "block py-2 px-4 text-sm text-gray-700"
+                                )}
+                              >
+                                {item.name}
+                              </a>
+                            )}
+                          </Menu.Item>
+                        ))}
+                      </Menu.Items>
+                    </Transition>
+                  </Menu>
+                )}
+
+                {/* WishList */}
+                <button
+                  type="button"
+                  className="flex-shrink-0 rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2"
+                >
+                  <span className="sr-only">View WishList</span>
+
+                  <AiOutlineHeart className=" h-6 w-6" aria-hidden="true" />
+                </button>
+
+                <Link href={"/user/carts"}>
+                  <div className="flex gap-x-2 items-center gap-1.5 p-2 hover:rounded-sm cursor-pointer hover:scale-110 transition-all duration-200 ease-linear">
+                    {" "}
+                    <button
+                      type="button"
+                      className="relative inline-flex items-center p-1 text-sm font-medium text-center lg:relative lg:inline-flex lg:items-center "
+                    >
+                      <BsCartDash className="text-gray-400 h-6 lg:h-6 w-6 lg:w-6 hover:text-gray-600" />
+                      {(cart?.items.length >= 1 && cart !== null) ||
+                      (basketSearch.searchResult?.items.length >= 1 &&
+                        cart !== null) ? (
+                        <div className="absolute inline-flex  -top-1 -right-1 justify-center items-center w-5 h-5 text-xs font-semibold text-white bg-amber-500 rounded-full border-2 border-white ">
+                          {cart.items.length === 0
+                            ? basketSearch.searchResult.items.length
+                            : cart.items.length}
+                        </div>
+                      ) : (
+                        <></>
+                      )}
+
+                      <span className="sr-only">Notifications</span>
+                    </button>
+                    <div className="hidden md:block">
+                      <div className=" text-xs font-medium text-gray-400">
+                        Total
+                      </div>
+                      <div className="text-sm font-semibold text-gray-800">
+                        MK0.00
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              </div>
             </div>
-        </div>
-    );
-}
+            <nav
+              className="hidden lg:flex lg:space-x-4 lg:py-2"
+              aria-label="Global"
+            >
+              {navigation.map((item) => (
+                <a
+                  key={item.name}
+                  href={item.href}
+                  className={classNames(
+                    item.current
+                      ? "bg-gray-100 text-gray-900"
+                      : "text-gray-900 hover:bg-gray-50 hover:text-gray-900",
+                    "rounded-md py-2 px-3 inline-flex items-center text-sm font-medium"
+                  )}
+                  aria-current={item.current ? "page" : undefined}
+                >
+                  {item.name}
+                </a>
+              ))}
+            </nav>
+          </div>
+
+          <Disclosure.Panel as="nav" className="lg:hidden" aria-label="Global">
+            <div className="space-y-1 px-2 pt-2 pb-3">
+              {navigation.map((item) => (
+                <Disclosure.Button
+                  key={item.name}
+                  as="a"
+                  href={item.href}
+                  className={classNames(
+                    item.current
+                      ? "bg-gray-100 text-gray-900"
+                      : "text-gray-900 hover:bg-gray-50 hover:text-gray-900",
+                    "block rounded-md py-2 px-3 text-base font-medium"
+                  )}
+                  aria-current={item.current ? "page" : undefined}
+                >
+                  {item.name}
+                </Disclosure.Button>
+              ))}
+            </div>
+            {isAuthenticated ? (
+              <div className="border-t border-gray-200 pt-4 pb-3">
+                <div className="flex items-center px-4">
+                  <div className="flex-shrink-0">
+                    <img
+                      className="h-10 w-10 rounded-full"
+                      src={users.imageUrl}
+                      alt=""
+                    />
+                  </div>
+                  <div className="ml-3">
+                    <div className="text-xs font-semibold text-gray-400">
+                      <span>Hi,</span>
+                    </div>
+                    <div className="text-sm font-semibold text-gray-800">
+                      {user?.profile?.firstName}
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    className="ml-auto flex-shrink-0 rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2"
+                  >
+                    <span className="sr-only">View notifications</span>
+                    <button
+                      type="button"
+                      className="relative inline-flex items-center p-1 text-sm font-medium text-center lg:relative lg:inline-flex lg:items-center "
+                    >
+                      <BsCartDash className="text-gray-400 h-6 lg:h-6 w-6 lg:w-6 hover:text-gray-600" />
+                      {(cart?.items.length >= 1 && cart !== null) ||
+                      (basketSearch.searchResult?.items.length >= 1 &&
+                        cart !== null) ? (
+                        <div className="absolute inline-flex  -top-1 -right-1 justify-center items-center w-5 h-5 text-xs font-semibold text-white bg-amber-500 rounded-full border-2 border-white ">
+                          {cart.items.length === 0
+                            ? basketSearch.searchResult.items.length
+                            : cart.items.length}
+                        </div>
+                      ) : (
+                        <></>
+                      )}
+
+                      <span className="sr-only">Notifications</span>
+                    </button>
+                  </button>
+                </div>
+
+                <div className="mt-3 space-y-1 px-2">
+                  {userNavigation.map((item) => (
+                    <Disclosure.Button
+                      key={item.name}
+                      as="a"
+                      href={item.href}
+                      className="block rounded-md py-2 px-3 text-base font-medium text-gray-500 hover:bg-gray-50 hover:text-gray-900"
+                    >
+                      {item.name}
+                    </Disclosure.Button>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div className="border-t border-gray-200 pt-4 pb-3">
+                <div className="flex items-center px-4">
+                  <div className="flex-shrink-0">
+                    <img
+                      className="h-10 w-10 rounded-full"
+                      src={users.imageUrl}
+                      alt=""
+                    />
+                  </div>
+                  <div className="ml-3">
+                    <div className="text-xs font-semibold text-gray-400">
+                      <span>Hi,</span>
+                    </div>
+                    <div className="text-sm font-semibold text-gray-800">
+                      {user?.profile?.firstName}
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    className="ml-auto flex-shrink-0 rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2"
+                  >
+                    <span className="sr-only">View notifications</span>
+                    <button
+                      type="button"
+                      className="relative inline-flex items-center p-1 text-sm font-medium text-center lg:relative lg:inline-flex lg:items-center "
+                    >
+                      <BsCartDash className="text-gray-400 h-6 lg:h-6 w-6 lg:w-6 hover:text-gray-600" />
+                      {(cart?.items.length >= 1 && cart !== null) ||
+                      (basketSearch.searchResult?.items.length >= 1 &&
+                        cart !== null) ? (
+                        <div className="absolute inline-flex  -top-1 -right-1 justify-center items-center w-5 h-5 text-xs font-semibold text-white bg-amber-500 rounded-full border-2 border-white ">
+                          {cart.items.length === 0
+                            ? basketSearch.searchResult.items.length
+                            : cart.items.length}
+                        </div>
+                      ) : (
+                        <></>
+                      )}
+
+                      <span className="sr-only">Notifications</span>
+                    </button>
+                  </button>
+                </div>
+              </div>
+            )}
+          </Disclosure.Panel>
+        </>
+      )}
+    </Disclosure>
+  );
+};
 
 export default Navigation;

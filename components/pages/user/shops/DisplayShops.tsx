@@ -1,46 +1,30 @@
-import {useState} from 'react'
-import { useAppDispatch } from '../../../../libs/store';
-import GetShops from './GetShops';
+import { Tabs } from "flowbite-react";
+import { useState } from "react";
+import { useAppDispatch } from "../../../../libs/store";
+import GetShops from "./GetShops";
 
 const DisplayShops = () => {
-    const [activeStatus, setActiveStatus] = useState<number>(1);
-    
+  const [activeStatus, setActiveStatus] = useState<number>(1);
 
-    return (
-        <div className="bg-white">            
-            <div className="mx-auto max-w-2xl py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
-                <h2 className="text-2xl font-bold tracking-tight text-gray-900">You can also view products based on shops</h2>               
-                <div className="xl:w-full xl:mx-0 h-12 hidden sm:block bg-white my-5">
-                    <ul className="flex">
-                        <li onClick={() => setActiveStatus(1)} className={activeStatus == 1 ? "text-sm border-orange-500 pt-3 mr-12" : "text-sm text-gray-600 py-3 flex items-center mr-12 cursor-pointer"}>
-                            <div className="flex items-center mb-3">
-                                <span className="ml-1 font-normal">Most Recommended shops</span>
-                            </div>
-                            {activeStatus == 1 && <div className="w-full h-1 bg-orange-600" />}
-                        </li>
-                        <li onClick={() => setActiveStatus(2)} className={activeStatus == 2 ? "text-sm border-orange-500 pt-3 mr-12" : "text-sm text-gray-600 py-3 flex items-center mr-12 cursor-pointer"}>
-                            <div className="flex items-center mb-3">
-                                <span className="ml-1 font-normal">Top Rated Shops</span>
-                            </div>
-                            {activeStatus == 2 && <div className="w-full h-1 bg-orange-600" />}
-                        </li>
-                        <li onClick={() => setActiveStatus(4)} className={activeStatus == 4 ? "text-sm border-orange-500 pt-3 mr-12" : "text-sm text-gray-600 py-3 flex items-center mr-12 cursor-pointer"}>
-                            <div className="flex items-center mb-3">
-                                <span className="ml-1 font-normal">Based on Location</span>
-                            </div>
-                            {activeStatus == 4 && <div className="w-full h-1 bg-orange-600" />}
-                        </li>
-                    </ul>
-                  
-                </div>
-                {
-                    activeStatus === 1 ? (<GetShops />) : <></>
-                
-                }
-            </div>
+  return (
+    <div className="bg-white max-w-7xl mx-auto mt-5 rounded-lg mb-10">
+      <div className="mx-auto max-w-2xl py-16 px-4 sm:py-2 sm:px-6 lg:max-w-7xl lg:px-8">
+        <div className="inline-flex justify-center items-center w-full">
+          <hr className="my-8 w-80 h-1 bg-gray-200 rounded border-0 dark:bg-gray-700" />
+          <div className="absolute left-1/2 px-4 bg-white -translate-x-1/2 ">
+            <h2 className="text-gray-800 text-xl lg:text-2xl font-bold text-left mb-8 md:mb-2">
+              Browse by Shops
+            </h2>
+          </div>
         </div>
-    )
-}
-
+        <Tabs.Group aria-label="Full width tabs" style="fullWidth">
+          <Tabs.Item title="Recommended Shops">{<GetShops />}</Tabs.Item>
+          <Tabs.Item title="Top Rated Shops">Dashboard content</Tabs.Item>
+          <Tabs.Item title="Near You">Settings content</Tabs.Item>
+        </Tabs.Group>
+      </div>
+    </div>
+  );
+};
 
 export default DisplayShops;
