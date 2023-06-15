@@ -20,6 +20,11 @@ import DisplayShops from "../components/pages/user/shops/DisplayShops";
 import { getDiscountService } from "../libs/services/DiscountService/DiscountService";
 import { getDiscountsSuccess } from "../libs/store/Discount";
 import { DiscountModel } from "../libs/models/discount/DiscountModel";
+import MarketingCTA from "../components/pages/user/catalog/MarketingCTA";
+import ProductCarousell from "../components/widgets/ProductCarousel";
+import SearchField from "../components/pages/user/catalog/SearchField";
+import { ProductModel } from "../libs/models/shops/catalogs/ProductModels";
+import ProductSearch from "../components/pages/user/catalog/ProductSearch";
 
 interface PageProps {
   discountData: DiscountModel[];
@@ -37,16 +42,17 @@ const Home: NextPage<PageProps> = ({ discountData }) => {
   });
 
   return (
-    <div className="bg-slate-100">
-      <LoginNav />
-      <Header />
+    <div className="bg-gray-100">
+      {/* <LoginNav /> */}
+      {/* <Header /> */}
       <Navigation />
-      {/*<Carousel />*/}
       <ProductCarousel />
       {/*<MarketingBanner />*/}
       <TrendingProducts />
       <Products isHome={true} />
-      <DisplayShops />
+      <ProductSearch />
+      <MarketingCTA />
+      {/* <DisplayShops /> */}
       {/*<FeaturedProduct />*/}
       {/* <Testimonials />*/}
       {/*<SubscribeBanner />*/}

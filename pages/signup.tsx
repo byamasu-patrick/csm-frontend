@@ -12,7 +12,7 @@ import {
 import { UserType } from "../libs/models/auth/AuthModels";
 import Swal from "sweetalert2";
 
-const Signup: React.FC = (props) => {
+const Signup: React.FC = () => {
   const [password, setPassword] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [firstName, setFirstName] = useState<string>("");
@@ -149,8 +149,8 @@ const Signup: React.FC = (props) => {
                     submitForm();
                   }}
                   className="
-                          grid grid-cols-1
-                          gap-y-6
+                          grid grid-cols-1 
+                          gap-y-6 
                           sm:grid-cols-2 sm:gap-x-8"
                 >
                   <div className="sm:col-span-2">

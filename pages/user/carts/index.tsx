@@ -24,8 +24,8 @@ const ShoppingCart: NextPageWithLayout = () => {
 
   return (
     <>
-      <div className="flex justify-between max-w-7xl bg-gray-100 mx-auto mt-5">
-        <div className="flex-1 overflow-x-auto relative sm:rounded-lg p-10">
+      <div className="flex flex-col md:items-stretch relative md:flex-row justify-between max-w-7xl mx-auto">
+        <div className="flex-1 overflow-x-auto relative sm:rounded-lg mt-10 px-2">
           <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:text-gray-600">
               <tr>
@@ -142,7 +142,7 @@ const ShoppingCart: NextPageWithLayout = () => {
         </div>
 
         <div>
-          <div className="p-5 mr-5 bg-white mt-10 mb-5 shadow-md w-96">
+          <div className="mt-2 p-5 w-full md:w-96 md:mt-10 bg-white mb-5 shadow-md">
             <div>
               <p className="font-bold text-gray-800">CART TOTALS</p>
               <div className="flex items-center justify-between pt-10">

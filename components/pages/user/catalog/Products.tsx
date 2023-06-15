@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../../libs/store";
 import {
@@ -22,9 +23,22 @@ import ProductDialog from "./ProductDialog";
 import { ProductModel } from "../../../../libs/models/shops/catalogs/ProductModels";
 import Link from "next/link";
 import { DiscountSelector } from "../../../../libs/store/Discount";
+import { FiEye } from "react-icons/fi";
+import { FaCartArrowDown } from "react-icons/fa";
+import { MdAddShoppingCart } from "react-icons/md";
+import { AiOutlineHeart } from "react-icons/ai";
+import { ProductionQuantityLimits, Shop } from "@mui/icons-material";
+
+import GetShops from "../shops/GetShops";
+import { GetShopsFromApi } from "../../../../libs/store/Auth";
+import DisplayShops from "../shops/DisplayShops";
+import Image from "next/image";
+import MyModal from "../../../../pages/user/settings/MyModal";
+import SectionDivider from "./SectionDivider";
 
 interface ProductProps {
   isHome: boolean;
+  // data: ProductModel;
 }
 
 const Products: React.FC<ProductProps> = (props) => {
@@ -41,7 +55,20 @@ const Products: React.FC<ProductProps> = (props) => {
     useAppSelector(BasketSelector);
   const router = useRouter();
 
+  const [open, setOpen] = useState(false);
+
+  const handleOpen = () => {
+    setOpen(true);
+    setProduct(product);
+  };
+  const handleClose = () => setOpen(false);
   let productLimit = 0;
+
+  const [loading, setLoading] = useState(false);
+  const [hoverIndex, setHoverIndex] = useState(-1);
+  const handleCardHover = (index: number) => {
+    setHoverIndex(index);
+  };
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -133,27 +160,15 @@ const Products: React.FC<ProductProps> = (props) => {
 
   return (
     <>
-      <div className="bg-white max-w-7xl mx-auto rounded-lg">
-        {/*<div className="w-full sm:w-full md:w-4/12 lg:w-3/12 bg-white mr-6 h-[530px] mb-6">
-                    <ProductSort isProductPage={false}/>
-                </div>  
-
-    */}
+      <div className=" max-w-7xl mx-auto rounded-lg">
         {isGetting ? (
           <></>
         ) : (
-          <div className="max-w-screen-2xl px-4 md:px-8 mx-auto pb-5">
-            <div className="inline-flex justify-center items-center w-full">
-              <hr className="my-8 w-64 h-1 bg-gray-200 rounded border-0 dark:bg-gray-700" />
-              <div className="absolute left-1/2 px-4 bg-white -translate-x-1/2 ">
-                <h2 className="text-gray-800 text-xl lg:text-2xl font-bold text-left">
-                  New Arrivals
-                </h2>
-              </div>
-            </div>
+          <div className="mx-4 max-w-screen-2xl lg:mx-auto pb-5">
+            <SectionDivider title="New Arrivals" />
 
-            <div className="grid grid-cols-2  sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 ">
-              {products?.results.map((product, key) => {
+            <div className=" grid grid-cols-2  sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 ">
+              {products?.results.map((product, index) => {
                 productLimit++;
                 const productDiscount = discounts.filter(
                   (prodDiscont) => prodDiscont.productId === product.id
@@ -161,108 +176,114 @@ const Products: React.FC<ProductProps> = (props) => {
 
                 // console.log("Discount: ", productDiscount)
 
-                if (productLimit < 7) {
+                if (productLimit > 0) {
                   return (
-                    <div>
-                      <a
-                        href="#"
-                        className="group h-40 block bg-gray-100 rounded-t-lg overflow-hidden relative"
+                    <div
+                      className={`relative overflow-hidden shadow-lg ${
+                        hoverIndex === index
+                          ? "bg-white transition-all duration-300 ease-in-out rounded-lg h-80"
+                          : "bg-white h-72"
+                      }`}
+                      onMouseEnter={() => handleCardHover(index)}
+                      onMouseLeave={() => handleCardHover(-1)}
+                    >
+                      <div className=" px-4 pt-2">
+                        <div className="inline-block text-xs mb-2 leading-none text-a text-gray-600 hover:text-amber-500">
+                          <Link href={"/"}>Mash Store</Link>
+                        </div>
+                        <div className="text-sm font-semibold leading-none text-[rgb(11,115,164)]">
+                          <Link href={"/"}>
+                            {product.name.substring(0, 15)}
+                          </Link>
+                        </div>
+                      </div>
+                      <div
+                        className={`w-full h-40 p-5 ${
+                          hoverIndex === index ? "bg-white-500 opacity-75" : ""
+                        } transition duration-200 ease-linear`}
                       >
                         <img
+                          className="w-full h-full object-fit:cover hover:scale-110 transition duration-200"
                           src={product.imageFile}
                           onClick={() => handleOnProductClicked(product)}
-                          loading="lazy"
                           alt=""
-                          className="w-full h-full object-cover object-center group-hover:scale-110 transition duration-200"
                         />
+                      </div>
 
-                        <span className="bg-orange-500 text-gray-100 text-sm font-semibold tracking-wider rounded-r-lg absolute left-0 top-3 px-3 py-1.5 hover:scale-105 transition-200">
-                          Sale
-                        </span>
-                      </a>
-
-                      <div className="">
-                        <div className="bg-gray-100 gap-2 px-4 py-2">
-                          <a
-                            href="#"
-                            className="text-xs leading-6 font-medium uppercase text-slate-500"
-                          >
-                            {product.name.substring(0, 15)}
-                          </a>
-                        </div>
-                        <div className="flex justify-between items-center bg-gray-100 gap-2 px-4">
-                          <div className="flex-auto text-lg font-medium text-slate-500">
-                            {productDiscount !== undefined ? (
-                              <span className="line-through ">
-                                MK {product.price}
-                              </span>
-                            ) : (
-                              ""
-                            )}
-                            {productDiscount !== undefined
-                              ? `K ${product.price - productDiscount.amount}`
-                              : `MK ${product.price} `}
-                          </div>
-                          <div className="flex flex-col items-end space-y-2">
-                            <div className="text-xs leading-6 font-medium uppercase text-slate-500">
-                              In stock
-                            </div>
-                          </div>
-                        </div>
-                        <div>
-                          <hr className="" />
-                        </div>
-                        <div className="flex space-x-4 mb-6 text-sm font-medium bg-gray-100 rounded-b-lg gap-2 p-4">
-                          <div className="flex-auto flex space-x-4">
-                            <span className="h-10 px-6 font-semibold rounded-md bg-[#3d9dc9] text-white cursor-pointer hover:bg-orange-500">
-                              <p className="p-2">Buy now</p>
+                      <div className="px-4 py-2">
+                        <div className="flex justify-between items-center">
+                          {productDiscount !== undefined ? (
+                            <span className="line-through ">
+                              MK {product.price}
                             </span>
-                          </div>
+                          ) : (
+                            ""
+                          )}
+                          {productDiscount !== undefined
+                            ? `K ${product.price - productDiscount.amount}`
+                            : `MK ${product.price} `}
                           <span
                             className={`${
-                              addCart == key + 1 ? "" : ""
-                            } flex-none flex items-center justify-center hover:bg-orange-500 hover:text-white w-9 h-9 rounded-md text-orange-500
-                              border border-gray-400`}
+                              addCart == index + 1 ? "" : ""
+                            } flex-none bg-gray-100 text-gray-400 text-sm font-semibold uppercase rounded-full p-2 ${
+                              hoverIndex === index
+                                ? "bg-amber-500 cursor-pointer transition-all duration-300 ease-in-out text-white"
+                                : ""
+                            }`}
                             aria-label="Like"
-                            onClick={() => {
-                              setAddCart(key + 1);
-                              addToBasket(
+                            onClick={async () => {
+                              setLoading(true);
+                              setAddCart(index + 1);
+                              await addToBasket(
                                 product.price,
                                 product.id,
                                 product.name
                               ).catch((error) => console.log(error));
+                              setTimeout(() => setLoading(false), 3000);
                             }}
                           >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              strokeWidth={1.5}
-                              stroke="currentColor"
-                              className="w-6 h-6 cursor-pointer"
-                            >
-                              {addCart == key + 1 ? (
-                                <CircularProgress
-                                  key={key}
-                                  size="1rem"
-                                  style={{
-                                    color: "white",
-                                    marginBottom: -4,
-                                    marginRight: 6,
-                                  }}
-                                />
-                              ) : (
-                                <></>
-                              )}
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
+                            {loading && hoverIndex === index ? (
+                              <CircularProgress
+                                size={15}
+                                style={{ borderRadius: "50%" }}
                               />
-                            </svg>
+                            ) : (
+                              <MdAddShoppingCart className="h-5 w-5" />
+                            )}
                           </span>
                         </div>
                       </div>
+                      <div
+                        className={` border-gray-400 px-4 ${
+                          hoverIndex === index ? "block" : "hidden"
+                        }`}
+                      >
+                        <hr className="w-full border-1 bg-gray-300 rounded mx-auto" />
+
+                        <div className="mx-auto max-w-sm">
+                          <div className="flex py-4 justify-between">
+                            <div onClick={handleOpen}>
+                              <a className="flex items-center text-sm text-gray-500 leading-none transition-all duration-200 hover:text-amber-500 cursor-pointer">
+                                <FiEye className="h-4 w-4 mr-2" />
+                                View
+                              </a>
+                            </div>
+
+                            <Link href={"/"}>
+                              <a className="flex items-center text-sm text-gray-500 leading-none transition-all duration-200 hover:text-amber-500 mr-1">
+                                <AiOutlineHeart className="h-4 w-4 mr-2" />
+                                Wishlist
+                              </a>
+                            </Link>
+                          </div>
+                        </div>
+                      </div>
+
+                      <MyModal
+                        open={open}
+                        onClose={handleClose}
+                        data={product as ProductModel}
+                      />
                     </div>
                   );
                 }
