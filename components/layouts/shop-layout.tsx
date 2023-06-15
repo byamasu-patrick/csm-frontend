@@ -1,11 +1,13 @@
 // react
-import React, { ReactElement, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Fragment } from "react";
-import Image from "next/image";
 import Link from "next/link";
-import { withRouter, useRouter } from 'next/router';
-import Swal from "sweetalert2";
-import { navList, userNavigation, other } from "../../libs/models/shops/ShopModels"
+import { useRouter } from "next/router";
+import {
+  navList,
+  userNavigation,
+  other,
+} from "../../libs/models/shops/ShopModels";
 // tailwind
 import { Menu, Popover, Transition } from "@headlessui/react";
 import { ListBulletIcon, XMarkIcon } from "@heroicons/react/24/outline";
@@ -13,51 +15,46 @@ import ShopBreadcrumb from "../../components/widgets/breadcrumbs/shop-breadcrumb
 import { NextPageWithLayout } from "../../pages/_app";
 import { AuthSelector } from "../../libs/store/Auth/selectors";
 import { logOut } from "../../libs/store/Auth/actions";
-import { initialLoadUser } from "../../libs/services/AuthService/authService";
-import { TokenModel, User } from "../../libs/models/auth/AuthModels";
 import { useAppDispatch, useAppSelector } from "../../libs/store";
-import { Logout } from "@mui/icons-material";
-import CircularProgress from '@mui/material/CircularProgress';
-import Box from '@mui/material/Box';
+import CircularProgress from "@mui/material/CircularProgress";
+import Box from "@mui/material/Box";
 import Footer from "../widgets/footer";
 
 interface ShopProps {
-    children?: React.ReactNode;
+  children?: React.ReactNode;
 }
 
-const ShopLayout: NextPageWithLayout<ShopProps> = ({children}: ShopProps) => {
-    const router = useRouter();
-    const pathname =  router.pathname;
-    const { user } = useAppSelector(AuthSelector);
-  
-    const dispatch = useAppDispatch();
+const ShopLayout: NextPageWithLayout<ShopProps> = ({ children }: ShopProps) => {
+  const router = useRouter();
+  const pathname = router.pathname;
+  const { user } = useAppSelector(AuthSelector);
 
-    useEffect(() => {
-      
-    }, []);
-    
-    const navigation = () => {
-        for (let nav of navList)
-            if ( nav.href.split("/")[1] + nav.href.split("/")[2] == pathname.split("/")[1] + pathname.split("/")[2])
-                nav.current = true;
-            else
-                nav.current = false;
-            return navList;
-    }
+  const dispatch = useAppDispatch();
 
-    const logout = () => {
-      dispatch(logOut());
-      router.push('/signin');
-    }
+  useEffect(() => {}, []);
 
-    return (
-        <>
-        {
-          true ? (<div className="min-h-full mb-6 " style={{ height: 'auto' }} >
+  const navigation = () => {
+    for (let nav of navList)
+      if (
+        nav.href.split("/")[1] + nav.href.split("/")[2] ==
+        pathname.split("/")[1] + pathname.split("/")[2]
+      )
+        nav.current = true;
+      else nav.current = false;
+    return navList;
+  };
+
+  const logout = () => {
+    dispatch(logOut());
+    router.push("/signin");
+  };
+
+  return (
+    <>
+      {true ? (
+        <div className="min-h-full mb-6 " style={{ height: "auto" }}>
           {/* When the mobile menu is open, add `overflow-hidden` to the `body` element to prevent double scrollbars */}
-          <Popover
-            as="header"           
-          >
+          <Popover as="header">
             {({ open }) => (
               <>
                 <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 pt-1 border-b-1 pb-3 shadow-sm">
@@ -87,7 +84,10 @@ const ShopLayout: NextPageWithLayout<ShopProps> = ({children}: ShopProps) => {
                       <Popover.Button className="-mx-2 rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-orange-500">
                         <span className="sr-only">Open menu</span>
                         {open ? (
-                          <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
+                          <XMarkIcon
+                            className="block h-6 w-6"
+                            aria-hidden="true"
+                          />
                         ) : (
                           <ListBulletIcon
                             className="block h-6 w-6"
@@ -121,7 +121,10 @@ const ShopLayout: NextPageWithLayout<ShopProps> = ({children}: ShopProps) => {
                               "
                           >
                             <span className="sr-only">Open user menu</span>
-                            <span className="lowercase m-2"> {user?.email} </span>
+                            <span className="lowercase m-2">
+                              {" "}
+                              {user?.email}{" "}
+                            </span>
                             <span
                               className="
                                     inline-flex
@@ -135,7 +138,9 @@ const ShopLayout: NextPageWithLayout<ShopProps> = ({children}: ShopProps) => {
                                     uppercase
                                   "
                             >
-                              {user?.profile?.firstName +" "+ user?.profile?.lastName}
+                              {user?.profile?.firstName +
+                                " " +
+                                user?.profile?.lastName}
                             </span>
                           </Menu.Button>
                         </div>
@@ -153,10 +158,7 @@ const ShopLayout: NextPageWithLayout<ShopProps> = ({children}: ShopProps) => {
                               <Menu.Item key={item.name}>
                                 {({ active }) => (
                                   <Link href={item.href}>
-                                    <a
-                                      className = "block py-2 px-4 text-sm text-gray-700"
-                                      
-                                    >
+                                    <a className="block py-2 px-4 text-sm text-gray-700">
                                       {item.name}
                                     </a>
                                   </Link>
@@ -164,12 +166,12 @@ const ShopLayout: NextPageWithLayout<ShopProps> = ({children}: ShopProps) => {
                               </Menu.Item>
                             ))}
                             <Menu.Item key="signout">
-                                <a
-                                  className="bg-gray-100 block py-2 px-4 text-sm text-gray-700"
-                                  onClick={() => logout()}
-                                >
-                                  Sign out
-                                </a>
+                              <a
+                                className="bg-gray-100 block py-2 px-4 text-sm text-gray-700"
+                                onClick={() => logout()}
+                              >
+                                Sign out
+                              </a>
                             </Menu.Item>
                           </Menu.Items>
                         </Transition>
@@ -178,14 +180,17 @@ const ShopLayout: NextPageWithLayout<ShopProps> = ({children}: ShopProps) => {
                   </div>
                 </div>
 
-                <Popover.Panel as="nav" className="lg:hidden" aria-label="Global">
+                <Popover.Panel
+                  as="nav"
+                  className="lg:hidden"
+                  aria-label="Global"
+                >
                   <div className="max-w-3xl mx-auto px-2 pt-2 pb-3 space-y-1 sm:px-4">
                     {navigation().map((item: any) => (
                       <Link key={item.name} href={item.href}>
                         <a
                           aria-current={item.current ? "page" : undefined}
                           className="bg-gray-100 text-gray-900 block rounded-md py-2 px-3 text-base font-medium"
-                          
                         >
                           {item.name}
                         </a>
@@ -209,12 +214,16 @@ const ShopLayout: NextPageWithLayout<ShopProps> = ({children}: ShopProps) => {
                                 uppercase
                               "
                         >
-                          {user?.profile?.firstName +" "+ user?.profile?.lastName}
+                          {user?.profile?.firstName +
+                            " " +
+                            user?.profile?.lastName}
                         </span>
                       </div>
                       <div className="ml-3">
                         <div className="text-base font-medium text-gray-800">
-                        {user?.profile?.firstName +" "+ user?.profile?.lastName}
+                          {user?.profile?.firstName +
+                            " " +
+                            user?.profile?.lastName}
                         </div>
                         <div className="text-sm font-medium text-gray-500">
                           {user?.email}
@@ -249,15 +258,16 @@ const ShopLayout: NextPageWithLayout<ShopProps> = ({children}: ShopProps) => {
                     {navigation().map((item: any) => (
                       <Link key={item.name} href={item.href}>
                         <a
-                          className= { item.current
-                            ? "bg-gray-200 text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md"
-                            : "text-gray-600 hover:text-gray-600 hover:bg-gray-200 group flex items-center px-3 py-2 text-sm font-medium rounded-md"
+                          className={
+                            item.current
+                              ? "bg-gray-200 text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md"
+                              : "text-gray-600 hover:text-gray-600 hover:bg-gray-200 group flex items-center px-3 py-2 text-sm font-medium rounded-md"
                           }
                           aria-current={item.current ? "page" : undefined}
                         >
                           <item.icon
                             className={
-                                item.current
+                              item.current
                                 ? "text-gray-500 flex-shrink-0 -ml-1 mr-3 h-6 w-6"
                                 : "text-gray-400 group-hover:text-gray-500 flex-shrink-0 -ml-1 mr-3 h-6 w-6"
                             }
@@ -286,27 +296,28 @@ const ShopLayout: NextPageWithLayout<ShopProps> = ({children}: ShopProps) => {
                   </div>
                 </nav>
               </div>
-              <main className="lg:col-span-9 sm:col-span-10 "> 
-                  <ShopBreadcrumb />
-                  {children}
-              </main>              
+              <main className="lg:col-span-9 sm:col-span-10 ">
+                <ShopBreadcrumb />
+                {children}
+              </main>
             </div>
-            
-            <div className="">                
-             <Footer />
+
+            <div className="">
+              <Footer />
             </div>
           </div>
-          </div>) : (<>
+        </div>
+      ) : (
+        <>
           <div className="grid place-items-center h-screen">
-          <Box sx={{ display: 'flex' }} className="">
+            <Box sx={{ display: "flex" }} className="">
               <CircularProgress />
             </Box>
           </div>
-        </>)
-        }
-        
-      </>
-    );
+        </>
+      )}
+    </>
+  );
 };
 
 export default ShopLayout;
