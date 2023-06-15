@@ -11,7 +11,7 @@ interface Props {
 
 const MyModal: React.FC<Props> = ({ open, onClose, data }) => {
   return (
-    <Transition appear show={open} as={Fragment}>
+    <Transition appear show={true} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={onClose}>
         <Transition.Child
           as={Fragment}

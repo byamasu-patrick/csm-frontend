@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
 import React, { useState, ReactElement } from "react";
 import ClientLayout from "../../../components/layouts/clients-layout";

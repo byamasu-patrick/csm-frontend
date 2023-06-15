@@ -72,7 +72,7 @@ const ProductPage: React.FC<ProductProps> = (props) => {
     }
   };
 
-  const [mainImage, setMainImage] = useState(props.data.imageFile);
+  const [mainImage, setMainImage] = useState(props.data.imageFile || "");
 
   const imageRef = useRef<HTMLImageElement>(null);
   const thumbnails = [

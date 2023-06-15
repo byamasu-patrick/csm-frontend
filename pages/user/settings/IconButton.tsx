@@ -1,7 +1,9 @@
 import React, { FC } from "react";
 import { motion } from "framer-motion";
-import { HiOutlineUser, BiHeart, BsCartDash, FiSearch } from "react-icons/all";
-
+import { HiOutlineUser } from "react-icons/hi";
+import { BiHeart } from "react-icons/bi";
+import { BsCartDash } from "react-icons/bs";
+import { FiSearch } from "react-icons/fi";
 interface Props {
   count: number;
   total: string;

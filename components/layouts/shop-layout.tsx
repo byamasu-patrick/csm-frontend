@@ -145,6 +145,7 @@ const ShopLayout: NextPageWithLayout<ShopProps> = ({ children }: ShopProps) => {
                           </Menu.Button>
                         </div>
                         <Transition
+                          show={true}
                           as={Fragment}
                           enter="transition ease-out duration-100"
                           enterFrom="transform opacity-0 scale-95"
