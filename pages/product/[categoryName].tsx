@@ -53,7 +53,7 @@ const Product: NextPageWithLayout = () => {
     const updatingBasketToDb = async () => {
       await dispatch(
         GetAllProductsByCategory({
-          catName: categoryName?.toString(),
+          catName: categoryName as string,
           page: 1,
         })
       );
